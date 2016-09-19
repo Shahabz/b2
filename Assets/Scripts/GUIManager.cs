@@ -20,6 +20,7 @@ public class GUIManager : MonoBehaviour {
 	//TODO implement stamina logic
 	public Slider hungerSlider, anxietySlider;
 	public GameObject menu;
+	public Camera currentCameraInUse;
 	bool isInventoryOn = true;
 	[SerializeField]
 	Text subtitleText, thoughtText, gameover, timeDisplay, notes, money;
@@ -55,7 +56,9 @@ public class GUIManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		money.text = "Money: $" + PlayerController.s_instance.money.ToString("F2");
+		
+		BillboardCamera ();
+//		money.text = "Money: $" + PlayerController.s_instance.money.ToString("F2");
 
 
 		if (thoughtTimer > 0) {
@@ -64,13 +67,6 @@ public class GUIManager : MonoBehaviour {
 			isDisplayingThought = false;
 			thoughtText.gameObject.GetComponent<Fader> ().StartFadeOut ();
 
-		}
-
-		if (subtitleTimer > 0 && !isInDialogue) {
-			subtitleText.enabled = true;
-			subtitleTimer -= Time.deltaTime;
-		} else if (subtitleTimer <= 0 || isInDialogue) {
-			subtitleText.enabled = false;
 		}
 			
 	}
@@ -100,6 +96,14 @@ public class GUIManager : MonoBehaviour {
 
 	void DisableMenu () {
 		Time.timeScale = 1f;
+	}
+
+
+	void BillboardCamera () {
+		Vector3 v = transform.position - currentCameraInUse.transform.position;
+		v.x = v.z = 0.0f;
+		thoughtText.transform.LookAt( currentCameraInUse.transform.position - v ); 
+		thoughtText.transform.Rotate(0,180,0);
 	}
 
 //	void DisplayNotesToSelf () {

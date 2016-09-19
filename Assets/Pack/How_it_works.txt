@@ -1,0 +1,39 @@
+
+No actions required for play "SniperView" scene.
+
+About controls: ============================================================================= [CameraMoveController.cs]
+	-Move a,s,d,w.
+	-Shift to stop breathing.		
+	-Right mouse button to point with the rifle.
+	-Left mouse button to shoot.
+	-r recharge bullet animation. 			(in this version the bullets are not counted)	
+	-t recharge pack of bullets	animation. 	(in this version the bullets are not counted)
+	-q reset the scene.
+	-Esc exit the scene (on Editor).
+=============================================================================================
+
+About xray: ========================================================================================================================================================== [SetRenderQueue.cs] for mesh, [DepthMat material] for camera.
+	*You must to assign "SetRenderQueue.cs" script to the mesh that you want hide.
+		-Please see the capture example /Tutorials_and_Info/mesh_can_be_hidden.png
+	*To get it works, you need add to the camera (to get xray effect) the "Over" prefab, on Pack/Mask. Basically is a plane mesh circle with "DepthMat" material.
+		-In this project, the camera with xray effect is associated to the bullets.
+		-Please see the capture example /Tutorials_and_Info/Over_Prefab.png
+======================================================================================================================================================================
+
+About slowmotion: ============================================================================================================================================ [Bullet.cs]
+*It is controlled by Bullet.cs, "OntriggerEnter" with different gameobjects:
+	-"Radious", "hips", and also it creates blood "OntriggerEnter" with "neck", "chest" and "head".
+*On this version the enemy only can detect collision with the bullet around the chest, neck and head. The arms etc... not will be detected as collision. 
+==============================================================================================================================================================
+
+
+Important:
+	-The bullets include "Bullet.cs", here the timestep/timescale is changed. If you change the size of colliders ("Radius", "chest", etc...), the timestep or speed of the bullet... the collision event might not be detected correctly. More speed needs a low timestep.
+	*On this version the enemy only can detect collision with the bullet around the chest, neck and head. The arms etc... not will be detected as collision. 
+	*The bullet is destroyed when collides with "Limit" prefab.
+
+Problems with lights:
+	-go to Window -> Lighting
+	-uncheck "Auto" and press Build. (this with all scenes)
+
+Contact info into "Tutorials_and_Info/Contact_info"

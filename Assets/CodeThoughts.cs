@@ -1,0 +1,57 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+
+public class CodeThoughts : MonoBehaviour {
+	public TextAsset codeJargonThoughts;
+	public GameObject ThoughtText;
+	// Use this for initialization
+	List<string> myCodeThoughts;
+	CSVParser thisParser;
+	bool isSpawning;
+	float spawnTime = .1f, spawnTimer;
+	float spawnRangeX = 1.2f;
+	float spawnRangeY = .6f;
+	float spawnRangeZ = .4f;
+
+	void Start () {
+		thisParser = GetComponent<CSVParser> ();
+		myCodeThoughts = new List<string>(thisParser.Parse (codeJargonThoughts));
+	}
+
+	public void StartSpawning() {
+		isSpawning = true;
+	}
+
+	public void StopSpawning() {
+		isSpawning = false;
+
+	}
+
+	// Update is called once per frame
+	void Update () {
+		if (isSpawning) {
+			spawnTimer += Time.deltaTime;
+			if (spawnTimer > spawnTime) {
+				spawnTimer = 0;
+				SpawnRandomCodeThought();
+			}
+		}
+	}
+
+
+
+	void SpawnRandomCodeThought () {
+		float x = Random.Range (-spawnRangeX, spawnRangeX);
+		float y = Random.Range (-spawnRangeY, spawnRangeY);
+		float z = Random.Range (-spawnRangeZ, spawnRangeZ);
+
+		Vector3 spawnPos = new Vector3 (transform.position.x + x, transform.position.y + y, transform.position.z + spawnRangeZ);
+		GameObject thoughtText = (GameObject)Instantiate (ThoughtText, spawnPos, transform.parent.rotation) as GameObject;
+		thoughtText.GetComponentInChildren<Text> ().text = myCodeThoughts [Random.Range (0, myCodeThoughts.Count - 1)];
+
+	
+
+	}
+}
