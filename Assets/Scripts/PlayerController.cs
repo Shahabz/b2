@@ -5,12 +5,14 @@ using InControl;
 public enum PlayerState{Walking, Computer, AnxietyCam, Therapy};
 
 public class PlayerController : MonoBehaviour {
+	public static PlayerController s_instance;
+
 	PlayerState thisPlayerState = PlayerState.Walking;
 	public Animator thisAnimator;
 	const string walkingBool = "isWalking";
 	float walkAxis, rotateAxis;
 	public float speedScalar = .04f, rotateScalar = 4f;
-	public Computer currentComputer;
+
 	public int anxiety;
 	public int devLevel;
 
@@ -18,21 +20,19 @@ public class PlayerController : MonoBehaviour {
 
 	[SerializeField]
 	Camera anxietyCam;
+	public Computer currentComputer;
 
-	public static PlayerController s_instance;
 
 	InputDevice inputDevice;
 
-	public bool switchToAnxietyCam = false;
 	public bool isNearComputer = false;
 
 	[SerializeField]
 	GameObject brain;
 	Vector3 brainStartPosition, anxietyCamStartPosition;
-	float brainFloatUpDistance = .28f, brainRaiseSpeed = .3f, brainFlashSpeed = .1f;
-	bool brainAnimationDoOnce;
+	float brainFloatUpDistance = .28f, brainRaiseSpeed = .3f, brainFlashSpeed = .1f, brainFlashTimer, brainFlashDuration;
+	bool brainFlashState;
 	bool isBrainRaisingAndFlashing;
-	bool switchToComputer, switchToWalking;
 
 
 	void Awake() {
@@ -63,6 +63,10 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	#region StateMachine
+
+	public bool switchToAnxietyCam, switchToComputer, switchToWalking;
+
+
 	void Update () {
 		inputDevice = InputManager.ActiveDevice;
 
@@ -110,7 +114,6 @@ public class PlayerController : MonoBehaviour {
 			if (switchToComputer) {
 				switchToComputer = false;
 				thisPlayerState = PlayerState.Computer;
-
 			}
 			break;
 		}
@@ -165,43 +168,37 @@ public class PlayerController : MonoBehaviour {
 			brain.transform.Translate (Vector3.up* Time.deltaTime * brainRaiseSpeed);
 			Camera.main.transform.Translate (Vector3.up* Time.deltaTime * brainRaiseSpeed);
 
-		} else if (!brainAnimationDoOnce) {
-			StartCoroutine ("FlashBrain");
-			brainAnimationDoOnce = true;
+		} else if (!brainFlashState) {
+			brainFlashState = true;
 		}
-	}
 
 
-	IEnumerator FlashBrain () {
-		print ("flashbrain");
-		brain.GetComponentInChildren<MeshRenderer> ().material.color = brainFlashColor;
-		yield return new WaitForSeconds (brainFlashSpeed);
-		brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
-		yield return new WaitForSeconds (brainFlashSpeed);
-		brain.GetComponentInChildren<MeshRenderer> ().material.color = brainFlashColor;
-		yield return new WaitForSeconds (brainFlashSpeed);
-		brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
-		yield return new WaitForSeconds (brainFlashSpeed);
-		brain.GetComponentInChildren<MeshRenderer> ().material.color = brainFlashColor;
-		yield return new WaitForSeconds (brainFlashSpeed);
-		brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
-		yield return new WaitForSeconds (brainFlashSpeed);
-		brain.GetComponentInChildren<MeshRenderer> ().material.color = brainFlashColor;
-		yield return new WaitForSeconds (brainFlashSpeed);
-		brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
-		yield return new WaitForSeconds (brainFlashSpeed);
+
 		brain.SetActive (false);
-		brainAnimationDoOnce = false;
-		isBrainRaisingAndFlashing = false;
 		switchToComputer = true;
 		currentComputer.ComputerCameraOn ();
-		brain.SetActive (false);
 		ResetAnxietyCamAndBrainPosition ();
 	}
 
+	void FlashBrain () {
+		brainFlashDuration += Time.deltaTime;
+		brainFlashTimer += Time.deltaTime;
+		if (brainFlashTimer > brainFlashSpeed) {
+			if (brainFlashState) {
+				brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
+			} else {
+				brain.GetComponentInChildren<MeshRenderer> ().material.color = brainFlashColor;
+			}
+		}
+	}
 	void ResetAnxietyCamAndBrainPosition() {
 		anxietyCam.transform.localPosition = anxietyCamStartPosition;
 		brain.transform.localPosition = brainStartPosition;
+		isBrainRaisingAndFlashing = false;
+		brainFlashState = false;
+		brain.SetActive (false);
+
+
 	}
 		
 }

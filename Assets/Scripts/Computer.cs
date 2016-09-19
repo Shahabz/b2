@@ -67,7 +67,8 @@ public class Computer : MonoBehaviour {
 			
 			break;
 		case 3:
-
+			TurnOff ();
+			PlayerController.s_instance.switchToWalking = true;
 			break;
 		}
 	}
@@ -77,12 +78,11 @@ public class Computer : MonoBehaviour {
 		lastCamPos = Camera.main.transform.position;
 		lastCamRot = Camera.main.transform.rotation;
 		ComputerCameraOn ();
-
-
 	}
 
 	public void TurnOff () {
 		projectedScreen.SetActive (false);
+		ComputerCameraOff ();
 	}
 
 	public void ComputerCameraOn () {
