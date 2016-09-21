@@ -2,7 +2,7 @@
 using System.Collections;
 using InControl;
 
-public enum PlayerState{Walking, Computer, AnxietyCam, Therapy};
+public enum PlayerState {Walking, Computer, AnxietyCam, Therapy};
 
 public class PlayerController : MonoBehaviour {
 	public static PlayerController s_instance;
@@ -30,9 +30,9 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	GameObject brain;
 	Vector3 brainStartPosition, anxietyCamStartPosition;
-	float brainFloatUpDistance = .28f, brainRaiseSpeed = .3f, brainFlashSpeed = .1f, brainFlashTimer, brainFlashDuration;
+	float brainFloatUpDistance = .28f, brainRaiseSpeed = .3f, brainFlashSpeed = .3f, brainFlashTimer, brainFlashDuration = 2f, brainFlashDurationTimer;
 	bool brainFlashState;
-	bool isBrainRaisingAndFlashing;
+	bool isRaisingBrain, isFlashingBrain;
 
 
 	void Awake() {
@@ -51,13 +51,15 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void ReceiveAnxiety() {
-		isBrainRaisingAndFlashing = true;
+		isRaisingBrain = true;
+		isFlashingBrain = true;
 		anxiety++;
 		brainFlashColor = Color.red;
 	}
 
 	public void AlleviateAnxiety() {
-		isBrainRaisingAndFlashing = true;
+		isRaisingBrain = true;
+		isFlashingBrain = true;
 		anxiety--;
 		brainFlashColor = Color.green;
 	}
@@ -108,13 +110,22 @@ public class PlayerController : MonoBehaviour {
 			break;
 
 		case PlayerState.AnxietyCam:
-			if (isBrainRaisingAndFlashing) {
-				RaiseAndFlashBrain ();
+			if (isRaisingBrain) {
+				RaiseBrain ();
+			}
+			else if (isFlashingBrain) {
+				FlashBrain ();
 			}
 			if (switchToComputer) {
 				switchToComputer = false;
 				thisPlayerState = PlayerState.Computer;
+				currentComputer.ComputerCameraOn ();
 			}
+			if (switchToWalking) {
+				switchToWalking = false;
+				thisPlayerState = PlayerState.Walking;
+			}
+
 			break;
 		}
 	}
@@ -163,41 +174,48 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void RaiseAndFlashBrain () {
+	void RaiseBrain () {
 		if (Vector3.Distance (brainStartPosition, brain.transform.localPosition) < brainFloatUpDistance) {
-			brain.transform.Translate (Vector3.up* Time.deltaTime * brainRaiseSpeed);
-			Camera.main.transform.Translate (Vector3.up* Time.deltaTime * brainRaiseSpeed);
-
-		} else if (!brainFlashState) {
-			brainFlashState = true;
+			brain.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
+			Camera.main.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
+		} else {
+			isRaisingBrain = false;
 		}
-
-
-
-		brain.SetActive (false);
-		switchToComputer = true;
-		currentComputer.ComputerCameraOn ();
-		ResetAnxietyCamAndBrainPosition ();
 	}
 
 	void FlashBrain () {
-		brainFlashDuration += Time.deltaTime;
+		print ("FLASH BRAIN");
+		brainFlashDurationTimer += Time.deltaTime;
 		brainFlashTimer += Time.deltaTime;
 		if (brainFlashTimer > brainFlashSpeed) {
-			if (brainFlashState) {
-				brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
+			AlternateBrainColor ();
+			brainFlashTimer = 0;
+		}
+		if (brainFlashDurationTimer > brainFlashDuration) {
+			isFlashingBrain = false;
+			brainFlashDurationTimer = 0;
+			ResetAnxietyCamAndBrainPosition ();
+			if (isNearComputer) {
+				switchToComputer = true;
 			} else {
-				brain.GetComponentInChildren<MeshRenderer> ().material.color = brainFlashColor;
+				switchToWalking = true;
 			}
 		}
+	}
+
+	void AlternateBrainColor () {
+		if (brainFlashState) {
+			brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
+		} else {
+			brain.GetComponentInChildren<MeshRenderer> ().material.color = brainFlashColor;
+		}
+		brainFlashState = !brainFlashState;
 	}
 	void ResetAnxietyCamAndBrainPosition() {
 		anxietyCam.transform.localPosition = anxietyCamStartPosition;
 		brain.transform.localPosition = brainStartPosition;
-		isBrainRaisingAndFlashing = false;
 		brainFlashState = false;
 		brain.SetActive (false);
-
 
 	}
 		
