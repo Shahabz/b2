@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
 
 	PlayerState thisPlayerState = PlayerState.Walking;
 	public Animator thisAnimator;
-	const string walkingBool = "isWalking";
+	const string walkingBool = "fwd", walkingBackBool = "back";
 	float walkAxis, rotateAxis;
 	public float speedScalar = .04f, rotateScalar = 4f;
 
@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	GameObject brain;
 	Vector3 brainStartPosition, anxietyCamStartPosition;
-	float brainFloatUpDistance = .28f, brainRaiseSpeed = .3f, brainFlashSpeed = .3f, brainFlashTimer, brainFlashDuration = 2f, brainFlashDurationTimer;
+	float brainFloatUpDistance = .19f, brainRaiseSpeed = .3f, brainFlashSpeed = .3f, brainFlashTimer, brainFlashDuration = 2f, brainFlashDurationTimer;
 	bool brainFlashState;
 	bool isRaisingBrain, isFlashingBrain;
 
@@ -149,7 +149,14 @@ public class PlayerController : MonoBehaviour {
 	void HandleAnimation () {
 		if (walkAxis > 0) {
 			thisAnimator.SetBool (walkingBool, true);
+			thisAnimator.SetBool (walkingBackBool, false);
+		} else if (walkAxis < 0) {
+			print (walkAxis);
+
+			thisAnimator.SetBool (walkingBackBool, true);
+			thisAnimator.SetBool (walkingBool, false);
 		} else {
+			thisAnimator.SetBool (walkingBackBool, false);
 			thisAnimator.SetBool (walkingBool, false);
 		}
 	}
