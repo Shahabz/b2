@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+
 using InControl;
 
 public enum PlayerState {Walking, Computer, AnxietyCam, Therapy};
+public enum AnxietyDescription {None, Minor, Moderate, Severe, Debilitating, Psychotic, _Size}
 
 public class PlayerController : MonoBehaviour {
 	public static PlayerController s_instance;
@@ -13,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 	float walkAxis, rotateAxis;
 	public float speedScalar = .04f, rotateScalar = 4f;
 
-	public int anxiety;
+	int anxietyLevel;
 	public int devLevel;
 
 	Color brainFlashColor;
@@ -22,15 +25,21 @@ public class PlayerController : MonoBehaviour {
 	Camera anxietyCam;
 	public Computer currentComputer;
 
+	const string AnxietyTextTemplate = "Anxiety Level: ";
 
 	InputDevice inputDevice;
 
 	public bool isNearComputer = false;
 
+	
+	public Slider anxietySlider;
+	public Text anxietyText;
+	float sliderSpeed = .7f;
+	
 	[SerializeField]
 	GameObject brain;
 	Vector3 brainStartPosition, anxietyCamStartPosition;
-	float brainFloatUpDistance = .19f, brainRaiseSpeed = .3f, brainFlashSpeed = .3f, brainFlashTimer, brainFlashDuration = 2f, brainFlashDurationTimer;
+	float brainFloatUpDistance = .19f, brainRaiseSpeed = .3f, brainFlashSpeed = .3f, brainFlashTimer, brainFlashDuration = 4.5f, brainFlashDurationTimer;
 	bool brainFlashState;
 	bool isRaisingBrain, isFlashingBrain;
 
@@ -53,14 +62,14 @@ public class PlayerController : MonoBehaviour {
 	public void ReceiveAnxiety() {
 		isRaisingBrain = true;
 		isFlashingBrain = true;
-		anxiety++;
+		anxietyLevel++;
 		brainFlashColor = Color.red;
 	}
 
 	public void AlleviateAnxiety() {
 		isRaisingBrain = true;
 		isFlashingBrain = true;
-		anxiety--;
+		anxietyLevel--;
 		brainFlashColor = Color.green;
 	}
 
@@ -115,6 +124,8 @@ public class PlayerController : MonoBehaviour {
 			}
 			else if (isFlashingBrain) {
 				FlashBrain ();
+				AnimateAnxietyBar ();
+
 			}
 			if (switchToComputer) {
 				switchToComputer = false;
@@ -181,17 +192,19 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	#region BrainAnimation
+
 	void RaiseBrain () {
 		if (Vector3.Distance (brainStartPosition, brain.transform.localPosition) < brainFloatUpDistance) {
 			brain.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
 			Camera.main.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
 		} else {
+			DisplayAnxiety (true);
 			isRaisingBrain = false;
 		}
 	}
 
 	void FlashBrain () {
-		print ("FLASH BRAIN");
 		brainFlashDurationTimer += Time.deltaTime;
 		brainFlashTimer += Time.deltaTime;
 		if (brainFlashTimer > brainFlashSpeed) {
@@ -210,6 +223,7 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+
 	void AlternateBrainColor () {
 		if (brainFlashState) {
 			brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
@@ -223,7 +237,25 @@ public class PlayerController : MonoBehaviour {
 		brain.transform.localPosition = brainStartPosition;
 		brainFlashState = false;
 		brain.SetActive (false);
+		DisplayAnxiety (false);
 
 	}
+	#endregion
+
+	#region AnxietyDisplay
+	void DisplayAnxiety (bool on) {
+		anxietySlider.gameObject.SetActive (on);
+		anxietyText.gameObject.SetActive (on);
+		anxietyText.text = AnxietyTextTemplate + ((AnxietyDescription)anxietyLevel-1).ToString();
+	}
+
+	void AnimateAnxietyBar() {
+		if (anxietySlider.value < anxietyLevel) {
+			anxietySlider.value += Time.deltaTime * sliderSpeed;
+		} else {
+			anxietyText.text = AnxietyTextTemplate + ((AnxietyDescription)anxietyLevel).ToString();
+		}
+	}
+	#endregion
 		
 }

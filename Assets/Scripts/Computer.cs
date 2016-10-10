@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 using InControl;
 
+
+
+
 public class Computer : MonoBehaviour {
 
 	public GameObject[] arrows;
@@ -19,9 +22,12 @@ public class Computer : MonoBehaviour {
 
 	[SerializeField]
 	Text[] selectionArrows;
+	[SerializeField]
+	Text jobOption;
 
-	float programmingPracticeTime = 3.5f, programmingPracticeTimer;
-	bool isPracticingProgramming;
+	bool appliedOnThisComputerToday;
+	float programmingPracticeTime = 3.5f, programmingPracticeTimer, jobResponseTime = 3.5f, jobResponseTimer;
+	bool isPracticingProgramming, isApplyingToJob;
 	bool isComputerBeingUsed;
 	// Use this for initialization
 	void Start () {
@@ -32,6 +38,8 @@ public class Computer : MonoBehaviour {
 	void Update () {
 		if (isPracticingProgramming) {
 			ShowProgrammingPractice ();
+		} else if (isApplyingToJob) {
+			ShowJobResponse ();
 		}
 
 	}
@@ -61,7 +69,10 @@ public class Computer : MonoBehaviour {
 			isPracticingProgramming = true;
 			break;
 		case 1:
-			
+			appliedOnThisComputerToday = true;
+			PlayerController.s_instance.switchToAnxietyCam = true;
+			isApplyingToJob = true;
+
 			break;
 		case 2:
 			
@@ -133,6 +144,23 @@ public class Computer : MonoBehaviour {
 			PlayerController.s_instance.ReceiveAnxiety ();
 			PlayerController.s_instance.GetComponentInChildren<CodeThoughts> ().StopSpawning ();
 
+		}
+	}
+
+	void UpdateJobState () {
+		if (appliedOnThisComputerToday) {
+			jobOption.text = "No Jobs Available";
+		}
+	}
+
+	void ShowJobResponse () {
+		if (jobResponseTimer < jobResponseTime) {
+			jobResponseTimer += Time.deltaTime;
+		} else {
+			programmingPracticeTimer = 0;
+			isApplyingToJob = false;
+			appliedOnThisComputerToday = true;
+			ComputerCameraOn ();
 		}
 	}
 }
