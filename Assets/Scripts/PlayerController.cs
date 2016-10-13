@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 using InControl;
 
-public enum PlayerState {Walking, Computer, AnxietyCam, Therapy};
+public enum PlayerState {Walking, Computer, PracticeProgramming, Therapy};
 public enum AnxietyDescription {None, Minor, Moderate, Severe, Debilitating, Psychotic, _Size}
 
 public class PlayerController : MonoBehaviour {
@@ -113,12 +113,12 @@ public class PlayerController : MonoBehaviour {
 				switchToAnxietyCam = false;
 				Camera.main.transform.rotation = anxietyCam.transform.rotation;
 				Camera.main.transform.position = anxietyCam.transform.position;
-				thisPlayerState = PlayerState.AnxietyCam;
+				thisPlayerState = PlayerState.PracticeProgramming;
 				brain.SetActive (true);
 			}
 			break;
 
-		case PlayerState.AnxietyCam:
+		case PlayerState.PracticeProgramming:
 			if (isRaisingBrain) {
 				RaiseBrain ();
 			}

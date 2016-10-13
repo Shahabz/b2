@@ -26,20 +26,24 @@ public class Computer : MonoBehaviour {
 	Text jobOption;
 
 	bool appliedOnThisComputerToday;
-	float programmingPracticeTime = 3.5f, programmingPracticeTimer, jobResponseTime = 3.5f, jobResponseTimer;
+	float programmingPracticeTime = 3.5f, programmingPracticeTimer, jobResponseTime = 3.5f, jobResponseTimer,showJobResponseTime, showJobResponseTimer;
 	bool isPracticingProgramming, isApplyingToJob;
 	bool isComputerBeingUsed;
 	// Use this for initialization
 	void Start () {
 	
 	}
-	
+
+	//The computer has a state machine and so does the player - this may be bad practice.
+
 	// Update is called once per frame
 	void Update () {
 		if (isPracticingProgramming) {
 			ShowProgrammingPractice ();
-		} else if (isApplyingToJob) {
+		}
+		if (isApplyingToJob) {
 			ShowJobResponse ();
+			print ("SHOW JOB");
 		}
 
 	}
@@ -69,9 +73,12 @@ public class Computer : MonoBehaviour {
 			isPracticingProgramming = true;
 			break;
 		case 1:
-			appliedOnThisComputerToday = true;
-			PlayerController.s_instance.switchToAnxietyCam = true;
-			isApplyingToJob = true;
+			if (!appliedOnThisComputerToday) {
+				appliedOnThisComputerToday = true;
+				PlayerController.s_instance.switchToAnxietyCam = true;
+				showJobResponseTime = JobText.s_instance.GetJobDescriptionScrollTime ();
+				StartCoroutine ("WaitToShowJob");
+			}
 
 			break;
 		case 2:
@@ -153,14 +160,28 @@ public class Computer : MonoBehaviour {
 		}
 	}
 
+	IEnumerator WaitToShowJob () {
+		yield return new WaitForSeconds (3f);
+		isApplyingToJob = true;
+		JobText.s_instance.SpawnJobText ();
+	}
+
 	void ShowJobResponse () {
-		if (jobResponseTimer < jobResponseTime) {
-			jobResponseTimer += Time.deltaTime;
-		} else {
+		//wait for response
+	
+		//show response
+		if (showJobResponseTimer < showJobResponseTime) {
+			showJobResponseTimer += Time.deltaTime;
+			print (showJobResponseTime);
+			print (showJobResponseTimer);
+		}
+		else {
 			programmingPracticeTimer = 0;
 			isApplyingToJob = false;
 			appliedOnThisComputerToday = true;
-			ComputerCameraOn ();
+			PlayerController.s_instance.switchToComputer = true;
+			print ("REACHED ELSE");
+			UpdateJobState ();
 		}
 	}
 }
