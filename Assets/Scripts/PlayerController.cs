@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 using InControl;
 
-public enum PlayerState {Walking, Computer, PracticeProgramming, Therapy};
+public enum PlayerState {Walking, Computer, PracticeProgramming, Therapy, AppliedToJob};
 public enum AnxietyDescription {None, Minor, Moderate, Severe, Debilitating, Psychotic, _Size}
 
 public class PlayerController : MonoBehaviour {
@@ -22,14 +22,14 @@ public class PlayerController : MonoBehaviour {
 	Color brainFlashColor;
 
 	[SerializeField]
-	Camera anxietyCam;
+	Camera anxietyCam, jobCam;
 	public Computer currentComputer;
 
 	const string AnxietyTextTemplate = "Anxiety Level: ";
 
 	InputDevice inputDevice;
 
-	public bool isNearComputer = false;
+	public bool isNearComputer = false, isNearTherapist = false;
 
 	
 	public Slider anxietySlider;
@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour {
 
 	#region StateMachine
 
-	public bool switchToAnxietyCam, switchToComputer, switchToWalking;
+	public bool switchToAnxietyCam, switchToComputer, switchToWalking, switchToApplyToJob;
 
 
 	void Update () {
@@ -116,6 +116,13 @@ public class PlayerController : MonoBehaviour {
 				thisPlayerState = PlayerState.PracticeProgramming;
 				brain.SetActive (true);
 			}
+				
+			if (switchToApplyToJob) {
+				Camera.main.transform.rotation = jobCam.transform.rotation;
+				Camera.main.transform.position = jobCam.transform.position;
+				switchToApplyToJob = false;
+				thisPlayerState = PlayerState.AppliedToJob;
+			}
 			break;
 
 		case PlayerState.PracticeProgramming:
@@ -136,8 +143,16 @@ public class PlayerController : MonoBehaviour {
 				switchToWalking = false;
 				thisPlayerState = PlayerState.Walking;
 			}
-
 			break;
+
+		case PlayerState.AppliedToJob:
+			if (switchToComputer) {
+				switchToComputer = false;
+				thisPlayerState = PlayerState.Computer;
+				currentComputer.ComputerCameraOn ();
+			}
+			break;
+
 		}
 	}
 	#endregion

@@ -43,7 +43,6 @@ public class Computer : MonoBehaviour {
 		}
 		if (isApplyingToJob) {
 			ShowJobResponse ();
-			print ("SHOW JOB");
 		}
 
 	}
@@ -75,7 +74,7 @@ public class Computer : MonoBehaviour {
 		case 1:
 			if (!appliedOnThisComputerToday) {
 				appliedOnThisComputerToday = true;
-				PlayerController.s_instance.switchToAnxietyCam = true;
+				PlayerController.s_instance.switchToApplyToJob = true;
 				showJobResponseTime = JobText.s_instance.GetJobDescriptionScrollTime ();
 				StartCoroutine ("WaitToShowJob");
 			}
@@ -172,15 +171,13 @@ public class Computer : MonoBehaviour {
 		//show response
 		if (showJobResponseTimer < showJobResponseTime) {
 			showJobResponseTimer += Time.deltaTime;
-			print (showJobResponseTime);
-			print (showJobResponseTimer);
+
 		}
 		else {
 			programmingPracticeTimer = 0;
 			isApplyingToJob = false;
 			appliedOnThisComputerToday = true;
 			PlayerController.s_instance.switchToComputer = true;
-			print ("REACHED ELSE");
 			UpdateJobState ();
 		}
 	}
