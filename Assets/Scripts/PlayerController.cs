@@ -181,8 +181,6 @@ public class PlayerController : MonoBehaviour {
 			thisAnimator.SetBool (walkingBool, true);
 			thisAnimator.SetBool (walkingBackBool, false);
 		} else if (walkAxis < 0) {
-			print (walkAxis);
-
 			thisAnimator.SetBool (walkingBackBool, true);
 			thisAnimator.SetBool (walkingBool, false);
 		} else {

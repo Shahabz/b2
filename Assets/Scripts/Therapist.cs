@@ -29,14 +29,14 @@ public class Therapist : MultipleChoice {
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player") {
 			PlayerController.s_instance.isNearTherapist = true;
-			tolsoyAnimator.SetTrigger ("standup");
+			tolsoyAnimator.SetTrigger ("sitdown");
 		}
 	}
 
 	void OnTriggerExit (Collider other) {
 		if (other.tag == "Player") {
 			PlayerController.s_instance.isNearTherapist = false;
-			tolsoyAnimator.SetTrigger ("sitdown");
+			tolsoyAnimator.SetTrigger ("standup");
 
 		}
 
