@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using InControl;
 
 public enum PlayerState {Walking, Computer, PracticeProgramming, Therapy, AppliedToJob};
-public enum AnxietyDescription {None, Minor, Moderate, Severe, Debilitating, Psychotic, _Size}
+public enum AnxietyDescription {None, Mild, Moderate, Severe, Debilitating, Psychotic, _Size}
 
 public class PlayerController : MonoBehaviour {
 	public static PlayerController s_instance;
@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour {
 
 	#region StateMachine
 
-	public bool switchToAnxietyCam, switchToComputer, switchToWalking, switchToApplyToJob;
+	public bool switchToAnxietyCam, switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy;
 
 
 	void Update () {
@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour {
 			if (switchToComputer) {
 				switchToComputer = false;
 				thisPlayerState = PlayerState.Computer;
-				currentComputer.ComputerCameraOn ();
+				currentComputer.MultipleChoiceCameraOn ();
 			}
 			if (switchToWalking) {
 				switchToWalking = false;
@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour {
 			if (switchToComputer) {
 				switchToComputer = false;
 				thisPlayerState = PlayerState.Computer;
-				currentComputer.ComputerCameraOn ();
+				currentComputer.MultipleChoiceCameraOn ();
 			}
 			break;
 
@@ -168,7 +168,11 @@ public class PlayerController : MonoBehaviour {
 		if (isNearComputer) {
 			switchToComputer = true;
 			currentComputer.TurnOn ();
-			currentComputer.ComputerCameraOn ();
+			currentComputer.MultipleChoiceCameraOn ();
+		}
+
+		if (isNearTherapist) {
+			switchToTherapy = true;
 		}
 	}
 

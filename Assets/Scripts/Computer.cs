@@ -3,25 +3,15 @@ using System.Collections;
 using UnityEngine.UI;
 using InControl;
 
+public class Computer : MultipleChoice {
 
-
-
-public class Computer : MonoBehaviour {
-
-	public GameObject[] arrows;
 	[SerializeField]
 	GameObject projectedScreen;
 	[SerializeField]
-	Camera thisViewOfComputer;
-	int selection = 0;
-	[SerializeField]
 	Light computerLight;
 	InputDevice inputDevice;
-	Vector3 lastCamPos;
-	Quaternion lastCamRot;
 
-	[SerializeField]
-	Text[] selectionArrows;
+
 	[SerializeField]
 	Text jobOption;
 
@@ -30,9 +20,6 @@ public class Computer : MonoBehaviour {
 	bool isPracticingProgramming, isApplyingToJob;
 	bool isComputerBeingUsed;
 	// Use this for initialization
-	void Start () {
-	
-	}
 
 	//The computer has a state machine and so does the player - this may be bad practice.
 
@@ -92,52 +79,19 @@ public class Computer : MonoBehaviour {
 
 	public void TurnOn () {
 		projectedScreen.SetActive (true);
-		lastCamPos = Camera.main.transform.position;
-		lastCamRot = Camera.main.transform.rotation;
-		ComputerCameraOn ();
+		lastInLevelCamPosition = Camera.main.transform.position;
+		lastInLevelCamRotation = Camera.main.transform.rotation;
+		MultipleChoiceCameraOn ();
 	}
 
 	public void TurnOff () {
 		projectedScreen.SetActive (false);
-		ComputerCameraOff ();
+		MultipleChoiceCameraOff ();
 	}
 
-	public void ComputerCameraOn () {
-		Camera.main.transform.rotation = thisViewOfComputer.transform.rotation;
-		Camera.main.transform.position = thisViewOfComputer.transform.position;
-	}
-	void ComputerCameraOff() {
-		Camera.main.transform.rotation = lastCamRot;
-		Camera.main.transform.position = lastCamPos;
-	}
 
-	public void ArrowDown() {
-		if (selection >= arrows.Length-1) {
-			selection = 0;
-		} else {
-			selection++;
-		}
-		ShowSelection();
-	}
 
-	public void ArrowUp() {
-		if (selection < 1) {
-			selection = arrows.Length-1;
-		} else {
-			selection--;
-		}
-		ShowSelection();
 
-	}
-	void ShowSelection() {
-		for (int i = 0; i < arrows.Length;i++) {
-			if (selection == i) {
-				arrows [i].SetActive(true);
-			} else {
-				arrows [i].SetActive(false);
-			}
-		}
-	}
 
 	void ShowProgrammingPractice () {
 		//visual representation of coding
