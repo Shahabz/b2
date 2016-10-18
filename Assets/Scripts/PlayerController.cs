@@ -95,6 +95,14 @@ public class PlayerController : MonoBehaviour {
 			if (inputDevice.Action1.WasPressed) {
 				Interact ();
 			}
+
+			if (switchToTherapy) {
+				switchToTherapy = false;
+				thisPlayerState = PlayerState.Therapy;
+				thisAnimator.SetTrigger ("sit");
+				Therapist.s_instance.StartTherapistSession ();
+			}
+
 			break;
 		case PlayerState.Computer:
 			if (inputDevice.LeftStickUp.WasPressed) {

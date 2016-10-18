@@ -13,17 +13,19 @@ public class Therapist : MultipleChoice {
 	[SerializeField] Text therapistSubtitle, choiceA, choiceB, choiceC, choiceD;
 
 	[SerializeField] Animator tolsoyAnimator;
+	[SerializeField] Transform davidTransform;
 
 	TherapistState thisTherapistState;
 
+	public static Therapist s_instance; 
+
 	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	void Awake () {
+		if (s_instance == null) {
+			s_instance = this;
+		} else {
+			Destroy (this);
+		}
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -44,6 +46,9 @@ public class Therapist : MultipleChoice {
 
 	public void StartTherapistSession () {
 		MultipleChoiceCameraOn ();
+		PlayerController.s_instance.transform.position = davidTransform.position;
+		PlayerController.s_instance.transform.rotation = davidTransform.rotation;
+
 	}
 
 }
