@@ -161,6 +161,17 @@ public class PlayerController : MonoBehaviour {
 			}
 			break;
 
+		case PlayerState.Therapy:
+			if (inputDevice.LeftStickUp.WasPressed) {
+				Therapist.s_instance.ArrowUp ();
+			} else if (inputDevice.LeftStickDown.WasPressed) {
+				Therapist.s_instance.ArrowDown ();
+			}
+			if (inputDevice.Action1.WasPressed) {
+				Therapist.s_instance.SelectItem ();
+			}
+			break;
+
 		}
 	}
 	#endregion

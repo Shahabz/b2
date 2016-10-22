@@ -51,7 +51,7 @@ public class Computer : MultipleChoice {
 
 	}
 
-	public void SelectItem () {
+	public override void SelectItem () {
 		switch (selection) {
 		case 0:
 			PlayerController.s_instance.GetComponentInChildren<CodeThoughts> ().StartSpawning ();
@@ -82,11 +82,13 @@ public class Computer : MultipleChoice {
 		lastInLevelCamPosition = Camera.main.transform.position;
 		lastInLevelCamRotation = Camera.main.transform.rotation;
 		MultipleChoiceCameraOn ();
+		isActive = true;
 	}
 
 	public void TurnOff () {
 		projectedScreen.SetActive (false);
 		MultipleChoiceCameraOff ();
+		isActive = false;
 	}
 
 
