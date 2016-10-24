@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
 			Camera.main.transform.position = ComputerCam.transform.position;
 			Camera.main.transform.rotation = ComputerCam.transform.rotation;
 			PlayerController.s_instance.transform.position = ComputerTransform.position;
+			Camera.main.fieldOfView = ComputerCam.fieldOfView;
 
 			break;
 		case DebugStartPosition.Intro:

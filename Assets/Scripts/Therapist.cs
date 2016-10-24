@@ -6,8 +6,16 @@ enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, Sayi
 
 public class Therapist : MultipleChoice {
 
+	//Show text only on questions and answers, small in between dialogue is audio only.
+
+	//STATE MACHINE SWITCHES
 	bool switchToIdle,switchToIntroduction,switchToAskingQuestion, switchToDavidSelectAnswer, switchToSayingAnswer;
+	//STATE MACHINE TIMERS
+	float introductionTimer, askingQuestionTimer;
+	float introductionTime = 1f, askingQuestionTime = 1f;
 	bool hasAskedQuestion;
+
+	const string therapyAudioDirectory = "Audio/Therapy/";
 	//it would be cool to fade into an abstract space when questions are being asked, or perhaps select 
 	[SerializeField]
 	Camera davidSitting, OTS_TtoD, OTS_DtoT, twoShot, selectAnswer, topDown;
@@ -24,8 +32,10 @@ public class Therapist : MultipleChoice {
 
 	public AudioSource[] incorrectBark, correctBark, welcomeToTherapyDavidLuna;
 
+	AudioClip currentAudioClip;
+
 	[SerializeField]
-	TherapySession[] allTherapySession;
+	TherapySession[] allTherapySessions;
 	TherapySession currentTherapySession; 
 
 	int questionIndex = 0;
@@ -73,6 +83,7 @@ public class Therapist : MultipleChoice {
 	void Update() {
 		switch (thisTherapistState) {
 		case TherapistState.Idle:
+			//Welcome to therapy David
 
 			if (switchToIntroduction) {
 				switchToIntroduction = false;
@@ -80,26 +91,37 @@ public class Therapist : MultipleChoice {
 				welcomeToTherapyDavidLuna[GameManager.s_instance.day].Play ();
 			}
 			break;
-		case TherapistState.AskingQuestion:
-			if (welcomeToTherapyDavidLuna [GameManager.s_instance.day].isPlaying == false && hasAskedQuestion == false) {
-				StartCoroutine ("AskQuestion");
-				hasAskedQuestion = true;
+
+
+		case TherapistState.Introduction:
+			if (GenericTimer.RunGenericTimer (introductionTime + welcomeToTherapyDavidLuna[GameManager.s_instance.day].clip.length, ref introductionTimer)){
+				thisTherapistState = TherapistState.AskingQuestion;
+				therapistSubtitle.gameObject.SetActive (true);
+				therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].questionString;
+				currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].questionAudioPath) as AudioClip;
+				GetComponent<AudioSource> ().clip = currentAudioClip;
+				GetComponent<AudioSource> ().Play ();
 			}
-			if (switchToDavidSelectAnswer) {
-				switchToDavidSelectAnswer = false;
+
+			break;
+		case TherapistState.AskingQuestion:
+			if (GenericTimer.RunGenericTimer (askingQuestionTime + currentAudioClip.length, ref askingQuestionTimer)) {
+				therapistSubtitle.gameObject.SetActive (false);
+				answerPanel.SetActive (true);
+				choiceA.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [0];
+				choiceB.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [1];
+				choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
+				choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
 				thisTherapistState = TherapistState.DavidSelectAnswer;
 			}
+
 			break;
 		case TherapistState.DavidSelectAnswer:
-
+			
 			break;
 		}
 	}
 
-	IEnumerator AskQuestion() {
-		yield return new WaitForSeconds (1f);
-		currentTherapySession.therapySessionElements [questionIndex].question.Play ();
-		yield return new WaitForSeconds (currentTherapySession.therapySessionElements [questionIndex].question.clip.length);
-		switchToDavidSelectAnswer = true;
-	}
+
+
 }

@@ -6,10 +6,11 @@ using System.Collections.Generic;
 [System.Serializable]
 public class TherapySessionElement
 {
-	public AudioSource question;
-	public List<AudioSource> answersSpoken;
+	public string questionAudioPath;
+	public List<string> answersSpokenAudioPath;
 	public List<string> answerChoices;
-	public AudioSource response;
+	public string responseAudioPath;
+	public string questionString; 
 
 	public string correctAnswer; //list of sentences that are appropiate formations of wordChoices
 }
