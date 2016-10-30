@@ -2,14 +2,14 @@
 using System.Collections;
 using UnityEngine.UI;
 
-enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, SayingAnswer}
+enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, TherapistResponseToAnswer};
 
 public class Therapist : MultipleChoice {
 
 	//Show text only on questions and answers, small in between dialogue is audio only.
 
 	//STATE MACHINE SWITCHES
-	bool switchToIdle,switchToIntroduction,switchToAskingQuestion, switchToDavidSelectAnswer, switchToSayingAnswer;
+	bool switchToIdle,switchToIntroduction,switchToAskingQuestion, switchToDavidSelectAnswer, switchToSayingAnswer, switchToTherapistResponse;
 	//STATE MACHINE TIMERS
 	float introductionTimer, askingQuestionTimer;
 	float introductionTime = 1f, askingQuestionTime = 1f;
@@ -86,6 +86,7 @@ public class Therapist : MultipleChoice {
 			//Welcome to therapy David
 
 			if (switchToIntroduction) {
+				currentTherapySession = allTherapySessions [GameManager.s_instance.day];
 				switchToIntroduction = false;
 				thisTherapistState = TherapistState.Introduction;
 				welcomeToTherapyDavidLuna[GameManager.s_instance.day].Play ();
@@ -101,6 +102,7 @@ public class Therapist : MultipleChoice {
 				currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].questionAudioPath) as AudioClip;
 				GetComponent<AudioSource> ().clip = currentAudioClip;
 				GetComponent<AudioSource> ().Play ();
+				SetCamera (OTS_DtoT);
 			}
 
 			break;
@@ -113,15 +115,44 @@ public class Therapist : MultipleChoice {
 				choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
 				choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
 				thisTherapistState = TherapistState.DavidSelectAnswer;
+				SetCamera (OTS_TtoD);
+
 			}
 
 			break;
 		case TherapistState.DavidSelectAnswer:
-			
+			if (switchToTherapistResponse) {
+				switchToTherapistResponse = false;
+				thisTherapistState = TherapistState.TherapistResponseToAnswer;
+				SetCamera (OTS_DtoT);
+				answerPanel.SetActive (false);
+				therapistSubtitle.gameObject.SetActive (true);
+				therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].responseString;
+
+			}
+			break;
+
+		case TherapistState.TherapistResponseToAnswer:
+
+
+
 			break;
 		}
 	}
 
+	public override void SelectItem () {
+		if (currentTherapySession.therapySessionElements [questionIndex].answerChoices [selection] == currentTherapySession.therapySessionElements [questionIndex].correctAnswer) {
+			//correct
+			//play corrent audio then play therapist response
+			//play alleviate anxiety animation
+		} else {
+			//wrong
+			//play wrong audio then play therapist repsonse
+			//play gain anxiety animation
 
+		}
+		switchToTherapistResponse = true;
+		//then goto tolstoy response
+	}
 
 }

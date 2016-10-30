@@ -57,4 +57,11 @@ public class MultipleChoice : MonoBehaviour {
 		Camera.main.transform.position = lastInLevelCamPosition;
 	}
 
+	public void SetCamera(Camera thisCamera) {
+		Camera.main.transform.rotation = thisCamera.transform.rotation;
+		Camera.main.transform.position = thisCamera.transform.position;
+		Camera.main.fieldOfView = thisCamera.fieldOfView;
+
+	}
+
 }
