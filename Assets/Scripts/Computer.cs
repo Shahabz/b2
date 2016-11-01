@@ -55,7 +55,7 @@ public class Computer : MultipleChoice {
 		switch (selection) {
 		case 0:
 			PlayerController.s_instance.GetComponentInChildren<CodeThoughts> ().StartSpawning ();
-			PlayerController.s_instance.switchToAnxietyCam = true;
+			PlayerController.s_instance.switchToPracticeProgramming = true;
 			isPracticingProgramming = true;
 			break;
 		case 1:

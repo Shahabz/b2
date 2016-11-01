@@ -34,14 +34,15 @@ public class PlayerController : MonoBehaviour {
 	
 	public Slider anxietySlider;
 	public Text anxietyText;
-	float sliderSpeed = .7f;
+	float sliderSpeed = 1.2f;
 	
 	[SerializeField]
 	GameObject brain;
 	Vector3 brainStartPosition, anxietyCamStartPosition;
-	float brainFloatUpDistance = .19f, brainRaiseSpeed = .3f, brainFlashSpeed = .3f, brainFlashTimer, brainFlashDuration = 4.5f, brainFlashDurationTimer;
+	float brainFloatUpDistance = .19f, brainRaiseSpeed = .3f, brainFlashSpeed = .44f, brainFlashTimer, brainFlashDuration = 3f, brainFlashDurationTimer;
 	bool brainFlashState;
 	bool isRaisingBrain, isFlashingBrain;
+	public bool allowInput;
 
 
 	void Awake() {
@@ -53,29 +54,11 @@ public class PlayerController : MonoBehaviour {
 		brainStartPosition = brain.transform.localPosition;
 		anxietyCamStartPosition = anxietyCam.transform.localPosition;
 	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-
-	public void ReceiveAnxiety() {
-		isRaisingBrain = true;
-		isFlashingBrain = true;
-		anxietyLevel++;
-		brainFlashColor = Color.red;
-	}
-
-	public void AlleviateAnxiety() {
-		isRaisingBrain = true;
-		isFlashingBrain = true;
-		anxietyLevel--;
-		brainFlashColor = Color.green;
-	}
+		
 
 	#region StateMachine
 
-	public bool switchToAnxietyCam, switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy;
+	public bool switchToPracticeProgramming, switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy;
 
 
 	void Update () {
@@ -117,10 +100,9 @@ public class PlayerController : MonoBehaviour {
 				switchToWalking = false;
 				thisPlayerState = PlayerState.Walking;
 			}
-			if (switchToAnxietyCam) {
-				switchToAnxietyCam = false;
-				Camera.main.transform.rotation = anxietyCam.transform.rotation;
-				Camera.main.transform.position = anxietyCam.transform.position;
+			if (switchToPracticeProgramming) {
+				switchToPracticeProgramming = false;
+				SwitchToAnxietyCam ();
 				thisPlayerState = PlayerState.PracticeProgramming;
 				brain.SetActive (true);
 			}
@@ -140,7 +122,6 @@ public class PlayerController : MonoBehaviour {
 			else if (isFlashingBrain) {
 				FlashBrain ();
 				AnimateAnxietyBar ();
-
 			}
 			if (switchToComputer) {
 				switchToComputer = false;
@@ -162,19 +143,28 @@ public class PlayerController : MonoBehaviour {
 			break;
 
 		case PlayerState.Therapy:
-			if (inputDevice.LeftStickUp.WasPressed) {
+			if (inputDevice.LeftStickUp.WasPressed && allowInput) {
 				Therapist.s_instance.ArrowUp ();
-			} else if (inputDevice.LeftStickDown.WasPressed) {
+			} else if (inputDevice.LeftStickDown.WasPressed && allowInput) {
 				Therapist.s_instance.ArrowDown ();
 			}
-			if (inputDevice.Action1.WasPressed) {
+			if (inputDevice.Action1.WasPressed && allowInput) {
 				Therapist.s_instance.SelectItem ();
+			}
+			if (isRaisingBrain) {
+				RaiseBrain ();
+			}
+			else if (isFlashingBrain) {
+				FlashBrain ();
+				AnimateAnxietyBar ();
 			}
 			break;
 
 		}
 	}
 	#endregion
+
+	#region Movement+Animation
 	void HandleMovement() {
 		transform.Translate (Vector3.forward * speedScalar * walkAxis);
 	}
@@ -227,7 +217,7 @@ public class PlayerController : MonoBehaviour {
 			rotateAxis = inputDevice.LeftStickRight;
 		}
 	}
-
+	#endregion
 	#region BrainAnimation
 
 	void RaiseBrain () {
@@ -251,10 +241,16 @@ public class PlayerController : MonoBehaviour {
 			isFlashingBrain = false;
 			brainFlashDurationTimer = 0;
 			ResetAnxietyCamAndBrainPosition ();
-			if (isNearComputer) {
+			switch (thisPlayerState) {
+			case PlayerState.PracticeProgramming:
 				switchToComputer = true;
-			} else {
+				break;
+			case PlayerState.Walking :
 				switchToWalking = true;
+				break;
+			case PlayerState.Therapy:
+				Therapist.s_instance.switchToTherapistWaitingToRespond = true;
+				break;
 			}
 		}
 	}
@@ -292,6 +288,27 @@ public class PlayerController : MonoBehaviour {
 			anxietyText.text = AnxietyTextTemplate + ((AnxietyDescription)anxietyLevel).ToString();
 		}
 	}
+
+	public void ReceiveAnxiety() {
+		isRaisingBrain = true;
+		isFlashingBrain = true;
+		anxietyLevel++;
+		brainFlashColor = Color.red;
+	}
+
+	public void AlleviateAnxiety() {
+		isRaisingBrain = true;
+		isFlashingBrain = true;
+		anxietyLevel--;
+		brainFlashColor = Color.green;
+	}
+
+	public void SwitchToAnxietyCam() {
+		Camera.main.transform.rotation = anxietyCam.transform.rotation;
+		Camera.main.transform.position = anxietyCam.transform.position;
+		Camera.main.fieldOfView = anxietyCam.fieldOfView;
+	}
+
 	#endregion
 		
 }

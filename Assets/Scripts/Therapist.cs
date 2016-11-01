@@ -2,23 +2,24 @@
 using System.Collections;
 using UnityEngine.UI;
 
-enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, TherapistResponseToAnswer};
+enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, AnxietyAnimation, TherapistWaitingToRespond, TherapistResponse, CheckForNextQuestion, EndSession};
 
 public class Therapist : MultipleChoice {
 
 	//Show text only on questions and answers, small in between dialogue is audio only.
 
 	//STATE MACHINE SWITCHES
-	bool switchToIdle,switchToIntroduction,switchToAskingQuestion, switchToDavidSelectAnswer, switchToSayingAnswer, switchToTherapistResponse;
+	public bool switchToIdle,switchToIntroduction,switchToAskingQuestion, switchToDavidSelectAnswer, switchToAnxietyAnimation, switchToTherapistWaitingToRespond;
+
 	//STATE MACHINE TIMERS
-	float introductionTimer, askingQuestionTimer;
-	float introductionTime = 1f, askingQuestionTime = 1f;
+	float introductionTimer, askingQuestionTimer, waitingTimer;
+	float introductionTime = 1f, askingQuestionTime = 1f, waitingTime = 1;
 	bool hasAskedQuestion;
 
 	const string therapyAudioDirectory = "Audio/Therapy/";
 	//it would be cool to fade into an abstract space when questions are being asked, or perhaps select 
 	[SerializeField]
-	Camera davidSitting, OTS_TtoD, OTS_DtoT, twoShot, selectAnswer, topDown;
+	public Camera davidSitting, OTS_TtoD, OTS_DtoT, twoShot, selectAnswer, topDown;
 
 	[SerializeField]
 	GameObject answerPanel;
@@ -116,28 +117,68 @@ public class Therapist : MultipleChoice {
 				choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
 				thisTherapistState = TherapistState.DavidSelectAnswer;
 				SetCamera (OTS_TtoD);
-
+				PlayerController.s_instance.allowInput = true;
 			}
 
 			break;
+
+		
 		case TherapistState.DavidSelectAnswer:
-			if (switchToTherapistResponse) {
-				switchToTherapistResponse = false;
-				thisTherapistState = TherapistState.TherapistResponseToAnswer;
-				SetCamera (OTS_DtoT);
+			if (switchToAnxietyAnimation) {
+				switchToAnxietyAnimation = false;
+				thisTherapistState = TherapistState.AnxietyAnimation;
+				PlayerController.s_instance.SwitchToAnxietyCam ();
 				answerPanel.SetActive (false);
+				PlayerController.s_instance.allowInput = false;
+
+			}
+			break;
+
+		case TherapistState.AnxietyAnimation:
+			if (switchToTherapistWaitingToRespond) {
+				switchToTherapistWaitingToRespond = false;
+				thisTherapistState = TherapistState.TherapistWaitingToRespond;
+				SetCamera (twoShot);
+			}
+			break;
+
+
+		case TherapistState.TherapistWaitingToRespond:
+			if (GenericTimer.RunGenericTimer(waitingTime, ref waitingTimer)) {
+				thisTherapistState = TherapistState.TherapistResponse;
+				SetCamera (OTS_DtoT);
 				therapistSubtitle.gameObject.SetActive (true);
 				therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].responseString;
+				currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].responseAudioPath) as AudioClip;
+			}
 
+
+			break;
+		case TherapistState.TherapistResponse:
+			if (GenericTimer.RunGenericTimer (askingQuestionTime + currentAudioClip.length, ref askingQuestionTimer)) {
+				SetCamera (mainViewOfMultipleChoice);
+				therapistSubtitle.gameObject.SetActive (false);
 			}
 			break;
 
-		case TherapistState.TherapistResponseToAnswer:
+		case TherapistState.CheckForNextQuestion:
+			if (GenericTimer.RunGenericTimer (waitingTime, ref waitingTimer)) {
+				if (currentTherapySession.therapySessionElements.Count > questionIndex + 1) {
+					questionIndex++;
+					thisTherapistState = TherapistState.AskingQuestion;
+				} else {
+					thisTherapistState = TherapistState.EndSession;
+				}
+			}
+			break;
 
-
+		case TherapistState.EndSession:
 
 			break;
+		
 		}
+
+
 	}
 
 	public override void SelectItem () {
@@ -145,13 +186,15 @@ public class Therapist : MultipleChoice {
 			//correct
 			//play corrent audio then play therapist response
 			//play alleviate anxiety animation
+			PlayerController.s_instance.AlleviateAnxiety();
 		} else {
 			//wrong
 			//play wrong audio then play therapist repsonse
 			//play gain anxiety animation
+			PlayerController.s_instance.ReceiveAnxiety ();
 
 		}
-		switchToTherapistResponse = true;
+		switchToAnxietyAnimation = true;
 		//then goto tolstoy response
 	}
 
