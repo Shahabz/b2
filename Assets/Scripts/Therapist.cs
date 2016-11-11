@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, AnxietyAnimation, TherapistWaitingToRespond, TherapistResponse, CheckForNextQuestion, EndSession};
+enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, AnxietyAnimation, TherapistWaitingToRespond, TherapistResponse, CheckForNextQuestion, EndSession, DoneForTheDay};
 
 public class Therapist : MultipleChoice {
 
@@ -19,7 +19,7 @@ public class Therapist : MultipleChoice {
 	const string therapyAudioDirectory = "Audio/Therapy/";
 	//it would be cool to fade into an abstract space when questions are being asked, or perhaps select 
 	[SerializeField]
-	public Camera davidSitting, OTS_TtoD, OTS_DtoT, twoShot, selectAnswer, topDown;
+	public Camera davidSitting, OTS_TtoD, OTS_DtoT, selectAnswer, topDown;
 
 	[SerializeField]
 	GameObject answerPanel;
@@ -53,14 +53,14 @@ public class Therapist : MultipleChoice {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		if (other.tag == "Player") {
+		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
 			PlayerController.s_instance.isNearTherapist = true;
 			tolsoyAnimator.SetTrigger ("sitdown");
 		}
 	}
 
 	void OnTriggerExit (Collider other) {
-		if (other.tag == "Player") {
+		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
 			PlayerController.s_instance.isNearTherapist = false;
 			tolsoyAnimator.SetTrigger ("standup");
 
@@ -78,7 +78,10 @@ public class Therapist : MultipleChoice {
 	}
 
 	public void EndTherapistSession () {
-
+		MultipleChoiceCameraOff ();
+		PlayerController.s_instance.switchToWalking = true;
+		thisTherapistState = TherapistState.DoneForTheDay;
+		tolsoyAnimator.SetTrigger ("standup");
 	}
 
 	void Update() {
@@ -98,12 +101,7 @@ public class Therapist : MultipleChoice {
 		case TherapistState.Introduction:
 			if (GenericTimer.RunGenericTimer (introductionTime + welcomeToTherapyDavidLuna[GameManager.s_instance.day].clip.length, ref introductionTimer)){
 				thisTherapistState = TherapistState.AskingQuestion;
-				therapistSubtitle.gameObject.SetActive (true);
-				therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].questionString;
-				currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].questionAudioPath) as AudioClip;
-				GetComponent<AudioSource> ().clip = currentAudioClip;
-				GetComponent<AudioSource> ().Play ();
-				SetCamera (OTS_DtoT);
+				ShowAskingQuestionState ();
 			}
 
 			break;
@@ -117,7 +115,7 @@ public class Therapist : MultipleChoice {
 				choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
 				thisTherapistState = TherapistState.DavidSelectAnswer;
 				SetCamera (OTS_TtoD);
-				PlayerController.s_instance.allowInput = true;
+				PlayerController.s_instance.allowSelectionInput = true;
 			}
 
 			break;
@@ -129,16 +127,17 @@ public class Therapist : MultipleChoice {
 				thisTherapistState = TherapistState.AnxietyAnimation;
 				PlayerController.s_instance.SwitchToAnxietyCam ();
 				answerPanel.SetActive (false);
-				PlayerController.s_instance.allowInput = false;
+				PlayerController.s_instance.allowSelectionInput = false;
 
 			}
 			break;
 
+			//how is the switch made from anxiety animation to therapistwaiting
 		case TherapistState.AnxietyAnimation:
 			if (switchToTherapistWaitingToRespond) {
 				switchToTherapistWaitingToRespond = false;
 				thisTherapistState = TherapistState.TherapistWaitingToRespond;
-				SetCamera (twoShot);
+				SetCamera (OTS_DtoT);
 			}
 			break;
 
@@ -146,7 +145,6 @@ public class Therapist : MultipleChoice {
 		case TherapistState.TherapistWaitingToRespond:
 			if (GenericTimer.RunGenericTimer(waitingTime, ref waitingTimer)) {
 				thisTherapistState = TherapistState.TherapistResponse;
-				SetCamera (OTS_DtoT);
 				therapistSubtitle.gameObject.SetActive (true);
 				therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].responseString;
 				currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].responseAudioPath) as AudioClip;
@@ -156,8 +154,9 @@ public class Therapist : MultipleChoice {
 			break;
 		case TherapistState.TherapistResponse:
 			if (GenericTimer.RunGenericTimer (askingQuestionTime + currentAudioClip.length, ref askingQuestionTimer)) {
-				SetCamera (mainViewOfMultipleChoice);
+				//SetCamera (mainViewOfMultipleChoice);
 				therapistSubtitle.gameObject.SetActive (false);
+				thisTherapistState = TherapistState.CheckForNextQuestion;
 			}
 			break;
 
@@ -166,6 +165,8 @@ public class Therapist : MultipleChoice {
 				if (currentTherapySession.therapySessionElements.Count > questionIndex + 1) {
 					questionIndex++;
 					thisTherapistState = TherapistState.AskingQuestion;
+					ShowAskingQuestionState ();
+					print ("ASK ANOTHER");
 				} else {
 					thisTherapistState = TherapistState.EndSession;
 				}
@@ -173,7 +174,7 @@ public class Therapist : MultipleChoice {
 			break;
 
 		case TherapistState.EndSession:
-
+			EndTherapistSession ();
 			break;
 		
 		}
@@ -198,4 +199,12 @@ public class Therapist : MultipleChoice {
 		//then goto tolstoy response
 	}
 
+	void ShowAskingQuestionState(){
+		therapistSubtitle.gameObject.SetActive (true);
+		therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].questionString;
+		currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].questionAudioPath) as AudioClip;
+		GetComponent<AudioSource> ().clip = currentAudioClip;
+		GetComponent<AudioSource> ().Play ();
+		SetCamera (OTS_DtoT);
+	}
 }

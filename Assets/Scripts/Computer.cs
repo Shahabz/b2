@@ -79,8 +79,6 @@ public class Computer : MultipleChoice {
 
 	public void TurnOn () {
 		projectedScreen.SetActive (true);
-		lastInLevelCamPosition = Camera.main.transform.position;
-		lastInLevelCamRotation = Camera.main.transform.rotation;
 		MultipleChoiceCameraOn ();
 		isActive = true;
 	}

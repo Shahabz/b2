@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour {
 	float brainFloatUpDistance = .19f, brainRaiseSpeed = .3f, brainFlashSpeed = .44f, brainFlashTimer, brainFlashDuration = 3f, brainFlashDurationTimer;
 	bool brainFlashState;
 	bool isRaisingBrain, isFlashingBrain;
-	public bool allowInput;
+	public bool allowSelectionInput;
 
 
 	void Awake() {
@@ -116,13 +116,7 @@ public class PlayerController : MonoBehaviour {
 			break;
 
 		case PlayerState.PracticeProgramming:
-			if (isRaisingBrain) {
-				RaiseBrain ();
-			}
-			else if (isFlashingBrain) {
-				FlashBrain ();
-				AnimateAnxietyBar ();
-			}
+			HandleBrainAnimation ();
 			if (switchToComputer) {
 				switchToComputer = false;
 				thisPlayerState = PlayerState.Computer;
@@ -143,20 +137,20 @@ public class PlayerController : MonoBehaviour {
 			break;
 
 		case PlayerState.Therapy:
-			if (inputDevice.LeftStickUp.WasPressed && allowInput) {
+			if (inputDevice.LeftStickUp.WasPressed && allowSelectionInput) {
 				Therapist.s_instance.ArrowUp ();
-			} else if (inputDevice.LeftStickDown.WasPressed && allowInput) {
+			} else if (inputDevice.LeftStickDown.WasPressed && allowSelectionInput) {
 				Therapist.s_instance.ArrowDown ();
 			}
-			if (inputDevice.Action1.WasPressed && allowInput) {
+			if (inputDevice.Action1.WasPressed && allowSelectionInput) {
 				Therapist.s_instance.SelectItem ();
 			}
-			if (isRaisingBrain) {
-				RaiseBrain ();
-			}
-			else if (isFlashingBrain) {
-				FlashBrain ();
-				AnimateAnxietyBar ();
+			HandleBrainAnimation ();
+
+			if (switchToWalking) {
+				switchToWalking = false;
+				thisAnimator.SetTrigger ("stand");
+				thisPlayerState = PlayerState.Walking;
 			}
 			break;
 
@@ -230,6 +224,16 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	void HandleBrainAnimation() {
+		if (isRaisingBrain) {
+			RaiseBrain ();
+		}
+		else if (isFlashingBrain) {
+			FlashBrain ();
+			AnimateAnxietyBar ();
+		}
+	}
+
 	void FlashBrain () {
 		brainFlashDurationTimer += Time.deltaTime;
 		brainFlashTimer += Time.deltaTime;
@@ -238,24 +242,27 @@ public class PlayerController : MonoBehaviour {
 			brainFlashTimer = 0;
 		}
 		if (brainFlashDurationTimer > brainFlashDuration) {
-			isFlashingBrain = false;
-			brainFlashDurationTimer = 0;
-			ResetAnxietyCamAndBrainPosition ();
-			switch (thisPlayerState) {
-			case PlayerState.PracticeProgramming:
-				switchToComputer = true;
-				break;
-			case PlayerState.Walking :
-				switchToWalking = true;
-				break;
-			case PlayerState.Therapy:
-				Therapist.s_instance.switchToTherapistWaitingToRespond = true;
-				break;
-			}
+			HandleAnxietyCamTransition ();
 		}
 	}
 
-
+	void HandleAnxietyCamTransition() {
+		isFlashingBrain = false;
+		brainFlashDurationTimer = 0;
+		ResetAnxietyCamAndBrainPosition ();
+		switch (thisPlayerState) {
+		case PlayerState.PracticeProgramming:
+			switchToComputer = true;
+			break;
+		case PlayerState.Walking :
+			switchToWalking = true;
+			break;
+		case PlayerState.Therapy:
+			Therapist.s_instance.switchToTherapistWaitingToRespond = true;
+			break;
+		}
+	}	
+	
 	void AlternateBrainColor () {
 		if (brainFlashState) {
 			brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
@@ -264,7 +271,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		brainFlashState = !brainFlashState;
 	}
-	void ResetAnxietyCamAndBrainPosition() {
+	public void ResetAnxietyCamAndBrainPosition() {
 		anxietyCam.transform.localPosition = anxietyCamStartPosition;
 		brain.transform.localPosition = brainStartPosition;
 		brainFlashState = false;
@@ -304,6 +311,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void SwitchToAnxietyCam() {
+		brain.SetActive (true);
 		Camera.main.transform.rotation = anxietyCam.transform.rotation;
 		Camera.main.transform.position = anxietyCam.transform.position;
 		Camera.main.fieldOfView = anxietyCam.fieldOfView;
