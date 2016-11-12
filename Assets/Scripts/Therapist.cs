@@ -128,7 +128,6 @@ public class Therapist : MultipleChoice {
 				PlayerController.s_instance.SwitchToAnxietyCam ();
 				answerPanel.SetActive (false);
 				PlayerController.s_instance.allowSelectionInput = false;
-
 			}
 			break;
 
@@ -149,9 +148,8 @@ public class Therapist : MultipleChoice {
 				therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].responseString;
 				currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].responseAudioPath) as AudioClip;
 			}
-
-
 			break;
+
 		case TherapistState.TherapistResponse:
 			if (GenericTimer.RunGenericTimer (askingQuestionTime + currentAudioClip.length, ref askingQuestionTimer)) {
 				//SetCamera (mainViewOfMultipleChoice);
@@ -178,8 +176,6 @@ public class Therapist : MultipleChoice {
 			break;
 		
 		}
-
-
 	}
 
 	public override void SelectItem () {

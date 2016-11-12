@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour {
 	int anxietyLevel;
 	public int devLevel;
 
-	Color brainFlashColor;
+	Color brainFlashColor, brainNormalColor = new Color (1f,1f,1f, .5f), brainRedColor = new Color (1f,0,0,.5f), brainGreenColor = new Color(0,1f,0,.5f);
 
 	[SerializeField]
 	Camera anxietyCam, jobCam;
@@ -265,7 +265,7 @@ public class PlayerController : MonoBehaviour {
 	
 	void AlternateBrainColor () {
 		if (brainFlashState) {
-			brain.GetComponentInChildren<MeshRenderer> ().material.color = Color.white;
+			brain.GetComponentInChildren<MeshRenderer> ().material.color = brainNormalColor;
 		} else {
 			brain.GetComponentInChildren<MeshRenderer> ().material.color = brainFlashColor;
 		}
@@ -300,21 +300,20 @@ public class PlayerController : MonoBehaviour {
 		isRaisingBrain = true;
 		isFlashingBrain = true;
 		anxietyLevel++;
-		brainFlashColor = Color.red;
+		brainFlashColor = brainRedColor;
 	}
 
 	public void AlleviateAnxiety() {
 		isRaisingBrain = true;
 		isFlashingBrain = true;
 		anxietyLevel--;
-		brainFlashColor = Color.green;
+		brainFlashColor = brainGreenColor;
 	}
 
 	public void SwitchToAnxietyCam() {
 		brain.SetActive (true);
 		Camera.main.transform.rotation = anxietyCam.transform.rotation;
 		Camera.main.transform.position = anxietyCam.transform.position;
-		Camera.main.fieldOfView = anxietyCam.fieldOfView;
 	}
 
 	#endregion

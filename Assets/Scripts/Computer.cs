@@ -88,11 +88,7 @@ public class Computer : MultipleChoice {
 		MultipleChoiceCameraOff ();
 		isActive = false;
 	}
-
-
-
-
-
+		
 	void ShowProgrammingPractice () {
 		//visual representation of coding
 		if (programmingPracticeTimer < programmingPracticeTime) {
@@ -103,7 +99,6 @@ public class Computer : MultipleChoice {
 			programmingPracticeTimer = 0;
 			PlayerController.s_instance.ReceiveAnxiety ();
 			PlayerController.s_instance.GetComponentInChildren<CodeThoughts> ().StopSpawning ();
-
 		}
 	}
 
@@ -125,8 +120,8 @@ public class Computer : MultipleChoice {
 		//show response
 		if (showJobResponseTimer < showJobResponseTime) {
 			showJobResponseTimer += Time.deltaTime;
-
 		}
+
 		else {
 			programmingPracticeTimer = 0;
 			isApplyingToJob = false;
