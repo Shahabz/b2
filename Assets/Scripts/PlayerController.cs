@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 	float walkAxis, rotateAxis;
 	public float speedScalar = .04f, rotateScalar = 4f;
 
-	int anxietyLevel;
+	int anxietyLevel, lastAnxietyLevel;
 	public int devLevel;
 
 	Color brainFlashColor, brainNormalColor = new Color (1f,1f,1f, .5f), brainRedColor = new Color (1f,0,0,.5f), brainGreenColor = new Color(0,1f,0,.5f);
@@ -33,8 +33,9 @@ public class PlayerController : MonoBehaviour {
 
 	
 	public Slider anxietySlider;
+	float anxietSliderLerp;
 	public Text anxietyText;
-	float sliderSpeed = 1.2f;
+	float sliderSpeed = .9f;
 	
 	[SerializeField]
 	GameObject brain;
@@ -289,16 +290,19 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void AnimateAnxietyBar() {
-		if (anxietySlider.value < anxietyLevel) {
-			anxietySlider.value += Time.deltaTime * sliderSpeed;
+		if (anxietySlider.value != anxietyLevel) {
+			anxietSliderLerp += Time.deltaTime * sliderSpeed;
+			anxietySlider.value = Mathf.Lerp (lastAnxietyLevel, anxietyLevel, anxietSliderLerp);
 		} else {
 			anxietyText.text = AnxietyTextTemplate + ((AnxietyDescription)anxietyLevel).ToString();
+			anxietSliderLerp = 0;
 		}
 	}
 
 	public void ReceiveAnxiety() {
 		isRaisingBrain = true;
 		isFlashingBrain = true;
+		lastAnxietyLevel = anxietyLevel;
 		anxietyLevel++;
 		brainFlashColor = brainRedColor;
 	}
@@ -306,6 +310,7 @@ public class PlayerController : MonoBehaviour {
 	public void AlleviateAnxiety() {
 		isRaisingBrain = true;
 		isFlashingBrain = true;
+		lastAnxietyLevel = anxietyLevel;
 		anxietyLevel--;
 		brainFlashColor = brainGreenColor;
 	}

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
 
 	delegate void NextDay();
 	NextDay OnNextDay;
+
 	// Use this for initialization
 	void Start () {
 		switch (thisDebugStartPosition) {
@@ -45,5 +46,10 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	void GotoNextDay () {
+		OnNextDay ();
+		day++;
 	}
 }
