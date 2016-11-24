@@ -14,8 +14,8 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	Transform IntroTransform, ComputerTransform, TolstoyTransform;
 
-	delegate void NextDay();
-	NextDay OnNextDay;
+	public delegate void NextDay();
+	public NextDay OnNextDay;
 
 	// Use this for initialization
 	void Start () {

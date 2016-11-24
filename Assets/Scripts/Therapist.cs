@@ -52,7 +52,22 @@ public class Therapist : MultipleChoice {
 		}
 	}
 
-	void OnTriggerEnter(Collider other) {
+    private void OnEnable()
+    {
+        GameManager.s_instance.OnNextDay += ResetTherapistForTheDay;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.s_instance.OnNextDay -= ResetTherapistForTheDay;
+    }
+
+    void ResetTherapistForTheDay()
+    {
+
+    }
+
+    void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
 			PlayerController.s_instance.isNearTherapist = true;
 			tolsoyAnimator.SetTrigger ("sitdown");

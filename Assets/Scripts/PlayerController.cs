@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour {
 	float walkAxis, rotateAxis;
 	public float speedScalar = .04f, rotateScalar = 4f;
 
+
+
 	int anxietyLevel, lastAnxietyLevel;
 	public int devLevel;
 
@@ -27,15 +29,14 @@ public class PlayerController : MonoBehaviour {
 
 	const string AnxietyTextTemplate = "Anxiety Level: ";
 
+    public AnimatedSlider anxietySlider;
+
 	InputDevice inputDevice;
 
 	public bool isNearComputer = false, isNearTherapist = false;
 
 	
-	public Slider anxietySlider;
-	float anxietSliderLerp;
-	public Text anxietyText;
-	float sliderSpeed = .9f;
+	
 	
 	[SerializeField]
 	GameObject brain;
@@ -69,7 +70,8 @@ public class PlayerController : MonoBehaviour {
 		case PlayerState.Walking:
 			if (switchToComputer) {
 				switchToComputer = false;
-				thisPlayerState = PlayerState.Computer;
+                    currentComputer.SetLastInLevelCamTransform();
+                    thisPlayerState = PlayerState.Computer;
 			}
 			HandleLeftStickVertical ();
 			HandleLeftStickHorizontal ();
@@ -231,7 +233,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		else if (isFlashingBrain) {
 			FlashBrain ();
-			AnimateAnxietyBar ();
+			anxietySlider.AnimateSlider(anxietyLevel, lastAnxietyLevel, AnxietyTextTemplate, ((AnxietyDescription)anxietyLevel).ToString());
 		}
 	}
 
@@ -285,18 +287,7 @@ public class PlayerController : MonoBehaviour {
 	#region AnxietyDisplay
 	void DisplayAnxiety (bool on) {
 		anxietySlider.gameObject.SetActive (on);
-		anxietyText.gameObject.SetActive (on);
-		anxietyText.text = AnxietyTextTemplate + ((AnxietyDescription)anxietyLevel-1).ToString();
-	}
-
-	void AnimateAnxietyBar() {
-		if (anxietySlider.value != anxietyLevel) {
-			anxietSliderLerp += Time.deltaTime * sliderSpeed;
-			anxietySlider.value = Mathf.Lerp (lastAnxietyLevel, anxietyLevel, anxietSliderLerp);
-		} else {
-			anxietyText.text = AnxietyTextTemplate + ((AnxietyDescription)anxietyLevel).ToString();
-			anxietSliderLerp = 0;
-		}
+		anxietySlider.thisText.text = AnxietyTextTemplate + ((AnxietyDescription)lastAnxietyLevel).ToString();
 	}
 
 	public void ReceiveAnxiety() {

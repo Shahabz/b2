@@ -47,11 +47,15 @@ public class MultipleChoice : MonoBehaviour {
 	public virtual void SelectItem(){}
 
 	public void MultipleChoiceCameraOn () {
-		lastInLevelCamPosition = Camera.main.transform.position;
-		lastInLevelCamRotation = Camera.main.transform.rotation;
 		Camera.main.transform.rotation = mainViewOfMultipleChoice.transform.rotation;
 		Camera.main.transform.position = mainViewOfMultipleChoice.transform.position;
 	}
+
+    public void SetLastInLevelCamTransform()
+    {
+        lastInLevelCamPosition = Camera.main.transform.position;
+        lastInLevelCamRotation = Camera.main.transform.rotation;
+    }
 
 	// Stores the camera position of where you were when you entered the therapy
 	public void MultipleChoiceCameraOff() {
