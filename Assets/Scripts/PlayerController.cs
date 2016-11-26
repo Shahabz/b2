@@ -72,8 +72,10 @@ public class PlayerController : MonoBehaviour {
 		case PlayerState.Walking:
 			if (switchToComputer) {
 				switchToComputer = false;
-                    currentComputer.SetLastInLevelCamTransform();
-                    thisPlayerState = PlayerState.Computer;
+                thisPlayerState = PlayerState.Computer;
+				thisAnimator.SetBool (walkingBackBool, false);
+				thisAnimator.SetBool (walkingBool, false);
+				return;
 			}
 			HandleLeftStickVertical ();
 			HandleLeftStickHorizontal ();
@@ -197,6 +199,7 @@ public class PlayerController : MonoBehaviour {
 	void Interact() {
 		if (isNearComputer) {
 			switchToComputer = true;
+			currentComputer.SetLastInLevelCamTransform();
 			currentComputer.TurnOn ();
 		}
 
@@ -218,7 +221,6 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 	void HandleLeftStickVertical () {
-		//Car Acceleration
 		walkAxis = 0;
 		if (inputDevice.LeftStickUp != 0) {
 			walkAxis = inputDevice.LeftStickUp;
