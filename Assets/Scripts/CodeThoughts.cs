@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class CodeThoughts : MonoBehaviour {
-	public TextAsset codeJargonThoughts;
+	public TextAsset codeJargonThoughts, codePsychoThoughts;
 	public GameObject ThoughtText;
 	// Use this for initialization
 	List<string> myCodeThoughts;
@@ -17,11 +17,18 @@ public class CodeThoughts : MonoBehaviour {
 
 	void Start () {
 		thisParser = GetComponent<CSVParser> ();
-		myCodeThoughts = new List<string>(thisParser.Parse (codeJargonThoughts));
-	}
+}
 
-	public void StartSpawning() {
-		isSpawning = true;
+	public void StartSpawning(bool isPsycho) {
+        if (isPsycho)
+        {
+            myCodeThoughts = new List<string>(thisParser.Parse(codeJargonThoughts));
+        }
+        else {
+            myCodeThoughts = new List<string>(thisParser.Parse(codePsychoThoughts));
+
+        }
+        isSpawning = true;	
 	}
 
 	public void StopSpawning() {

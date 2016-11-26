@@ -14,25 +14,13 @@ public class Computer : MultipleChoice {
 
 	[SerializeField]
 	Text jobOption;
-
-	bool appliedOnThisComputerToday;
-	float programmingPracticeTime = 3.5f, programmingPracticeTimer, jobResponseTime = 3.5f, jobResponseTimer,showJobResponseTime, showJobResponseTimer;
-	bool isPracticingProgramming, isApplyingToJob;
+    bool isDestroyed;
+	public bool appliedOnThisComputerToday;
 	bool isComputerBeingUsed;
 	// Use this for initialization
 
 	//The computer has a state machine and so does the player - this may be bad practice.
 
-	// Update is called once per frame
-	void Update () {
-		if (isPracticingProgramming) {
-			ShowProgrammingPractice ();
-		}
-		if (isApplyingToJob) {
-			ShowJobResponse ();
-		}
-
-	}
 
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player") {
@@ -54,16 +42,12 @@ public class Computer : MultipleChoice {
 	public override void SelectItem () {
 		switch (selection) {
 		case 0:
-			PlayerController.s_instance.GetComponentInChildren<CodeThoughts> ().StartSpawning ();
-			PlayerController.s_instance.switchToPracticeProgramming = true;
-			isPracticingProgramming = true;
+                PlayerController.s_instance.TryPracticeProgramming();
 			break;
 		case 1:
 			if (!appliedOnThisComputerToday) {
 				appliedOnThisComputerToday = true;
 				PlayerController.s_instance.switchToApplyToJob = true;
-				showJobResponseTime = JobText.s_instance.GetJobDescriptionScrollTime ();
-				StartCoroutine ("WaitToShowJob");
 			}
 
 			break;
@@ -89,45 +73,19 @@ public class Computer : MultipleChoice {
 		isActive = false;
 	}
 		
-	void ShowProgrammingPractice () {
-		//visual representation of coding
-		if (programmingPracticeTimer < programmingPracticeTime) {
-			programmingPracticeTimer += Time.deltaTime;
-			return;
-		} else {
-			isPracticingProgramming = false;
-			programmingPracticeTimer = 0;
-			PlayerController.s_instance.ReceiveAnxiety ();
-			PlayerController.s_instance.GetComponentInChildren<CodeThoughts> ().StopSpawning ();
-		}
-	}
+   
 
-	void UpdateJobState () {
+    public void PunchComputer() {
+        isDestroyed = true;
+        TurnOff();
+        PlayerController.s_instance.switchToWalking = true;
+        //play vfx
+    }
+
+	public void UpdateJobState () {
 		if (appliedOnThisComputerToday) {
 			jobOption.text = "No Jobs Available";
 		}
 	}
 
-	IEnumerator WaitToShowJob () {
-		yield return new WaitForSeconds (3f);
-		isApplyingToJob = true;
-		JobText.s_instance.SpawnJobText ();
-	}
-
-	void ShowJobResponse () {
-		//wait for response
-	
-		//show response
-		if (showJobResponseTimer < showJobResponseTime) {
-			showJobResponseTimer += Time.deltaTime;
-		}
-
-		else {
-			programmingPracticeTimer = 0;
-			isApplyingToJob = false;
-			appliedOnThisComputerToday = true;
-			PlayerController.s_instance.switchToComputer = true;
-			UpdateJobState ();
-		}
-	}
 }
