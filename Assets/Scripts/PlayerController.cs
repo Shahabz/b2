@@ -6,6 +6,7 @@ using InControl;
 
 public enum PlayerState {Walking, Computer, PracticeProgramming, Therapy, AppliedToJob};
 public enum AnxietyDescription {None, Mild, Moderate, Severe, Debilitating, Psychotic, _Size}
+public enum DevLevel {Amateur, Inexperienced = 10, Beginner=30, Novice=50, Junior=70, Green = 90, Intermediate = 100}
 
 public class PlayerController : MonoBehaviour {
 	public static PlayerController s_instance;
@@ -15,10 +16,9 @@ public class PlayerController : MonoBehaviour {
 	const string walkingBool = "fwd", walkingBackBool = "back";
 	float walkAxis, rotateAxis;
 	public float speedScalar = .04f, rotateScalar = 4f;
+    public float moneyLeft;
 
-
-
-	int anxietyLevel, lastAnxietyLevel;
+	public int anxietyLevel, lastAnxietyLevel;
 	public int devLevel;
 
 	Color brainFlashColor, brainNormalColor = new Color (1f,1f,1f, .5f), brainRedColor = new Color (1f,0,0,.5f), brainGreenColor = new Color(0,1f,0,.5f);
@@ -29,15 +29,13 @@ public class PlayerController : MonoBehaviour {
 
 	const string AnxietyTextTemplate = "Anxiety Level: ";
 
-    public AnimatedSlider anxietySlider;
+    public AnimatedSlider anxietySlider, devSlider;
+    public Text moneyLeftText, changeInMoneyText;
 
 	InputDevice inputDevice;
 
 	public bool isNearComputer = false, isNearTherapist = false;
 
-	
-	
-	
 	[SerializeField]
 	GameObject brain;
 	Vector3 brainStartPosition, anxietyCamStartPosition;
@@ -46,8 +44,12 @@ public class PlayerController : MonoBehaviour {
 	bool isRaisingBrain, isFlashingBrain;
 	public bool allowSelectionInput;
 
+    //computer bools and timers
+    public bool isPsychoProgramming, isPracticingProgramming, isApplyingToJob;
+    float programmingPracticeTime = 3.5f, programmingPracticeTimer, jobResponseTime = 3.5f, jobResponseTimer, showJobResponseTime, showJobResponseTimer;
 
-	void Awake() {
+
+    void Awake() {
 		if (s_instance == null) {
 			s_instance = this;
 		} else {
@@ -61,7 +63,6 @@ public class PlayerController : MonoBehaviour {
 	#region StateMachine
 
 	public bool switchToPracticeProgramming, switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy;
-
 
 	void Update () {
 		inputDevice = InputManager.ActiveDevice;
@@ -115,25 +116,44 @@ public class PlayerController : MonoBehaviour {
 			if (switchToApplyToJob) {
 				Camera.main.transform.rotation = jobCam.transform.rotation;
 				Camera.main.transform.position = jobCam.transform.position;
-				switchToApplyToJob = false;
+                showJobResponseTime = JobText.s_instance.GetJobDescriptionScrollTime();
+                StartCoroutine("WaitToShowJob");
+                switchToApplyToJob = false;
 				thisPlayerState = PlayerState.AppliedToJob;
 			}
 			break;
 
 		case PlayerState.PracticeProgramming:
-			HandleBrainAnimation ();
-			if (switchToComputer) {
-				switchToComputer = false;
-				thisPlayerState = PlayerState.Computer;
-				currentComputer.MultipleChoiceCameraOn ();
-			}
-			if (switchToWalking) {
-				switchToWalking = false;
-				thisPlayerState = PlayerState.Walking;
-			}
+                if (isPracticingProgramming){
+                    ShowProgrammingPractice();
+                }
+                if (!isPsychoProgramming)
+                {
+                    HandleBrainAnimation();
+                    if (switchToComputer)
+                    {
+                        switchToComputer = false;
+                        thisPlayerState = PlayerState.Computer;
+                        currentComputer.MultipleChoiceCameraOn();
+                    }
+                    if (switchToWalking)
+                    {
+                        switchToWalking = false;
+                        thisPlayerState = PlayerState.Walking;
+                    }
+                }
+                else
+                {
+
+
+                }
 			break;
 
 		case PlayerState.AppliedToJob:
+                if (isApplyingToJob)
+                {
+                    ShowJobResponse();
+                }
 			if (switchToComputer) {
 				switchToComputer = false;
 				thisPlayerState = PlayerState.Computer;
@@ -177,7 +197,6 @@ public class PlayerController : MonoBehaviour {
 			switchToComputer = true;
 			currentComputer.SetLastInLevelCamTransform();
 			currentComputer.TurnOn ();
-			currentComputer.MultipleChoiceCameraOn ();
 		}
 
 		if (isNearTherapist) {
@@ -293,11 +312,19 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void ReceiveAnxiety() {
-		isRaisingBrain = true;
-		isFlashingBrain = true;
-		lastAnxietyLevel = anxietyLevel;
-		anxietyLevel++;
-		brainFlashColor = brainRedColor;
+        GetComponentInChildren<CodeThoughts>().StopSpawning();
+        lastAnxietyLevel = anxietyLevel;
+        anxietyLevel++;
+        if (isPsychoProgramming)
+        {
+            //throw punch and rage quit
+        }
+        else
+        {
+            isRaisingBrain = true;
+            isFlashingBrain = true;
+            brainFlashColor = brainRedColor;
+        }
 	}
 
 	public void AlleviateAnxiety() {
@@ -314,6 +341,79 @@ public class PlayerController : MonoBehaviour {
 		Camera.main.transform.position = anxietyCam.transform.position;
 	}
 
-	#endregion
-		
+    #endregion
+    #region ComputerProgrammingLogic
+    public void TryPracticeProgramming()
+    {
+        //need to make a version of programming practice that is psychotic which leads to punch
+        if (anxietyLevel <= 1)
+        {
+            StartProgramming(false);
+        }
+        else
+        {
+            float chanceOfRage = Random.Range(0f, 10f);
+            chanceOfRage *= anxietyLevel;
+            if (chanceOfRage < 7)
+            {
+                StartProgramming(false);
+            }
+            else
+            {
+                StartProgramming(true);
+            }
+        }
+    }
+
+    void StartProgramming(bool isPsycho)
+    {
+        GetComponentInChildren<CodeThoughts>().StartSpawning(isPsycho);
+        switchToPracticeProgramming = true;
+        isPracticingProgramming = true;
+    }
+
+
+    void ShowProgrammingPractice()
+    {
+        //visual representation of coding
+        if (programmingPracticeTimer < programmingPracticeTime)
+        {
+            programmingPracticeTimer += Time.deltaTime;
+            return;
+        }
+        else
+        {
+            isPracticingProgramming = false;
+            programmingPracticeTimer = 0;
+            PlayerController.s_instance.ReceiveAnxiety();
+        }
+    }
+
+    IEnumerator WaitToShowJob()
+    {
+        yield return new WaitForSeconds(3f);
+        isApplyingToJob = true;
+        JobText.s_instance.SpawnJobText();
+    }
+
+    void ShowJobResponse()
+    {
+        //wait for response
+
+        //show response
+        if (showJobResponseTimer < showJobResponseTime)
+        {
+            showJobResponseTimer += Time.deltaTime;
+        }
+
+        else
+        {
+            programmingPracticeTimer = 0;
+            isApplyingToJob = false;
+            currentComputer.appliedOnThisComputerToday = true;
+            switchToComputer = true;
+            currentComputer.UpdateJobState();
+        }
+    }
+    #endregion
 }
