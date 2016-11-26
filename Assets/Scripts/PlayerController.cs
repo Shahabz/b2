@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -6,7 +7,7 @@ using InControl;
 
 public enum PlayerState {Walking, Computer, PracticeProgramming, Therapy, AppliedToJob};
 public enum AnxietyDescription {None, Mild, Moderate, Severe, Debilitating, Psychotic, _Size}
-public enum DevLevel {Amateur, Inexperienced = 10, Beginner=30, Novice=50, Junior=70, Green = 90, Intermediate = 100}
+public enum DevLevel {None, Amateur=10, Inexperienced = 20, Beginner=30, Novice=50, Junior=70, Green = 90, Intermediate = 100, _Size}
 
 public class PlayerController : MonoBehaviour {
 	public static PlayerController s_instance;
@@ -66,6 +67,9 @@ public class PlayerController : MonoBehaviour {
 	public bool switchToPracticeProgramming, switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy;
 
 	void Update () {
+        if (Input.GetKeyDown(KeyCode.F)) {
+            thisAnimator.SetTrigger("punch");
+        }
 		inputDevice = InputManager.ActiveDevice;
 
 		switch (thisPlayerState) {
@@ -111,7 +115,6 @@ public class PlayerController : MonoBehaviour {
 				switchToPracticeProgramming = false;
 				SwitchToAnxietyCam ();
 				thisPlayerState = PlayerState.PracticeProgramming;
-				brain.SetActive (true);
 			}
 				
 			if (switchToApplyToJob) {
@@ -143,14 +146,7 @@ public class PlayerController : MonoBehaviour {
                         thisPlayerState = PlayerState.Walking;
                     }
                 }
-                else if (isPsychoProgramming)
-                {
-                    if (switchToWalking)
-                    {
-                        switchToWalking = false;
-                        thisPlayerState = PlayerState.Walking;
-                    }
-                }
+                
 			break;
 
 		case PlayerState.AppliedToJob:
@@ -326,6 +322,7 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
+            brain.SetActive(true);
             isRaisingBrain = true;
             isFlashingBrain = true;
             brainFlashColor = brainRedColor;
@@ -334,7 +331,10 @@ public class PlayerController : MonoBehaviour {
 
     IEnumerator RageQuit()
     {
+        thisAnimator.SetTrigger("punch");
+        currentComputer.PunchComputer();
         yield return new WaitForSeconds(2f);
+        thisPlayerState = PlayerState.Walking;
 
     }
 
@@ -347,7 +347,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void SwitchToAnxietyCam() {
-		brain.SetActive (true);
 		Camera.main.transform.rotation = anxietyCam.transform.rotation;
 		Camera.main.transform.position = anxietyCam.transform.position;
 	}
@@ -365,7 +364,7 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            float chanceOfRage = Random.Range(0f, 10f);
+            float chanceOfRage = UnityEngine.Random.Range(0f, 10f);
             chanceOfRage = chanceOfRage * anxietyLevel;
             if (chanceOfRage < 7)
             {
@@ -373,7 +372,6 @@ public class PlayerController : MonoBehaviour {
             }
             else
             {
-                print("RAGEQUIT");
                 StartProgramming(true);
             }
         }
@@ -384,10 +382,26 @@ public class PlayerController : MonoBehaviour {
         GetComponentInChildren<CodeThoughts>().StartSpawning(isPsycho);
         switchToPracticeProgramming = true;
         isPracticingProgramming = true;
+        isPsychoProgramming = isPsycho;
         lastDevLevel = devLevel;
         devLevel++;
-        devSlider.thisText.text = DevLevelTextTemplate + ((DevLevel)devLevel).ToString();
+        devSlider.thisText.text = DevLevelTextTemplate + GetDevLevelString();
         devSlider.gameObject.SetActive(true);
+    }
+
+    string GetDevLevelString() {
+        string outString;
+        foreach (DevLevel x in Enum.GetValues(typeof(DevLevel)))
+        {
+            if (devLevel <= (int)x)
+            {
+                outString = x.ToString();
+                return outString;
+            }
+        }
+
+        outString = "ERROR";
+        return outString;
     }
 
 

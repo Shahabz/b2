@@ -10,7 +10,8 @@ public class Computer : MultipleChoice {
 	[SerializeField]
 	Light computerLight;
 	InputDevice inputDevice;
-
+    [SerializeField]
+    GameObject computerExplosion;
 
 	[SerializeField]
 	Text jobOption;
@@ -80,6 +81,8 @@ public class Computer : MultipleChoice {
         TurnOff();
         PlayerController.s_instance.switchToWalking = true;
         //play vfx
+        Instantiate(computerExplosion);
+
     }
 
 	public void UpdateJobState () {
