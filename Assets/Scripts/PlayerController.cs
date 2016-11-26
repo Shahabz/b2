@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour {
     public float moneyLeft;
 
 	public int anxietyLevel, lastAnxietyLevel;
-	public int devLevel;
+	public int devLevel, lastDevLevel;
 
 	Color brainFlashColor, brainNormalColor = new Color (1f,1f,1f, .5f), brainRedColor = new Color (1f,0,0,.5f), brainGreenColor = new Color(0,1f,0,.5f);
 
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour {
 	public Computer currentComputer;
 
 	const string AnxietyTextTemplate = "Anxiety Level: ";
+    const string DevLevelTextTemplate = "Dev Level: ";
 
     public AnimatedSlider anxietySlider, devSlider;
     public Text moneyLeftText, changeInMoneyText;
@@ -140,10 +141,13 @@ public class PlayerController : MonoBehaviour {
                         thisPlayerState = PlayerState.Walking;
                     }
                 }
-                else
+                else if (isPsychoProgramming)
                 {
-
-
+                    if (switchToWalking)
+                    {
+                        switchToWalking = false;
+                        thisPlayerState = PlayerState.Walking;
+                    }
                 }
 			break;
 
@@ -236,15 +240,6 @@ public class PlayerController : MonoBehaviour {
 	#endregion
 	#region BrainAnimation
 
-	void RaiseBrain () {
-		if (Vector3.Distance (brainStartPosition, brain.transform.localPosition) < brainFloatUpDistance) {
-			brain.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
-			Camera.main.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
-		} else {
-			DisplayAnxiety (true);
-			isRaisingBrain = false;
-		}
-	}
 
 	void HandleBrainAnimation() {
 		if (isRaisingBrain) {
@@ -256,6 +251,15 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	void RaiseBrain () {
+		if (Vector3.Distance (brainStartPosition, brain.transform.localPosition) < brainFloatUpDistance) {
+			brain.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
+			Camera.main.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
+		} else {
+			DisplayAnxiety (true);
+			isRaisingBrain = false;
+		}
+	}
 	void FlashBrain () {
 		brainFlashDurationTimer += Time.deltaTime;
 		brainFlashTimer += Time.deltaTime;
@@ -316,6 +320,7 @@ public class PlayerController : MonoBehaviour {
         if (isPsychoProgramming)
         {
             //throw punch and rage quit
+            StartCoroutine("RageQuit");
         }
         else
         {
@@ -324,6 +329,12 @@ public class PlayerController : MonoBehaviour {
             brainFlashColor = brainRedColor;
         }
 	}
+
+    IEnumerator RageQuit()
+    {
+        yield return new WaitForSeconds(2f);
+
+    }
 
 	public void AlleviateAnxiety() {
 		isRaisingBrain = true;
@@ -343,6 +354,8 @@ public class PlayerController : MonoBehaviour {
     #region ComputerProgrammingLogic
     public void TryPracticeProgramming()
     {
+        print(anxietyLevel);
+
         //need to make a version of programming practice that is psychotic which leads to punch
         if (anxietyLevel <= 1)
         {
@@ -351,13 +364,14 @@ public class PlayerController : MonoBehaviour {
         else
         {
             float chanceOfRage = Random.Range(0f, 10f);
-            chanceOfRage *= anxietyLevel;
+            chanceOfRage = chanceOfRage * anxietyLevel;
             if (chanceOfRage < 7)
             {
                 StartProgramming(false);
             }
             else
             {
+                print("RAGEQUIT");
                 StartProgramming(true);
             }
         }
@@ -368,6 +382,10 @@ public class PlayerController : MonoBehaviour {
         GetComponentInChildren<CodeThoughts>().StartSpawning(isPsycho);
         switchToPracticeProgramming = true;
         isPracticingProgramming = true;
+        lastDevLevel = devLevel;
+        devLevel++;
+        devSlider.thisText.text = DevLevelTextTemplate + ((DevLevel)devLevel).ToString();
+        devSlider.gameObject.SetActive(true);
     }
 
 
@@ -376,11 +394,13 @@ public class PlayerController : MonoBehaviour {
         //visual representation of coding
         if (programmingPracticeTimer < programmingPracticeTime)
         {
+            devSlider.thisSlider.value = Mathf.Lerp(lastDevLevel, devLevel, programmingPracticeTimer / programmingPracticeTime);
             programmingPracticeTimer += Time.deltaTime;
             return;
         }
         else
         {
+            devSlider.gameObject.SetActive(false);
             isPracticingProgramming = false;
             programmingPracticeTimer = 0;
             PlayerController.s_instance.ReceiveAnxiety();

@@ -22,10 +22,10 @@ public class CodeThoughts : MonoBehaviour {
 	public void StartSpawning(bool isPsycho) {
         if (isPsycho)
         {
-            myCodeThoughts = new List<string>(thisParser.Parse(codeJargonThoughts));
+            myCodeThoughts = new List<string>(thisParser.Parse(codePsychoThoughts));
         }
         else {
-            myCodeThoughts = new List<string>(thisParser.Parse(codePsychoThoughts));
+            myCodeThoughts = new List<string>(thisParser.Parse(codeJargonThoughts));
 
         }
         isSpawning = true;	
@@ -57,8 +57,5 @@ public class CodeThoughts : MonoBehaviour {
 		Vector3 spawnPos = new Vector3 (transform.position.x + x, transform.position.y + y, transform.position.z + spawnRangeZ);
 		GameObject thoughtText = (GameObject)Instantiate (ThoughtText, spawnPos, transform.parent.rotation) as GameObject;
 		thoughtText.GetComponentInChildren<Text> ().text = myCodeThoughts [Random.Range (0, myCodeThoughts.Count - 1)];
-
-	
-
 	}
 }
