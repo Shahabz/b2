@@ -35,16 +35,18 @@ public class JobText : MonoBehaviour {
 	}
 
 	string GetJobDescription() {
+        string outString;
 		Jobs thisJob = (Jobs)GameManager.s_instance.day;
 		switch (thisJob) {
 		case Jobs.Scopely:
-			return "No Response.";
+			outString = "No Response.";
 			break;
 		default :
-			return "";
+			outString = "No Response.";
 			break;
-
 		}
+        print("GOT JOB desc");
+        return outString;
 	}
 
 }
