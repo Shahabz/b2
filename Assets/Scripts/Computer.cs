@@ -12,19 +12,22 @@ public class Computer : MultipleChoice {
 	InputDevice inputDevice;
     [SerializeField]
     GameObject computerExplosion;
+    [SerializeField]
+    MeshRenderer computerScreen;
 
 	[SerializeField]
 	Text jobOption;
     bool isDestroyed;
 	public bool appliedOnThisComputerToday;
 	bool isComputerBeingUsed;
-	// Use this for initialization
 
-	//The computer has a state machine and so does the player - this may be bad practice.
+    // Use this for initialization
+
+    //The computer has a state machine and so does the player - this may be bad practice.
 
 
-	void OnTriggerEnter(Collider other) {
-		if (other.tag == "Player") {
+    void OnTriggerEnter(Collider other) {
+		if (other.tag == "Player" && !isDestroyed) {
 			computerLight.intensity = 2f;
 			PlayerController.s_instance.isNearComputer = true;
 			PlayerController.s_instance.currentComputer = this;
@@ -32,7 +35,7 @@ public class Computer : MultipleChoice {
 	}
 
 	void OnTriggerExit (Collider other) {
-		if (other.tag == "Player") {
+		if (other.tag == "Player" && !isDestroyed) {
 			computerLight.intensity = 1f;
 			PlayerController.s_instance.isNearComputer = false;
 			PlayerController.s_instance.currentComputer = null;
@@ -64,13 +67,14 @@ public class Computer : MultipleChoice {
 
 	public void TurnOn () {
 		projectedScreen.SetActive (true);
-		MultipleChoiceCameraOn ();
+        CameraManager.s_instance.SetMainViewOnScene(mainViewOfMultipleChoice);
+		CameraManager.s_instance.MultipleChoiceCameraOn ();
 		isActive = true;
 	}
 
 	public void TurnOff () {
 		projectedScreen.SetActive (false);
-		MultipleChoiceCameraOff ();
+        CameraManager.s_instance.MultipleChoiceCameraOff ();
 		isActive = false;
 	}
 		
@@ -81,11 +85,22 @@ public class Computer : MultipleChoice {
         TurnOff();
         PlayerController.s_instance.switchToWalking = true;
         //play vfx
-        Instantiate(computerExplosion);
+        StartCoroutine("ExplodeComputer");
 
     }
 
-	public void UpdateJobState () {
+    IEnumerator ExplodeComputer()
+    {
+        yield return new WaitForSeconds(1f);
+        Instantiate(computerExplosion, transform.position, Quaternion.identity);
+        computerLight.intensity = 0f;
+        PlayerController.s_instance.isNearComputer = false;
+        PlayerController.s_instance.currentComputer = null;
+        computerScreen.material.color = Color.black;
+
+    }
+
+    public void UpdateJobState () {
 		if (appliedOnThisComputerToday) {
 			jobOption.text = "No Jobs Available";
 		}

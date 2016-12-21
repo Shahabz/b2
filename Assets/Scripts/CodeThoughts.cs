@@ -14,12 +14,15 @@ public class CodeThoughts : MonoBehaviour {
 	float spawnRangeX = 1.2f;
 	float spawnRangeY = .6f;
 	float spawnRangeZ = .4f;
+    bool isPsychoMode;
 
 	void Start () {
 		thisParser = GetComponent<CSVParser> ();
 }
 
 	public void StartSpawning(bool isPsycho) {
+        isPsychoMode = isPsycho;
+
         if (isPsycho)
         {
             myCodeThoughts = new List<string>(thisParser.Parse(codePsychoThoughts));
@@ -57,5 +60,12 @@ public class CodeThoughts : MonoBehaviour {
 		Vector3 spawnPos = new Vector3 (transform.position.x + x, transform.position.y + y, transform.position.z + spawnRangeZ);
 		GameObject thoughtText = (GameObject)Instantiate (ThoughtText, spawnPos, transform.parent.rotation) as GameObject;
 		thoughtText.GetComponentInChildren<Text> ().text = myCodeThoughts [Random.Range (0, myCodeThoughts.Count - 1)];
-	}
+
+        if (isPsychoMode)
+        {
+            thoughtText.GetComponentInChildren<Text>().color = Color.red;
+            thoughtText.GetComponentInChildren<Fader>().customStartColor = Color.red;
+            thoughtText.GetComponentInChildren<Fader>().customEndColor = new Vector4 (0,0,0,0);
+        }
+    }
 }

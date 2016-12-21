@@ -54,12 +54,14 @@ public class Therapist : MultipleChoice {
 
     private void OnEnable()
     {
-        GameManager.s_instance.OnNextDay += ResetTherapistForTheDay;
+        //print(GameManager.s_instance);
+        GameObject.FindObjectOfType<GameManager>().OnNextDay += ResetTherapistForTheDay;
+        //GameManager.s_instance.OnNextDay += ResetTherapistForTheDay;
     }
 
     private void OnDisable()
     {
-        GameManager.s_instance.OnNextDay -= ResetTherapistForTheDay;
+        GameObject.FindObjectOfType<GameManager>().OnNextDay -= ResetTherapistForTheDay;
     }
 
     void ResetTherapistForTheDay()
@@ -84,16 +86,16 @@ public class Therapist : MultipleChoice {
 	}
 
 	public void StartTherapistSession () {
-		MultipleChoiceCameraOn ();
+        CameraManager.s_instance.SetLastInLevelCamTransform();
+        CameraManager.s_instance.SetMainViewOnScene(mainViewOfMultipleChoice);
+		CameraManager.s_instance.MultipleChoiceCameraOn ();
 		PlayerController.s_instance.transform.position = davidTransform.position;
 		PlayerController.s_instance.transform.rotation = davidTransform.rotation;
-		switchToIntroduction = true;
-
-
+        switchToIntroduction = true;
 	}
 
 	public void EndTherapistSession () {
-		MultipleChoiceCameraOff ();
+        CameraManager.s_instance.MultipleChoiceCameraOff ();
 		PlayerController.s_instance.switchToWalking = true;
 		thisTherapistState = TherapistState.DoneForTheDay;
 		tolsoyAnimator.SetTrigger ("standup");
@@ -129,7 +131,7 @@ public class Therapist : MultipleChoice {
 				choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
 				choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
 				thisTherapistState = TherapistState.DavidSelectAnswer;
-				SetCamera (OTS_TtoD);
+				CameraManager.s_instance.SetCamera (OTS_TtoD);
 				PlayerController.s_instance.allowSelectionInput = true;
 			}
 
@@ -140,7 +142,7 @@ public class Therapist : MultipleChoice {
 			if (switchToAnxietyAnimation) {
 				switchToAnxietyAnimation = false;
 				thisTherapistState = TherapistState.AnxietyAnimation;
-				PlayerController.s_instance.SwitchToAnxietyCam ();
+				CameraManager.s_instance.SwitchToAnxietyCam ();
 				answerPanel.SetActive (false);
 				PlayerController.s_instance.allowSelectionInput = false;
 			}
@@ -151,7 +153,7 @@ public class Therapist : MultipleChoice {
 			if (switchToTherapistWaitingToRespond) {
 				switchToTherapistWaitingToRespond = false;
 				thisTherapistState = TherapistState.TherapistWaitingToRespond;
-				SetCamera (OTS_DtoT);
+                CameraManager.s_instance.SetCamera (OTS_DtoT);
 			}
 			break;
 
@@ -216,6 +218,6 @@ public class Therapist : MultipleChoice {
 		currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].questionAudioPath) as AudioClip;
 		GetComponent<AudioSource> ().clip = currentAudioClip;
 		GetComponent<AudioSource> ().Play ();
-		SetCamera (OTS_DtoT);
+        CameraManager.s_instance.SetCamera (OTS_DtoT);
 	}
 }

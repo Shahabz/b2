@@ -45,7 +45,6 @@ public class JobText : MonoBehaviour {
 			outString = "No Response.";
 			break;
 		}
-        print("GOT JOB desc");
         return outString;
 	}
 

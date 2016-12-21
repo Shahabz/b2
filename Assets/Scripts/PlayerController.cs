@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 using InControl;
 
-public enum PlayerState {Walking, Computer, PracticeProgramming, Therapy, AppliedToJob};
+public enum PlayerState {Walking, Computer, PassiveState, Therapy, AppliedToJob};
 public enum AnxietyDescription {None, Mild, Moderate, Severe, Debilitating, Psychotic, _Size}
 public enum DevLevel {None, Amateur=10, Inexperienced = 20, Beginner=30, Novice=50, Junior=70, Green = 90, Intermediate = 100, _Size}
 
@@ -24,8 +24,7 @@ public class PlayerController : MonoBehaviour {
 
 	Color brainFlashColor, brainNormalColor = new Color (1f,1f,1f, .5f), brainRedColor = new Color (1f,0,0,.5f), brainGreenColor = new Color(0,1f,0,.5f);
 
-	[SerializeField]
-	Camera anxietyCam, jobCam;
+	
 	public Computer currentComputer;
 
 	const string AnxietyTextTemplate = "Anxiety Level: ";
@@ -40,7 +39,7 @@ public class PlayerController : MonoBehaviour {
 
 	[SerializeField]
 	GameObject brain;
-	Vector3 brainStartPosition, anxietyCamStartPosition;
+    Vector3 brainStartPosition;
 	float brainFloatUpDistance = .19f, brainRaiseSpeed = .3f, brainFlashSpeed = .44f, brainFlashTimer, brainFlashDuration = 3f, brainFlashDurationTimer;
 	bool brainFlashState;
 	bool isRaisingBrain, isFlashingBrain;
@@ -58,7 +57,6 @@ public class PlayerController : MonoBehaviour {
 			Destroy (this);
 		}
 		brainStartPosition = brain.transform.localPosition;
-		anxietyCamStartPosition = anxietyCam.transform.localPosition;
 	}
 		
 
@@ -67,9 +65,6 @@ public class PlayerController : MonoBehaviour {
 	public bool switchToPracticeProgramming, switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy;
 
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.F)) {
-            thisAnimator.SetTrigger("punch");
-        }
 		inputDevice = InputManager.ActiveDevice;
 
 		switch (thisPlayerState) {
@@ -86,6 +81,7 @@ public class PlayerController : MonoBehaviour {
 			HandleMovement ();
 			HandleRotation ();
 			HandleAnimation ();
+            HandleBrainAnimation();
 			if (inputDevice.Action1.WasPressed) {
 				Interact ();
 			}
@@ -113,13 +109,13 @@ public class PlayerController : MonoBehaviour {
 			}
 			if (switchToPracticeProgramming) {
 				switchToPracticeProgramming = false;
-				SwitchToAnxietyCam ();
-				thisPlayerState = PlayerState.PracticeProgramming;
+				CameraManager.s_instance.SwitchToAnxietyCam ();
+				thisPlayerState = PlayerState.PassiveState;
 			}
 				
 			if (switchToApplyToJob) {
-				Camera.main.transform.rotation = jobCam.transform.rotation;
-				Camera.main.transform.position = jobCam.transform.position;
+                CameraManager.s_instance.SwitchToJobCam();
+
                 showJobResponseTime = JobText.s_instance.GetJobDescriptionScrollTime();
                 StartCoroutine("WaitToShowJob");
                 switchToApplyToJob = false;
@@ -127,7 +123,7 @@ public class PlayerController : MonoBehaviour {
 			}
 			break;
 
-		case PlayerState.PracticeProgramming:
+		case PlayerState.PassiveState:
                 if (isPracticingProgramming){
                     ShowProgrammingPractice();
                 }
@@ -138,7 +134,7 @@ public class PlayerController : MonoBehaviour {
                     {
                         switchToComputer = false;
                         thisPlayerState = PlayerState.Computer;
-                        currentComputer.MultipleChoiceCameraOn();
+                        CameraManager.s_instance.MultipleChoiceCameraOn();
                     }
                     if (switchToWalking)
                     {
@@ -150,14 +146,14 @@ public class PlayerController : MonoBehaviour {
 			break;
 
 		case PlayerState.AppliedToJob:
-                if (isApplyingToJob)
-                {
-                    ShowJobResponse();
-                }
+            if (isApplyingToJob)
+            {
+                ShowJobResponse();
+            }
 			if (switchToComputer) {
 				switchToComputer = false;
 				thisPlayerState = PlayerState.Computer;
-				currentComputer.MultipleChoiceCameraOn ();
+				CameraManager.s_instance.MultipleChoiceCameraOn ();
 			}
 			break;
 
@@ -181,6 +177,24 @@ public class PlayerController : MonoBehaviour {
 
 		}
 	}
+    /// <summary>
+    /// The Goal of this function is to allow the player to gain anxiety from any state
+    /// such that we have control over how the anxiety is applied yet reuse the same anxiety
+    /// fx, such as the slider, brain and anxiety camera 
+    /// 
+    /// This also functions to interrupt the player input and return him to the state from which
+    /// he left before the anxiety occured
+    /// 
+    /// Anxiety can be caused by cats, cops, computer, and perhaps being too close to cars when they drive by
+    /// </summary>
+    /// <param name="currentCamera"></param>
+    /// <param name="currentPlayerState"></param>
+    void EnterPassiveState(Camera currentCamera, PlayerState currentPlayerState)
+    {
+
+
+    }
+
 	#endregion
 
 	#region Movement+Animation
@@ -195,7 +209,7 @@ public class PlayerController : MonoBehaviour {
 	void Interact() {
 		if (isNearComputer) {
 			switchToComputer = true;
-			currentComputer.SetLastInLevelCamTransform();
+			CameraManager.s_instance.SetLastInLevelCamTransform();
 			currentComputer.TurnOn ();
 		}
 
@@ -252,7 +266,7 @@ public class PlayerController : MonoBehaviour {
 	void RaiseBrain () {
 		if (Vector3.Distance (brainStartPosition, brain.transform.localPosition) < brainFloatUpDistance) {
 			brain.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
-			Camera.main.transform.Translate (Vector3.up * Time.deltaTime * brainRaiseSpeed);
+            CameraManager.s_instance.RaiseCamera(brainRaiseSpeed);
 		} else {
 			DisplayAnxiety (true);
 			isRaisingBrain = false;
@@ -273,9 +287,9 @@ public class PlayerController : MonoBehaviour {
 	void HandleAnxietyCamTransition() {
 		isFlashingBrain = false;
 		brainFlashDurationTimer = 0;
-		ResetAnxietyCamAndBrainPosition ();
+		ResetBrainLogic ();
 		switch (thisPlayerState) {
-		case PlayerState.PracticeProgramming:
+		case PlayerState.PassiveState:
 			switchToComputer = true;
 			break;
 		case PlayerState.Walking :
@@ -295,8 +309,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		brainFlashState = !brainFlashState;
 	}
-	public void ResetAnxietyCamAndBrainPosition() {
-		anxietyCam.transform.localPosition = anxietyCamStartPosition;
+	public void ResetBrainLogic() {
 		brain.transform.localPosition = brainStartPosition;
 		brainFlashState = false;
 		brain.SetActive (false);
@@ -346,17 +359,12 @@ public class PlayerController : MonoBehaviour {
 		brainFlashColor = brainGreenColor;
 	}
 
-	public void SwitchToAnxietyCam() {
-		Camera.main.transform.rotation = anxietyCam.transform.rotation;
-		Camera.main.transform.position = anxietyCam.transform.position;
-	}
+	
 
     #endregion
     #region ComputerProgrammingLogic
     public void TryPracticeProgramming()
     {
-        print(anxietyLevel);
-
         //need to make a version of programming practice that is psychotic which leads to punch
         if (anxietyLevel <= 1)
         {

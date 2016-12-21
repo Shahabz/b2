@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum DebugStartPosition {Intro, Computer, Tolstoy};
+public enum DebugStartPosition {Intro, Computer, Tolstoy, Highway};
 
 public class GameManager : MonoBehaviour {
 
@@ -9,16 +9,28 @@ public class GameManager : MonoBehaviour {
 	public static GameManager s_instance;
 	public DebugStartPosition thisDebugStartPosition = DebugStartPosition.Tolstoy;
 	[SerializeField]
-	Camera Intro, ComputerCam, Tolstoy;
+	Camera Intro, ComputerCam, Tolstoy, HighwayCam;
 
 	[SerializeField]
-	Transform IntroTransform, ComputerTransform, TolstoyTransform;
+	Transform IntroTransform, ComputerTransform, TolstoyTransform, HighwayTransform;
 
 	public delegate void NextDay();
 	public NextDay OnNextDay;
 
-	// Use this for initialization
-	void Start () {
+    void Awake()
+    {
+        if (s_instance == null)
+        {
+            s_instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
 		switch (thisDebugStartPosition) {
 		case DebugStartPosition.Computer:
 			Camera.main.transform.position = ComputerCam.transform.position;
@@ -33,16 +45,15 @@ public class GameManager : MonoBehaviour {
 		case DebugStartPosition.Tolstoy:
 
 			break;
-		}
-	}
-	void Awake() {
-		if (s_instance == null) {
-			s_instance = this;
-		} else {
-			Destroy (this);
-		}
 
+        case DebugStartPosition.Highway:
+                Camera.main.transform.position = HighwayCam.transform.position;
+                Camera.main.transform.rotation = HighwayCam.transform.rotation;
+                PlayerController.s_instance.transform.position = HighwayTransform.position;
+                break;
+		}
 	}
+	
 	// Update is called once per frame
 	void Update () {
 	
