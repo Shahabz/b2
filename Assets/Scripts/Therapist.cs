@@ -95,7 +95,7 @@ public class Therapist : MultipleChoice {
 	}
 
 	public void EndTherapistSession () {
-        CameraManager.s_instance.MultipleChoiceCameraOff ();
+        CameraManager.s_instance.UseLastInLevelCamTransform ();
 		PlayerController.s_instance.switchToWalking = true;
 		thisTherapistState = TherapistState.DoneForTheDay;
 		tolsoyAnimator.SetTrigger ("standup");
@@ -142,9 +142,8 @@ public class Therapist : MultipleChoice {
 			if (switchToAnxietyAnimation) {
 				switchToAnxietyAnimation = false;
 				thisTherapistState = TherapistState.AnxietyAnimation;
-				CameraManager.s_instance.SwitchToAnxietyCam ();
+                PlayerController.s_instance.switchToPassiveState = true;
 				answerPanel.SetActive (false);
-				PlayerController.s_instance.allowSelectionInput = false;
 			}
 			break;
 

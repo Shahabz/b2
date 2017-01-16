@@ -84,8 +84,15 @@ public class CameraManager : MonoBehaviour {
 
     public void SetLastInLevelCamTransform()
     {
+        print("SET" + Camera.main.transform.position);
         lastInLevelCamPosition = Camera.main.transform.position;
         lastInLevelCamRotation = Camera.main.transform.rotation;
+    }
+
+    public void UseLastInLevelCamTransform()
+    {
+        Camera.main.transform.position = lastInLevelCamPosition;
+        Camera.main.transform.rotation = lastInLevelCamRotation;
     }
 
     // Moves camera to the camera position of where you were when you entered the multiple choice mode

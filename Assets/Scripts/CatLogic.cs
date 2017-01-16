@@ -82,6 +82,7 @@ public class CatLogic : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
+            PlayerController.s_instance.switchToPassiveState = true;
             DestroyCat();
 
         }

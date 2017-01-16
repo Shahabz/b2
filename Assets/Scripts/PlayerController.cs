@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 using InControl;
 
-public enum PlayerState {Walking, Computer, PassiveState, Therapy, AppliedToJob};
+public enum PlayerState {Walking, Computer, PassiveAnxietyAnimations, Therapy, AppliedToJob};
 public enum AnxietyDescription {None, Mild, Moderate, Severe, Debilitating, Psychotic, _Size}
 public enum DevLevel {None, Amateur=10, Inexperienced = 20, Beginner=30, Novice=50, Junior=70, Green = 90, Intermediate = 100, _Size}
 
 public class PlayerController : MonoBehaviour {
 	public static PlayerController s_instance;
 
-	PlayerState thisPlayerState = PlayerState.Walking;
+	PlayerState thisPlayerState = PlayerState.Walking, lastPlayerState;
 	public Animator thisAnimator;
 	const string walkingBool = "fwd", walkingBackBool = "back";
 	float walkAxis, rotateAxis;
@@ -62,11 +62,13 @@ public class PlayerController : MonoBehaviour {
 
 	#region StateMachine
 
-	public bool switchToPracticeProgramming, switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy;
+	public bool switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy, switchToPassiveState;
 
 	void Update () {
 		inputDevice = InputManager.ActiveDevice;
-
+        if (Input.GetKeyDown(KeyCode.K)){
+            print(thisPlayerState);
+        }
 		switch (thisPlayerState) {
 		case PlayerState.Walking:
 			if (switchToComputer) {
@@ -81,7 +83,6 @@ public class PlayerController : MonoBehaviour {
 			HandleMovement ();
 			HandleRotation ();
 			HandleAnimation ();
-            HandleBrainAnimation();
 			if (inputDevice.Action1.WasPressed) {
 				Interact ();
 			}
@@ -92,6 +93,12 @@ public class PlayerController : MonoBehaviour {
 				thisAnimator.SetTrigger ("sit");
 				Therapist.s_instance.StartTherapistSession ();
 			}
+
+            if (switchToPassiveState)
+            {
+                switchToPassiveState = false;
+                EnterPassiveState();
+            }
 
 			break;
 		case PlayerState.Computer:
@@ -107,10 +114,9 @@ public class PlayerController : MonoBehaviour {
 				switchToWalking = false;
 				thisPlayerState = PlayerState.Walking;
 			}
-			if (switchToPracticeProgramming) {
-				switchToPracticeProgramming = false;
-				CameraManager.s_instance.SwitchToAnxietyCam ();
-				thisPlayerState = PlayerState.PassiveState;
+			if (switchToPassiveState) {
+                switchToPassiveState = false;
+                EnterPassiveState();
 			}
 				
 			if (switchToApplyToJob) {
@@ -123,24 +129,13 @@ public class PlayerController : MonoBehaviour {
 			}
 			break;
 
-		case PlayerState.PassiveState:
+		case PlayerState.PassiveAnxietyAnimations:
                 if (isPracticingProgramming){
                     ShowProgrammingPractice();
                 }
                 if (!isPsychoProgramming)
                 {
                     HandleBrainAnimation();
-                    if (switchToComputer)
-                    {
-                        switchToComputer = false;
-                        thisPlayerState = PlayerState.Computer;
-                        CameraManager.s_instance.MultipleChoiceCameraOn();
-                    }
-                    if (switchToWalking)
-                    {
-                        switchToWalking = false;
-                        thisPlayerState = PlayerState.Walking;
-                    }
                 }
                 
 			break;
@@ -166,13 +161,17 @@ public class PlayerController : MonoBehaviour {
 			if (inputDevice.Action1.WasPressed && allowSelectionInput) {
 				Therapist.s_instance.SelectItem ();
 			}
-			HandleBrainAnimation ();
 
 			if (switchToWalking) {
 				switchToWalking = false;
 				thisAnimator.SetTrigger ("stand");
-				thisPlayerState = PlayerState.Walking;
+                thisPlayerState = PlayerState.Walking;
 			}
+            if (switchToPassiveState)
+            {
+                switchToPassiveState = false;
+                EnterPassiveState();
+            }
 			break;
 
 		}
@@ -189,16 +188,53 @@ public class PlayerController : MonoBehaviour {
     /// </summary>
     /// <param name="currentCamera"></param>
     /// <param name="currentPlayerState"></param>
-    void EnterPassiveState(Camera currentCamera, PlayerState currentPlayerState)
+    void EnterPassiveState()
     {
+        lastPlayerState = thisPlayerState;
+        switch (thisPlayerState)
+        {
+            case PlayerState.Walking:
+                CameraManager.s_instance.SetLastInLevelCamTransform();
+                CameraManager.s_instance.SwitchToAnxietyCam();
+                break;
 
+            case PlayerState.Computer:
+                CameraManager.s_instance.SwitchToAnxietyCam();
+
+                break;
+
+            case PlayerState.Therapy:
+                CameraManager.s_instance.SwitchToAnxietyCam();
+                allowSelectionInput = false;
+                break;
+        }
+        thisPlayerState = PlayerState.PassiveAnxietyAnimations;
 
     }
 
-	#endregion
+    void ExitPassiveState() {
+        switch (lastPlayerState)
+        {
+            case PlayerState.Therapy:
+                Therapist.s_instance.switchToTherapistWaitingToRespond = true;
+                break;
 
-	#region Movement+Animation
-	void HandleMovement() {
+            case PlayerState.Computer:
+                CameraManager.s_instance.MultipleChoiceCameraOn();
+                break;
+
+            case PlayerState.Walking:
+                CameraManager.s_instance.UseLastInLevelCamTransform();
+
+                break;
+        }
+        thisPlayerState = lastPlayerState;
+
+    }
+    #endregion
+
+    #region Movement+Animation
+    void HandleMovement() {
 		transform.Translate (Vector3.forward * speedScalar * walkAxis);
 	}
 
@@ -209,7 +245,6 @@ public class PlayerController : MonoBehaviour {
 	void Interact() {
 		if (isNearComputer) {
 			switchToComputer = true;
-			CameraManager.s_instance.SetLastInLevelCamTransform();
 			currentComputer.TurnOn ();
 		}
 
@@ -288,17 +323,7 @@ public class PlayerController : MonoBehaviour {
 		isFlashingBrain = false;
 		brainFlashDurationTimer = 0;
 		ResetBrainLogic ();
-		switch (thisPlayerState) {
-		case PlayerState.PassiveState:
-			switchToComputer = true;
-			break;
-		case PlayerState.Walking :
-			switchToWalking = true;
-			break;
-		case PlayerState.Therapy:
-			Therapist.s_instance.switchToTherapistWaitingToRespond = true;
-			break;
-		}
+        ExitPassiveState();
 	}	
 	
 	void AlternateBrainColor () {
@@ -359,8 +384,6 @@ public class PlayerController : MonoBehaviour {
 		brainFlashColor = brainGreenColor;
 	}
 
-	
-
     #endregion
     #region ComputerProgrammingLogic
     public void TryPracticeProgramming()
@@ -388,7 +411,7 @@ public class PlayerController : MonoBehaviour {
     void StartProgramming(bool isPsycho)
     {
         GetComponentInChildren<CodeThoughts>().StartSpawning(isPsycho);
-        switchToPracticeProgramming = true;
+        switchToPassiveState = true;
         isPracticingProgramming = true;
         isPsychoProgramming = isPsycho;
         lastDevLevel = devLevel;
@@ -411,7 +434,6 @@ public class PlayerController : MonoBehaviour {
         outString = "ERROR";
         return outString;
     }
-
 
     void ShowProgrammingPractice()
     {
