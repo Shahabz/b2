@@ -19,6 +19,7 @@ public class Hourglass : MonoBehaviour {
         if (other.tag == "Player")
         {
             GameManager.s_instance.AddTime();
+            Destroy(gameObject);
         }
     }
 }

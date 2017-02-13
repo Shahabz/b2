@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-enum CatStates {Sitting, Following};
+enum CatStates {Sitting, Following, Waypoints};
 
 public class CatLogic : MonoBehaviour {
 
@@ -11,9 +11,13 @@ public class CatLogic : MonoBehaviour {
     float catRunSpeed = .02f;
     float triggerFollowDistance = 10f;
     float catLookAngle = 50;
+    float waypointToggleDistance = 3f;
+
+    public GameObject[] waypoints;
+    int waypointIndex;
     // Use this for initialization
 
-    bool switchToFollowing, switchToSitting;
+    bool switchToFollowing, switchToSitting, switchToWaypoints;
 	void Start () {
 	
 	}
@@ -43,6 +47,10 @@ public class CatLogic : MonoBehaviour {
                 }
                 break;
 
+            case CatStates.Waypoints:
+
+                break;
+
         }
 	}
 
@@ -51,6 +59,28 @@ public class CatLogic : MonoBehaviour {
         transform.LookAt(PlayerController.s_instance.transform.position);
         transform.Translate(Vector3.forward * catRunSpeed);
         
+    }
+
+    void GotoNextWaypoint()
+    {
+       
+        transform.LookAt(waypoints[waypointIndex].transform);
+        transform.Translate(Vector3.forward * catRunSpeed);
+
+    }
+
+    void HandleWaypointChecking()
+    {
+        if (Vector3.Distance(transform.position, waypoints[waypointIndex].transform.position) < waypointToggleDistance) {
+            if (waypointIndex >= waypoints.Length - 1)
+            {
+                waypointIndex = 0;
+            }
+            else
+            {
+                waypointIndex++;
+            }
+        }
     }
 
     void WaitForPlayerToComeClose()
