@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public enum DebugStartPosition {Intro, Computer, Tolstoy, Highway};
 
@@ -53,14 +54,36 @@ public class GameManager : MonoBehaviour {
                 break;
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    public float timeBonus = 30f;
+
+    public void AddTime()
+    {
+        second += timeBonus;
+
+    }
 
 	void GotoNextDay () {
 		OnNextDay ();
 		day++;
 	}
+
+    public float second = 300;
+    public Text timeDisplay;//, hourDisplay, minuteDisplay;
+
+    void Update()
+    {
+        second -= Time.deltaTime;
+        timeDisplay.text = (second < 10) ? timeDisplay.text = ReturnMinute().ToString() + ":0" + ReturnSecond().ToString() : timeDisplay.text = ReturnMinute().ToString() + ":" + ReturnSecond().ToString();
+    }
+
+    public int ReturnSecond()
+    {
+        return ((int)(second % 60));
+    }
+
+    public int ReturnMinute()
+    {
+        return (Mathf.FloorToInt(second / 60));
+    }
 }
