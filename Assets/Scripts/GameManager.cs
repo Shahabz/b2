@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour {
     void Update()
     {
         second -= Time.deltaTime;
-        timeDisplay.text = (second < 10) ? timeDisplay.text = ReturnMinute().ToString() + ":0" + ReturnSecond().ToString() : timeDisplay.text = ReturnMinute().ToString() + ":" + ReturnSecond().ToString();
+        timeDisplay.text = (ReturnSecond() < 10) ? timeDisplay.text = ReturnMinute().ToString() + ":0" + ReturnSecond().ToString() : timeDisplay.text = ReturnMinute().ToString() + ":" + ReturnSecond().ToString();
     }
 
     public int ReturnSecond()
