@@ -58,11 +58,12 @@ public class PlayerController : MonoBehaviour {
 		}
 		brainStartPosition = brain.transform.localPosition;
 	}
-		
 
-	#region StateMachine
+    
 
-	public bool switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy, switchToPassiveState;
+    #region StateMachine
+
+    public bool switchToComputer, switchToWalking, switchToApplyToJob, switchToTherapy, switchToPassiveState;
 
 	void Update () {
 		inputDevice = InputManager.ActiveDevice;
@@ -383,6 +384,11 @@ public class PlayerController : MonoBehaviour {
 		anxietyLevel--;
 		brainFlashColor = brainGreenColor;
 	}
+
+    void StartFromBeginningOfMap()
+    {
+        
+    }
 
     #endregion
     #region ComputerProgrammingLogic
