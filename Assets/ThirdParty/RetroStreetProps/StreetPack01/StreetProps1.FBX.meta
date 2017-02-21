@@ -1,0 +1,140 @@
+fileFormatVersion: 2
+guid: 33ac8e2f0cf717c4fb32574b12dba8b4
+timeCreated: 1462299925
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: ConcreteBlock
+    100004: FenseModul01
+    100006: FenseModul02
+    100008: FenseModul03
+    100010: FenseModul04
+    100012: FenseModul05
+    100014: FenseModul2_2
+    100016: Lavka
+    100018: Musor
+    100020: StreetClock
+    100022: UrnaBig
+    100024: UrnaSmall
+    100026: Parebric
+    100028: Parebric01
+    400000: //RootNode
+    400002: ConcreteBlock
+    400004: FenseModul01
+    400006: FenseModul02
+    400008: FenseModul03
+    400010: FenseModul04
+    400012: FenseModul05
+    400014: FenseModul2_2
+    400016: Lavka
+    400018: Musor
+    400020: StreetClock
+    400022: UrnaBig
+    400024: UrnaSmall
+    400026: Parebric
+    400028: Parebric01
+    2300000: //RootNode
+    2300002: ConcreteBlock
+    2300004: FenseModul01
+    2300006: FenseModul02
+    2300008: FenseModul03
+    2300010: FenseModul04
+    2300012: FenseModul05
+    2300014: FenseModul2_2
+    2300016: Lavka
+    2300018: Musor
+    2300020: StreetClock
+    2300022: UrnaBig
+    2300024: UrnaSmall
+    2300026: Parebric
+    2300028: Parebric01
+    3300000: //RootNode
+    3300002: ConcreteBlock
+    3300004: FenseModul01
+    3300006: FenseModul02
+    3300008: FenseModul03
+    3300010: FenseModul04
+    3300012: FenseModul05
+    3300014: FenseModul2_2
+    3300016: Lavka
+    3300018: Musor
+    3300020: StreetClock
+    3300022: UrnaBig
+    3300024: UrnaSmall
+    3300026: Parebric
+    3300028: Parebric01
+    4300000: Doska
+    4300002: ConcreteBlock
+    4300004: UrnaBig
+    4300006: Lavka
+    4300008: UrnaSmall
+    4300010: Musor
+    4300012: StreetClock
+    4300014: FenseModul2_2
+    4300016: FenseModul01
+    4300018: FenseModul02
+    4300020: FenseModul03
+    4300022: FenseModul04
+    4300024: FenseModul05
+    4300026: Parebric
+    4300028: Parebric01
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
