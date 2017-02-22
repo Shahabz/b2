@@ -22,6 +22,8 @@ public class CameraFollow : MonoBehaviour {
 
 	public float clipBuffer = 0.1f;
 
+	PlayerInput input;
+
 	void Start () {
 		Vector3 angles = transform.eulerAngles;
 		x = angles.y;
@@ -30,6 +32,13 @@ public class CameraFollow : MonoBehaviour {
 		// Make the rigid body not change rotation
 		if (GetComponent<Rigidbody>())
 			GetComponent<Rigidbody>().freezeRotation = true;
+
+		input = target.GetComponentInParent<PlayerInput>(); //Cuz we're looking at a child object ;)
+		if(input == null) {
+			Debug.LogError("PlayerInput is null", this);
+			this.enabled = false;
+			return;
+		}
 	}
 
 	Vector3 HandleCollisionZoom() {
@@ -77,8 +86,8 @@ public class CameraFollow : MonoBehaviour {
 		if (target) {
 			Vector3 lookPos = target.position;
 			Cursor.lockState = CursorLockMode.Locked;
-			x += Input.GetAxis("Mouse X") * xSpeed * distance * 0.02f;
-			y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
+			x += input.lookDir.x * xSpeed * distance * 0.02f;
+			y -= input.lookDir.y * ySpeed * 0.02f;
 
 			y = ClampAngle(y, yMinLimit, yMaxLimit);
 

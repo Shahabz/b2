@@ -15,13 +15,13 @@ public class TestPlayerController : MonoBehaviour {
 	
 	public LayerMask mask;
 	
-	public float jumpStrength = 3.0f;
+//	public float jumpStrength = 3.0f;
 	
-	float snowLevel = 0.0f;
+//	float snowLevel = 0.0f;
 	
-	public float snowAccumSpeed = 0.2f;
+//	public float snowAccumSpeed = 0.2f;
 	
-	bool moved;
+//	bool moved;
 
 	Rigidbody rigidbody;
 	
@@ -32,9 +32,9 @@ public class TestPlayerController : MonoBehaviour {
 	
 	public Transform cameraObj;
 
-	public Transform hand;
+//	public Transform hand;
 
-	public float attackRadius = 1.0f;
+//	public float attackRadius = 1.0f;
 	
 	void Start () {
 		input = GetComponent<BaseInput>();
@@ -43,12 +43,12 @@ public class TestPlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.T)) {
-			Application.LoadLevel(0);
-		}
-		if(Input.GetKeyDown(KeyCode.Escape)) {
-			Application.Quit();
-		}
+//		if(Input.GetKeyDown(KeyCode.T)) {
+//			Application.LoadLevel(0);
+//		}
+//		if(Input.GetKeyDown(KeyCode.Escape)) {
+//			Application.Quit();
+//		}
 //		//-------------------Snow stuff---------------------//
 //		if (moved) {
 //			snowLevel -= snowAccumSpeed * 5.0f * Time.deltaTime;
@@ -73,21 +73,22 @@ public class TestPlayerController : MonoBehaviour {
 		float speedMod = input.sprint ? sprintSpeedMod : 1.0f;
 		rigidbody.angularVelocity = Vector3.zero;
 		
-		if (input.dir.magnitude > 0.0f) {
+		if (input.moveDir.magnitude > 0.0f) {
 			rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
 			
 			Vector3 lookDir = Vector3.zero;
-			if(Mathf.Abs(input.dir.z) > 0.0f)
-				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.dir.z);
-			if(Mathf.Abs(input.dir.x) > 0.0f)
-				lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.dir.x);
+			if(Mathf.Abs(input.moveDir.z) > 0.0f)
+				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
+			if(Mathf.Abs(input.moveDir.x) > 0.0f)
+				lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
 			lookDir.Normalize();
 			lookDir.y = 0.0f;
-			
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), turnSpeed*Time.deltaTime);
+
+			if(lookDir != Vector3.zero)
+				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), turnSpeed*Time.deltaTime);
 		}
 
-		anim.SetBool("fwd", input.dir.magnitude != 0.0f);
+		anim.SetBool("fwd", input.moveDir.magnitude != 0.0f);
 //		anim.SetBool("back", input.dir.z < 0);
 
 
@@ -115,7 +116,7 @@ public class TestPlayerController : MonoBehaviour {
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
 
 			Vector3 lookDir = Vector3.zero;
-				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.dir.z);
+				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
 			lookDir.Normalize();
 			lookDir.y = 0.0f;
 			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 9f*Time.deltaTime);
@@ -128,7 +129,7 @@ public class TestPlayerController : MonoBehaviour {
 			}
 
 		} else {
-			Camera.main.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(Camera.main.GetComponent<CameraFollow>().distanceMax, 3f, Time.deltaTime*5f);
+			Camera.main.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(Camera.main.GetComponent<CameraFollow>().distanceMax, 1.8f, Time.deltaTime*5f);
 			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
 			targetPos.x = 0f;
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
@@ -160,10 +161,6 @@ public class TestPlayerController : MonoBehaviour {
 //		return Physics.Raycast (transform.position + Vector3.up, Vector3.down, GROUND_CHECK_DISTANCE, mask);
 //	}
 	
-	void OnGUI() {
-		GUI.Box(new Rect(0.0f, 0.0f, 100.0f, 60.0f), "WASD to move\nLMB to attack\nT to restart"); 
-	}
-
 //	void Attack() {
 //		Collider[] cols = Physics.OverlapSphere(hand.transform.position, attackRadius);
 //		foreach(Collider col in cols) {
