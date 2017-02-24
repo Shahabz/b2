@@ -151,6 +151,7 @@ Shader "Hidden/VertexPainterPro_Preview"
          v2f vert (appdata v)
          {
             v2f o;
+            UNITY_INITIALIZE_OUTPUT(v2f, o);
             o.uv = v.uv0.xy;
             o.vertex = mul(UNITY_MATRIX_MVP, v.vertex); 
             if (_tab > 1.9 && _tab < 2.1)

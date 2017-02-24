@@ -10,6 +10,7 @@ public class BaseInput : MonoBehaviour {
 //	public bool grapple;
 	public bool aim;
 	public bool shoot;
+	public bool melee;
 
 	void Start () {
 	

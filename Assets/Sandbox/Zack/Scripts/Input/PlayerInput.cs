@@ -8,6 +8,7 @@ public class PlayerInput : BaseInput {
 	//Um hi Pablo I'm putting this here for now but it can be moved.
 	public class PlayerActions : PlayerActionSet {
 		public PlayerAction Fire;
+		public PlayerAction Melee;
 		public PlayerAction Aim;
 		public PlayerAction Sprint;
 		public PlayerAction Left;
@@ -23,6 +24,7 @@ public class PlayerInput : BaseInput {
 
 		public PlayerActions() {
 			Fire = CreatePlayerAction( "Fire" );
+			Melee = CreatePlayerAction( "Melee" );
 			Aim = CreatePlayerAction( "Aim" );
 			Sprint = CreatePlayerAction( "Sprint" );
 			Left = CreatePlayerAction( "Move Left" );
@@ -43,6 +45,9 @@ public class PlayerInput : BaseInput {
 			playerActions.Fire.AddDefaultBinding( InputControlType.RightTrigger );
 			playerActions.Fire.AddDefaultBinding( Mouse.LeftButton );
 
+			playerActions.Melee.AddDefaultBinding( Key.F );
+			playerActions.Melee.AddDefaultBinding( InputControlType.Action2 );
+
 			playerActions.Aim.AddDefaultBinding( Mouse.RightButton );
 			playerActions.Aim.AddDefaultBinding( InputControlType.LeftTrigger );
 
@@ -53,6 +58,11 @@ public class PlayerInput : BaseInput {
 			playerActions.Down.AddDefaultBinding( Key.DownArrow );
 			playerActions.Left.AddDefaultBinding( Key.LeftArrow );
 			playerActions.Right.AddDefaultBinding( Key.RightArrow );
+
+			playerActions.Up.AddDefaultBinding( Key.W );
+			playerActions.Down.AddDefaultBinding( Key.S );
+			playerActions.Left.AddDefaultBinding( Key.A );
+			playerActions.Right.AddDefaultBinding( Key.D );
 
 			playerActions.Left.AddDefaultBinding( InputControlType.LeftStickLeft );
 			playerActions.Right.AddDefaultBinding( InputControlType.LeftStickRight );
@@ -109,9 +119,11 @@ public class PlayerInput : BaseInput {
 		if(aim) {
 			moveDir = Vector3.zero;
 			sprint = false;
+			melee = playerActions.Melee.WasPressed;
 		} else {
 			moveDir = new Vector3(playerActions.Move.X, 0f, playerActions.Move.Y); //its an x,y vec EW
 			sprint = playerActions.Sprint;
+			melee = false;
 		}
 	}
 

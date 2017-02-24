@@ -13,7 +13,7 @@ public class TestPlayerController : MonoBehaviour {
 //	public Animator topAnimator;
 //	public Animator bottomAnimator;
 	
-	public LayerMask mask;
+//	public LayerMask mask;
 	
 //	public float jumpStrength = 3.0f;
 	
@@ -88,26 +88,13 @@ public class TestPlayerController : MonoBehaviour {
 				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), turnSpeed*Time.deltaTime);
 		}
 
-		anim.SetBool("fwd", input.moveDir.magnitude != 0.0f);
-//		anim.SetBool("back", input.dir.z < 0);
 
-
-//		bottomAnimator.SetBool("Running", input.dir.magnitude != 0.0f);
-//		bottomAnimator.SetBool("Sprinting", input.sprint);
-//		
-//		topAnimator.SetBool("Running", input.dir.magnitude != 0.0f);
-//		topAnimator.SetBool("Sprinting", input.sprint);
-		
-//		grounded = CheckGrounded();
-//		bottomAnimator.SetBool("Grounded", grounded);
-//		topAnimator.SetBool("Grounded", grounded);
-		
-//		bottomAnimator.SetBool("Jump", false);
-//		topAnimator.SetBool("Jump", false);
-
-		//--------------------------------------------------//
-
+		//TODO fix this
+		anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 0.06f) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 0.06f));
+		anim.SetFloat("Movement", input.moveDir.magnitude/2f + anim.GetFloat("Sprint")/2f);
 		anim.SetBool("Aim", input.aim);
+
+		transform.FindChild("Trail").gameObject.SetActive(input.sprint);
 
 		if(input.aim) {
 			Camera.main.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(Camera.main.GetComponent<CameraFollow>().distanceMax, 1f, Time.deltaTime*5f);
@@ -116,10 +103,11 @@ public class TestPlayerController : MonoBehaviour {
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
 
 			Vector3 lookDir = Vector3.zero;
-				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
+			lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
+			lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
 			lookDir.Normalize();
 			lookDir.y = 0.0f;
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 9f*Time.deltaTime);
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime);
 
 			RaycastHit hit = new RaycastHit();
 			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
@@ -138,7 +126,10 @@ public class TestPlayerController : MonoBehaviour {
 		}
 
 		if(input.shoot) {
-			anim.SetTrigger("Attack");
+			anim.SetTrigger("Fire");
+		}
+		if(input.melee) {
+			anim.SetTrigger("punch");
 		}
 
 //		if(Input.GetButton("Fire2"))
