@@ -35,11 +35,14 @@ public class TestPlayerController : MonoBehaviour {
 //	public Transform hand;
 
 //	public float attackRadius = 1.0f;
+
+	LineRenderer laserTarget;
 	
 	void Start () {
 		input = GetComponent<BaseInput>();
 		rigidbody = GetComponent<Rigidbody>();
 		anim = GetComponent<Animator>();
+		laserTarget = GetComponentInChildren<LineRenderer>();
 	}
 	
 	void Update () {
@@ -107,14 +110,17 @@ public class TestPlayerController : MonoBehaviour {
 			lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
 			lookDir.Normalize();
 			lookDir.y = 0.0f;
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime);
+				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 15f*Time.deltaTime);
 
-			RaycastHit hit = new RaycastHit();
-			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
-				LineRenderer lineRend = transform.FindChild("LaserTarget").GetComponent<LineRenderer>();
-				lineRend.gameObject.SetActive(true);
-				lineRend.SetPositions( new Vector3[] {lineRend.transform.position, hit.point});
-			}
+//			RaycastHit hit = new RaycastHit();
+//			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
+			laserTarget.gameObject.SetActive(true);
+			laserTarget.SetPositions( new Vector3[] {laserTarget.transform.position, laserTarget.transform.position + (laserTarget.transform.up * 50f)});
+//			if(Mathf.Abs(transform.eulerAngles.y - Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime).eulerAngles.y) < 3f) {
+//				GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
+//				GetComponent<RootMotion.FinalIK.AimIK>().enabled = true;
+//			}
+//			}
 
 		} else {
 			Camera.main.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(Camera.main.GetComponent<CameraFollow>().distanceMax, 1.8f, Time.deltaTime*5f);
@@ -122,14 +128,18 @@ public class TestPlayerController : MonoBehaviour {
 			targetPos.x = 0f;
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
 
-			transform.FindChild("LaserTarget").gameObject.SetActive(false);
+			laserTarget.gameObject.SetActive(false);
+			GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = true;
+			GetComponent<RootMotion.FinalIK.AimIK>().enabled = false;
 		}
 
 		if(input.shoot) {
 			anim.SetTrigger("Fire");
+			GetComponent<WeaponManager>().Fire();
 		}
 		if(input.melee) {
 			anim.SetTrigger("punch");
+			GetComponent<WeaponManager>().Melee();
 		}
 
 //		if(Input.GetButton("Fire2"))
@@ -145,6 +155,11 @@ public class TestPlayerController : MonoBehaviour {
 //			lookWeight = Mathf.Lerp(lookWeight,0f,Time.deltaTime*lookSmoother);
 //		}
 //		topAnimator.SetLookAtWeight(lookWeight);
+	}
+
+	public void AimDone() {
+		GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
+		GetComponent<RootMotion.FinalIK.AimIK>().enabled = true;
 	}
 	
 //	bool CheckGrounded() {
