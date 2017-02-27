@@ -91,10 +91,9 @@ public class TestPlayerController : MonoBehaviour {
 				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), turnSpeed*Time.deltaTime);
 		}
 
-
 		//TODO fix this
-		anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 0.06f) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 0.06f));
-		anim.SetFloat("Movement", input.moveDir.magnitude/2f + anim.GetFloat("Sprint")/2f);
+		anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 5f*Time.deltaTime) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
+		anim.SetFloat("Movement", Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime));
 		anim.SetBool("Aim", input.aim);
 
 		transform.FindChild("Trail").gameObject.SetActive(input.sprint);
@@ -110,7 +109,7 @@ public class TestPlayerController : MonoBehaviour {
 			lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
 			lookDir.Normalize();
 			lookDir.y = 0.0f;
-				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 15f*Time.deltaTime);
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 15f*Time.deltaTime);
 
 //			RaycastHit hit = new RaycastHit();
 //			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
@@ -136,6 +135,7 @@ public class TestPlayerController : MonoBehaviour {
 		if(input.shoot) {
 			anim.SetTrigger("Fire");
 			GetComponent<WeaponManager>().Fire();
+			cameraObj.GetComponent<CameraFollow>().Recoil(0.5f);
 		}
 		if(input.melee) {
 			anim.SetTrigger("punch");

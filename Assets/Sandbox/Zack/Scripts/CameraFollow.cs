@@ -101,7 +101,10 @@ public class CameraFollow : MonoBehaviour {
 			Vector3 position = rotation * negDistance + lookPos;
 
 			transform.rotation = rotation;
-			transform.position = position;		
+			transform.position = position;	
+
+			Vector3 endPos = transform.FindChild("LaserEnd").localPosition;
+			transform.FindChild("LaserEnd").localPosition = Vector3.Lerp(endPos, new Vector3(0f, 0f, endPos.z), 5f*Time.deltaTime);
 		}
 	}
 	
@@ -112,5 +115,9 @@ public class CameraFollow : MonoBehaviour {
 		if (angle > 360F)
 			angle -= 360F;
 		return Mathf.Clamp(angle, min, max);
+	}
+
+	public void Recoil(float recoil) {
+		transform.FindChild("LaserEnd").localPosition += new Vector3(0f, recoil, 0f);
 	}
 }

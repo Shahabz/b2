@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class WeaponManager : MonoBehaviour {
 
+	[System.Serializable]
+	public class Weapon {
+		public string name;
+		public AudioClip[] fireSounds;
+	}
+
+	public Weapon[] weapons;
+	int currentWeapon;
+
 	public Transform weaponObj;
 
 	const float MAX_DISTANCE = 50f;
 
 	public void Fire() {
 		//Play sound here
-//		GetComponent<AudioSource>().clip = weapons[currentWeapon].fireSound;
-//		GetComponent<AudioSource>().Play();
+		GetComponent<AudioSource>().volume = OptionManager.FXVolume;
+		GetComponent<AudioSource>().clip = weapons[currentWeapon].fireSounds[Random.Range(0, weapons[currentWeapon].fireSounds.Length)];
+		GetComponent<AudioSource>().Play();
 
 		Transform firePos = weaponObj.FindChild("FirePos");
 		RaycastHit hit;
