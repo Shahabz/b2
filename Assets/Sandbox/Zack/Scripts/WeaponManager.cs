@@ -8,10 +8,17 @@ public class WeaponManager : MonoBehaviour {
 	public class Weapon {
 		public string name;
 		public AudioClip[] fireSounds;
+		public float fireRate = 1f;
+		public float recoil = 5f;
 	}
 
 	public Weapon[] weapons;
-	int currentWeapon;
+	int currentWeaponIndex;
+	public Weapon CurrentWeapon {
+		get {
+			return weapons[currentWeaponIndex];
+		}
+	}
 
 	public Transform weaponObj;
 
@@ -20,7 +27,7 @@ public class WeaponManager : MonoBehaviour {
 	public void Fire() {
 		//Play sound here
 		GetComponent<AudioSource>().volume = OptionManager.FXVolume;
-		GetComponent<AudioSource>().clip = weapons[currentWeapon].fireSounds[Random.Range(0, weapons[currentWeapon].fireSounds.Length)];
+		GetComponent<AudioSource>().clip = CurrentWeapon.fireSounds[Random.Range(0, CurrentWeapon.fireSounds.Length)];
 		GetComponent<AudioSource>().Play();
 
 		Transform firePos = weaponObj.FindChild("FirePos");
@@ -46,7 +53,7 @@ public class WeaponManager : MonoBehaviour {
 	}
 
 	public void Melee() {
-
+//		GetComponent<
 	}
 
 //	public void SwitchWeapon() {

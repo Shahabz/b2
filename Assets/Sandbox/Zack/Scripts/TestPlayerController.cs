@@ -73,26 +73,33 @@ public class TestPlayerController : MonoBehaviour {
 //			}
 //			}
 
+			if(input.shoot) {
+				anim.SetTrigger("Fire");
+				GetComponent<WeaponManager>().Fire();
+				cameraObj.GetComponent<CameraFollow>().Recoil(GetComponent<WeaponManager>().CurrentWeapon.recoil);
+			}
+			if(input.melee) {
+				anim.SetTrigger("punch");
+				GetComponent<WeaponManager>().Melee();
+
+				GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
+				GetComponent<RootMotion.FinalIK.AimIK>().enabled = false;
+			}
+
 		} else {
 			Camera.main.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(Camera.main.GetComponent<CameraFollow>().distanceMax, 1.8f, Time.deltaTime*5f);
 			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
 			targetPos.x = 0f;
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
 
+
+			//Do i care about this every frame?
 			laserTarget.gameObject.SetActive(false);
 			GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = true;
 			GetComponent<RootMotion.FinalIK.AimIK>().enabled = false;
 		}
 
-		if(input.shoot) {
-			anim.SetTrigger("Fire");
-			GetComponent<WeaponManager>().Fire();
-			cameraObj.GetComponent<CameraFollow>().Recoil(0.5f);
-		}
-		if(input.melee) {
-			anim.SetTrigger("punch");
-			GetComponent<WeaponManager>().Melee();
-		}
+
 	}
 
 	public void AimDone() {
