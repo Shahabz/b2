@@ -23,7 +23,6 @@ public class FootstepHandler : MonoBehaviour {
 
     public void PlayFootStep(float moveMagnitude)
     {
-        print(moveMagnitude);
         if (moveMagnitude < .9f)
         {
             cooldown = walkCooldown;

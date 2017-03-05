@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: e462bd77c6b7225458961d6a03bb3bb3
+timeCreated: 1488668736
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: PlainBlack
+  fontNames:
+  - PlainBlack
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
