@@ -36,6 +36,10 @@ public class WeaponManager : MonoBehaviour {
 		if(Physics.Raycast(new Ray(firePos.position, firePos.up), out hit, MAX_DISTANCE, hitMask, QueryTriggerInteraction.Ignore)) {
 			Debug.DrawRay(firePos.position, firePos.up*MAX_DISTANCE, Color.red, 1f);
 
+			RagdollCharacter ragdoll = hit.collider.gameObject.GetComponentInParent<RagdollCharacter>();
+			if(ragdoll != null)
+				ragdoll.Activate(hit.point, firePos.up*1000f);
+
 //			IDamageable damageable = hit.collider.gameObject.GetComponent<IDamageable>();
 //			if((damageable = hit.collider.gameObject.GetComponent<IDamageable>()) != null) {
 //				damageable.ApplyDamage(hit.point);

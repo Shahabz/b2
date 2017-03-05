@@ -32,7 +32,7 @@ public class TestPlayerController : MonoBehaviour {
 		rigidbody.angularVelocity = Vector3.zero;
 
         if (input.moveDir.magnitude > 0.0f) {
-            footstepHandler.PlayFootStep(input.moveDir.magnitude); //this is always 1, I need to figure out how to differentiate between running and walking and pass it to this param
+//            footstepHandler.PlayFootStep(input.moveDir.magnitude); //this is always 1, I need to figure out how to differentiate between running and walking and pass it to this param
 
             rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
 
@@ -49,13 +49,19 @@ public class TestPlayerController : MonoBehaviour {
         }
         else
         {
-            footstepHandler.CallCeaseFootStep();
+            
         }
 
 		//Wonky code because idle: 0, walk: 0.5, sprint: 1
 		anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 5f*Time.deltaTime) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
 		anim.SetFloat("Movement", Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime));
 		anim.SetBool("Aim", input.aim);
+
+		if (input.moveDir.magnitude > 0.0f) {
+			footstepHandler.PlayFootStep(Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime)); //this is always 1, I need to figure out how to differentiate between running and walking and pass it to this param
+		} else {
+			footstepHandler.CallCeaseFootStep();
+		}
 
 		if(input.aim) {
 			Camera.main.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(Camera.main.GetComponent<CameraFollow>().distanceMax, 1f, Time.deltaTime*5f);
