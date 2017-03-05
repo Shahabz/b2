@@ -112,4 +112,9 @@ public class CameraManager : MonoBehaviour {
         preTransitionCamPosition = thisCamera.transform.position;
         preTransitionCamRotation = thisCamera.transform.rotation;
     }
+
+    public void DisableGameplayCamera()
+    {
+        
+    }
 }

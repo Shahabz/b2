@@ -15,6 +15,7 @@ public class TestPlayerController : MonoBehaviour {
     FootstepHandler footstepHandler;
 	Rigidbody rigidbody;
 	public Transform cameraObj;
+    public Camera gameplayCamera;
 	LineRenderer laserTarget;
 
     public bool isNearTherapist;
@@ -42,7 +43,7 @@ public class TestPlayerController : MonoBehaviour {
 		anim = GetComponent<Animator>();
 		laserTarget = GetComponentInChildren<LineRenderer>();
 
-		GetComponent<RootMotion.FinalIK.AimIK>().solver.target = GetComponent<RootMotion.FinalIK.LookAtIK>().solver.target = cameraObj.FindChild("LaserEnd");
+        GetComponent<RootMotion.FinalIK.AimIK>().solver.target = GetComponent<RootMotion.FinalIK.LookAtIK>().solver.target = cameraObj.FindChild("LaserEnd");
 	}
 	
 	void Update () {
@@ -85,7 +86,7 @@ public class TestPlayerController : MonoBehaviour {
 		}
 
 		if(input.aim) {
-			Camera.main.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(Camera.main.GetComponent<CameraFollow>().distanceMax, 1f, Time.deltaTime*5f);
+			gameplayCamera.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(gameplayCamera.GetComponent<CameraFollow>().distanceMax, 1f, Time.deltaTime*5f);
 			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
 			targetPos.x = 0.5f;
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
@@ -97,9 +98,9 @@ public class TestPlayerController : MonoBehaviour {
 			lookDir.y = 0.0f;
 			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 15f*Time.deltaTime);
 
-//			RaycastHit hit = new RaycastHit(); 
-//			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
-			laserTarget.gameObject.SetActive(true);
+            //			RaycastHit hit = new RaycastHit(); 
+            //			if(Physics.Raycast(gameplayCamera.ScreenPointToRay(Input.mousePosition), out hit)) {
+            laserTarget.gameObject.SetActive(true);
 			laserTarget.SetPositions( new Vector3[] {laserTarget.transform.position, laserTarget.transform.position + (laserTarget.transform.up * 50f)});
 //			if(Mathf.Abs(transform.eulerAngles.y - Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime).eulerAngles.y) < 3f) {
 //				GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
@@ -121,7 +122,7 @@ public class TestPlayerController : MonoBehaviour {
 			}
 
 		} else {
-			Camera.main.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(Camera.main.GetComponent<CameraFollow>().distanceMax, 1.8f, Time.deltaTime*5f);
+            gameplayCamera.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(gameplayCamera.GetComponent<CameraFollow>().distanceMax, 1.8f, Time.deltaTime*5f);
 			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
 			targetPos.x = 0f;
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);

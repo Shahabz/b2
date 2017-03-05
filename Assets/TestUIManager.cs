@@ -17,10 +17,12 @@ public class TestUIManager : MonoBehaviour {
 //		
 //	}
 //
+/*
 	void Update () {
 		switch(state) {
 			case UIState.None:
 				Cursor.lockState = CursorLockMode.Locked;
+
 				if(NPInputManager.input.Menu.WasPressed) {
 					ToggleMenu(true);
 					return;
@@ -37,7 +39,7 @@ public class TestUIManager : MonoBehaviour {
 				break;
 		}
 	}
-
+*/
 	void ToggleMenu(bool show) {
 		if(show) {
 			state = UIState.Menu;

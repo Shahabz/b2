@@ -113,9 +113,9 @@ public class NPInputManager : MonoBehaviour {
 		}
 	}
 
-	public static PlayerActions input;
-
-	PlayerActions playerActions;
+    //public static PlayerActions input;
+    public PlayerActions input;
+    PlayerActions playerActions;
 	string saveData;
 
 	void OnEnable() {
