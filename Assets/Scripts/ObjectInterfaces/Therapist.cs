@@ -71,14 +71,14 @@ public class Therapist : MultipleChoice {
 
     void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
-			PlayerController.s_instance.isNearTherapist = true;
+			TestPlayerController.s_instance.isNearTherapist = true;
 			tolsoyAnimator.SetTrigger ("sitdown");
 		}
 	}
 
 	void OnTriggerExit (Collider other) {
 		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
-			PlayerController.s_instance.isNearTherapist = false;
+			TestPlayerController.s_instance.isNearTherapist = false;
 			tolsoyAnimator.SetTrigger ("standup");
 
 		}

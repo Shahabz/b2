@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour {
 		case DebugStartPosition.Computer:
 			Camera.main.transform.position = ComputerCam.transform.position;
 			Camera.main.transform.rotation = ComputerCam.transform.rotation;
-			PlayerController.s_instance.transform.position = ComputerTransform.position;
 
 			break;
 		case DebugStartPosition.Intro:
@@ -44,8 +43,8 @@ public class GameManager : MonoBehaviour {
 			break;
 
 		case DebugStartPosition.Tolstoy:
-
-			break;
+                TestPlayerController.s_instance.transform.position = TolstoyTransform.position;
+                break;
 
         case DebugStartPosition.Highway:
                 Camera.main.transform.position = HighwayCam.transform.position;

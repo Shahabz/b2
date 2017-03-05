@@ -14,11 +14,24 @@ public class TestPlayerController : MonoBehaviour {
     //	public Animator bottomAnimator;
     FootstepHandler footstepHandler;
 	Rigidbody rigidbody;
-	
 	public Transform cameraObj;
 	LineRenderer laserTarget;
-	
-	void Start () {
+
+    public bool isNearTherapist;
+    public static TestPlayerController s_instance;
+
+    void Awake()
+    {
+        if (s_instance == null)
+        {
+            s_instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+        void Start () {
         footstepHandler = GetComponent<FootstepHandler>();
 		input = GetComponent<BaseInput>();
 		rigidbody = GetComponent<Rigidbody>();
