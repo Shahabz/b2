@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GenericTimer : MonoBehaviour {
+public static class GenericTimer {
 
 	public static bool RunGenericTimer(float time, ref float timer) {
 		if (timer < time) {

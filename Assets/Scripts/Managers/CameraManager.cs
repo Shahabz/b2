@@ -10,7 +10,10 @@ using System.Collections;
 public class CameraManager : MonoBehaviour {
 
     [SerializeField]
-    Camera anxietyCam, jobCam;
+    Camera mainCamera;
+
+    [SerializeField]
+    Transform anxietyCam;
 
     Vector3 anxietyCamStartPosition;
 
@@ -39,14 +42,19 @@ public class CameraManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        anxietyCamStartPosition = anxietyCam.transform.localPosition;
-
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
     // Update is called once per frame
     void Update () {
 	
 	}
+
+    public void ToggleGameplayCamera (bool isEnabled)
+    {
+        TestPlayerController.s_instance.gameplayCamera.enabled = isEnabled;
+        mainCamera.enabled = !isEnabled;
+    }
 
     public void SetMainViewOnScene(Camera thisCamera)
     {
@@ -61,8 +69,7 @@ public class CameraManager : MonoBehaviour {
     }
 
     public void SwitchToJobCam() {
-        Camera.main.transform.rotation = jobCam.transform.rotation;
-        Camera.main.transform.position = jobCam.transform.position;
+ 
     }
 
     public void ResetAnxietyCam ()
@@ -84,7 +91,6 @@ public class CameraManager : MonoBehaviour {
 
     public void SetLastInLevelCamTransform()
     {
-        print("SET" + Camera.main.transform.position);
         lastInLevelCamPosition = Camera.main.transform.position;
         lastInLevelCamRotation = Camera.main.transform.rotation;
     }
@@ -113,8 +119,4 @@ public class CameraManager : MonoBehaviour {
         preTransitionCamRotation = thisCamera.transform.rotation;
     }
 
-    public void DisableGameplayCamera()
-    {
-        
-    }
 }

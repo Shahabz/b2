@@ -27,5 +27,7 @@ public class PlayerInput : BaseInput {
 			sprint = thisNPInputManager.input.Sprint;
 			melee = false;
 		}
+
+
 	}
 }

@@ -18,7 +18,6 @@ public class TestPlayerController : MonoBehaviour {
     public Camera gameplayCamera;
 	LineRenderer laserTarget;
 
-    public bool isNearTherapist;
     public static TestPlayerController s_instance;
 
 	public bool lockInput = false;
@@ -141,4 +140,16 @@ public class TestPlayerController : MonoBehaviour {
 		GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
 		GetComponent<RootMotion.FinalIK.AimIK>().enabled = true;
 	}
+
+    public void EnterTherapy ()
+    {
+        lockInput = true;
+        anim.SetTrigger("sit");
+    }
+
+    public void ExitTherapy()
+    {
+        lockInput = false;
+        anim.SetTrigger("stand");
+    }
 }

@@ -2,21 +2,23 @@
 using System.Collections;
 using UnityEngine.UI;
 
-enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, AnxietyAnimation, TherapistWaitingToRespond, TherapistResponse, CheckForNextQuestion, EndSession, DoneForTheDay};
+enum TherapistState {Idle, Introduction, AskingQuestion, DavidSelectAnswer, AnsweringQuestion, TherapistWaitingToRespond, TherapistResponse, CheckForNextQuestion, EndSession, DoneForTheDay};
 
 public class Therapist : MultipleChoice {
 
 	//Show text only on questions and answers, small in between dialogue is audio only.
 
 	//STATE MACHINE SWITCHES
-	public bool switchToIdle,switchToIntroduction,switchToAskingQuestion, switchToDavidSelectAnswer, switchToAnxietyAnimation, switchToTherapistWaitingToRespond;
+	public bool switchToIdle,switchToIntroduction,switchToAskingQuestion, switchToDavidSelectAnswer, switchToAnsweringState, switchToTherapistWaitingToRespond;
 
 	//STATE MACHINE TIMERS
 	float introductionTimer, askingQuestionTimer, waitingTimer;
 	float introductionTime = 1f, askingQuestionTime = 1f, waitingTime = 1;
 	bool hasAskedQuestion;
 
-	const string therapyAudioDirectory = "Audio/Therapy/";
+    BaseInput input;
+
+    const string therapyAudioDirectory = "Audio/Therapy/";
 	//it would be cool to fade into an abstract space when questions are being asked, or perhaps select 
 	[SerializeField]
 	public Camera davidSitting, OTS_TtoD, OTS_DtoT, selectAnswer, topDown;
@@ -24,7 +26,7 @@ public class Therapist : MultipleChoice {
 	[SerializeField]
 	GameObject answerPanel;
 
-	[SerializeField] Text therapistSubtitle, choiceA, choiceB, choiceC, choiceD;
+	[SerializeField] Text therapistSubtitle, therapistThoughtText, choiceA, choiceB, choiceC, choiceD;
 
 	[SerializeField] Animator tolsoyAnimator;
 	[SerializeField] Transform davidTransform;
@@ -41,7 +43,9 @@ public class Therapist : MultipleChoice {
 
 	int questionIndex = 0;
 
-	public static Therapist s_instance; 
+	public static Therapist s_instance;
+
+    NPInputManager thisNPInputManager;
 
 	// Use this for initialization
 	void Awake () {
@@ -52,6 +56,12 @@ public class Therapist : MultipleChoice {
 		}
 	}
 
+    private void Start()
+    {
+        thisNPInputManager = TestPlayerController.s_instance.GetComponent<NPInputManager>();
+        input = GameObject.FindObjectOfType<BaseInput>();
+    } 
+
     private void OnEnable()
     {
         //print(GameManager.s_instance);
@@ -61,7 +71,7 @@ public class Therapist : MultipleChoice {
 
     private void OnDisable()
     {
-        GameObject.FindObjectOfType<GameManager>().OnNextDay -= ResetTherapistForTheDay;
+        //GameObject.FindObjectOfType<GameManager>().OnNextDay -= ResetTherapistForTheDay;
     }
 
     void ResetTherapistForTheDay()
@@ -71,32 +81,24 @@ public class Therapist : MultipleChoice {
 
     void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
-			TestPlayerController.s_instance.isNearTherapist = true;
-			tolsoyAnimator.SetTrigger ("sitdown");
+            StartTherapistSession();
 		}
-	}
-
-	void OnTriggerExit (Collider other) {
-		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
-			TestPlayerController.s_instance.isNearTherapist = false;
-			tolsoyAnimator.SetTrigger ("standup");
-
-		}
-
 	}
 
 	public void StartTherapistSession () {
-        CameraManager.s_instance.SetLastInLevelCamTransform();
+        tolsoyAnimator.SetTrigger("sitdown");
+        CameraManager.s_instance.ToggleGameplayCamera(false);
         CameraManager.s_instance.SetMainViewOnScene(mainViewOfMultipleChoice);
-		CameraManager.s_instance.MultipleChoiceCameraOn ();
-		PlayerController.s_instance.transform.position = davidTransform.position;
-		PlayerController.s_instance.transform.rotation = davidTransform.rotation;
+        CameraManager.s_instance.MultipleChoiceCameraOn();
+        TestPlayerController.s_instance.EnterTherapy();
+        TestPlayerController.s_instance.transform.position = davidTransform.position;
+		TestPlayerController.s_instance.transform.rotation = davidTransform.rotation;
         switchToIntroduction = true;
 	}
 
 	public void EndTherapistSession () {
-        CameraManager.s_instance.UseLastInLevelCamTransform ();
-		PlayerController.s_instance.switchToWalking = true;
+        CameraManager.s_instance.ToggleGameplayCamera(true);
+        TestPlayerController.s_instance.ExitTherapy();
 		thisTherapistState = TherapistState.DoneForTheDay;
 		tolsoyAnimator.SetTrigger ("standup");
 	}
@@ -128,46 +130,56 @@ public class Therapist : MultipleChoice {
 				answerPanel.SetActive (true);
 				choiceA.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [0];
 				choiceB.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [1];
-				choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
-				choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
+	//			choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
+		//		choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
 				thisTherapistState = TherapistState.DavidSelectAnswer;
 				CameraManager.s_instance.SetCamera (OTS_TtoD);
-				PlayerController.s_instance.allowSelectionInput = true;
 			}
 
 			break;
 
 		
 		case TherapistState.DavidSelectAnswer:
-			if (switchToAnxietyAnimation) {
-				switchToAnxietyAnimation = false;
-				thisTherapistState = TherapistState.AnxietyAnimation;
-                PlayerController.s_instance.switchToPassiveState = true;
+            if (input.shoot || input.melee) {
+                    SelectItem();
+            }
+            if (thisNPInputManager.input.Down.WasPressed)
+                {
+                    ArrowUp();
+                }
+            if (thisNPInputManager.input.Up.WasPressed)
+                {
+                    ArrowDown();
+                }
+             if (switchToAnsweringState) {
+				switchToAnsweringState = false;
+				thisTherapistState = TherapistState.AnsweringQuestion;
+                //PlayerController.s_instance.switchToPassiveState = true;
 				answerPanel.SetActive (false);
-			}
-			break;
+                
+                }
+                break;
 
 			//how is the switch made from anxiety animation to therapistwaiting
-		case TherapistState.AnxietyAnimation:
-			if (switchToTherapistWaitingToRespond) {
-				switchToTherapistWaitingToRespond = false;
+		case TherapistState.AnsweringQuestion:
+			if (GenericTimer.RunGenericTimer(currentAudioClip.length, ref waitingTimer)) {
 				thisTherapistState = TherapistState.TherapistWaitingToRespond;
-                CameraManager.s_instance.SetCamera (OTS_DtoT);
-			}
-			break;
+                ShowResponseState();
+
+                }
+                break;
 
 
 		case TherapistState.TherapistWaitingToRespond:
-			if (GenericTimer.RunGenericTimer(waitingTime, ref waitingTimer)) {
-				thisTherapistState = TherapistState.TherapistResponse;
+			if (GenericTimer.RunGenericTimer(currentAudioClip.length, ref waitingTimer)) {
+				thisTherapistState = TherapistState.CheckForNextQuestion;
 				therapistSubtitle.gameObject.SetActive (true);
 				therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].responseString;
-				currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].responseAudioPath) as AudioClip;
 			}
 			break;
 
 		case TherapistState.TherapistResponse:
-			if (GenericTimer.RunGenericTimer (askingQuestionTime + currentAudioClip.length, ref askingQuestionTimer)) {
+			if (GenericTimer.RunGenericTimer (askingQuestionTime, ref askingQuestionTimer)) {
 				//SetCamera (mainViewOfMultipleChoice);
 				therapistSubtitle.gameObject.SetActive (false);
 				thisTherapistState = TherapistState.CheckForNextQuestion;
@@ -180,7 +192,6 @@ public class Therapist : MultipleChoice {
 					questionIndex++;
 					thisTherapistState = TherapistState.AskingQuestion;
 					ShowAskingQuestionState ();
-					print ("ASK ANOTHER");
 				} else {
 					thisTherapistState = TherapistState.EndSession;
 				}
@@ -189,34 +200,49 @@ public class Therapist : MultipleChoice {
 
 		case TherapistState.EndSession:
 			EndTherapistSession ();
+            //alleviate anxiety after session is over
 			break;
 		
 		}
 	}
 
 	public override void SelectItem () {
-		if (currentTherapySession.therapySessionElements [questionIndex].answerChoices [selection] == currentTherapySession.therapySessionElements [questionIndex].correctAnswer) {
+        currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].answerPaths[selection]) as AudioClip;
+        GetComponent<AudioSource>().clip = currentAudioClip;
+        GetComponent<AudioSource>().Play();
+        if (currentTherapySession.therapySessionElements [questionIndex].answerChoices [selection] == currentTherapySession.therapySessionElements [questionIndex].correctAnswer) {
 			//correct
 			//play corrent audio then play therapist response
 			//play alleviate anxiety animation
-			PlayerController.s_instance.AlleviateAnxiety();
+			//PlayerController.s_instance.AlleviateAnxiety();
 		} else {
 			//wrong
 			//play wrong audio then play therapist repsonse
 			//play gain anxiety animation
-			PlayerController.s_instance.ReceiveAnxiety ();
+			//PlayerController.s_instance.ReceiveAnxiety ();
 
 		}
-		switchToAnxietyAnimation = true;
+		switchToAnsweringState = true;
 		//then goto tolstoy response
 	}
 
 	void ShowAskingQuestionState(){
 		therapistSubtitle.gameObject.SetActive (true);
-		therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].questionString;
+        //therapistThoughtText.gameObject.SetActive(false);
+        therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].questionString;
 		currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].questionAudioPath) as AudioClip;
 		GetComponent<AudioSource> ().clip = currentAudioClip;
 		GetComponent<AudioSource> ().Play ();
         CameraManager.s_instance.SetCamera (OTS_DtoT);
 	}
+
+    void ShowResponseState()
+    {
+        //therapistThoughtText.gameObject.SetActive(true);
+        //therapistThoughtText.text = currentTherapySession.therapySessionElements[questionIndex].responseString;
+        currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements[questionIndex].responsePath) as AudioClip;
+        GetComponent<AudioSource>().clip = currentAudioClip;
+        GetComponent<AudioSource>().Play();
+        CameraManager.s_instance.SetCamera(mainViewOfMultipleChoice);
+    }
 }
