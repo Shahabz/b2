@@ -20,6 +20,8 @@ public class TestPlayerController : MonoBehaviour {
     public bool isNearTherapist;
     public static TestPlayerController s_instance;
 
+	public bool lockInput = false;
+
     void Awake()
     {
         if (s_instance == null)
@@ -31,15 +33,21 @@ public class TestPlayerController : MonoBehaviour {
             Destroy(this);
         }
     }
-        void Start () {
+
+    void Start () {
+		GetComponentInChildren<Camera>().transform.parent = null;
         footstepHandler = GetComponent<FootstepHandler>();
 		input = GetComponent<BaseInput>();
 		rigidbody = GetComponent<Rigidbody>();
 		anim = GetComponent<Animator>();
 		laserTarget = GetComponentInChildren<LineRenderer>();
+
+		GetComponent<RootMotion.FinalIK.AimIK>().solver.target = GetComponent<RootMotion.FinalIK.LookAtIK>().solver.target = cameraObj.FindChild("LaserEnd");
 	}
 	
 	void Update () {
+		if(lockInput)
+			return;
 		//---------------------Movement----------------------//
 		float speedMod = input.sprint ? sprintSpeedMod : 1.0f;
 		rigidbody.angularVelocity = Vector3.zero;

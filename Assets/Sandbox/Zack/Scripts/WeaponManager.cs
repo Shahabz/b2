@@ -38,7 +38,7 @@ public class WeaponManager : MonoBehaviour {
 
 			RagdollCharacter ragdoll = hit.collider.gameObject.GetComponentInParent<RagdollCharacter>();
 			if(ragdoll != null)
-				ragdoll.Activate(hit.point, firePos.up*1000f);
+				ragdoll.Activate(hit.point, firePos.up*3000f);
 
 //			IDamageable damageable = hit.collider.gameObject.GetComponent<IDamageable>();
 //			if((damageable = hit.collider.gameObject.GetComponent<IDamageable>()) != null) {

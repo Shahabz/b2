@@ -83,9 +83,11 @@ public class CameraFollow : MonoBehaviour {
 	}
 
 	void LateUpdate () {
+		if(TestPlayerController.s_instance.lockInput)
+			return;
 		if (target) {
 			Vector3 lookPos = target.position;
-			Cursor.lockState = CursorLockMode.Locked;
+
 			x += input.lookDir.x * xSpeed * distance * 0.02f;
 			y -= input.lookDir.y * ySpeed * 0.02f;
 
