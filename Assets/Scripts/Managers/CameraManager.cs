@@ -40,14 +40,18 @@ public class CameraManager : MonoBehaviour {
         }
     }
 
-    // Use this for initialization
     void Start () {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
-    // Update is called once per frame
     void Update () {
-	
+		if(TestUIManager.instance.State == TestUIManager.UIState.None) {
+			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.Unlocked;
+		} else if(TestUIManager.instance.State == TestUIManager.UIState.Menu) {
+			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.Locked;
+		} else if(TestUIManager.instance.State == TestUIManager.UIState.Cutscene) {
+			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.CameraOnly;
+		}
 	}
 
     public void ToggleGameplayCamera (bool isEnabled)

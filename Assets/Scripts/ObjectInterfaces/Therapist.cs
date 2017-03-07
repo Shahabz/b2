@@ -45,7 +45,7 @@ public class Therapist : MultipleChoice {
 
 	public static Therapist s_instance;
 
-    NPInputManager thisNPInputManager;
+//    NPInputManager thisNPInputManager;
 
 	// Use this for initialization
 	void Awake () {
@@ -58,7 +58,7 @@ public class Therapist : MultipleChoice {
 
     private void Start()
     {
-        thisNPInputManager = TestPlayerController.s_instance.GetComponent<NPInputManager>();
+//        thisNPInputManager = TestPlayerController.s_instance.GetComponent<NPInputManager>();
         input = GameObject.FindObjectOfType<BaseInput>();
     } 
 
@@ -143,11 +143,11 @@ public class Therapist : MultipleChoice {
             if (input.shoot || input.melee) {
                     SelectItem();
             }
-            if (thisNPInputManager.input.Down.WasPressed)
+            if (NPInputManager.input.Down.WasPressed)
                 {
                     ArrowUp();
                 }
-            if (thisNPInputManager.input.Up.WasPressed)
+            if (NPInputManager.input.Up.WasPressed)
                 {
                     ArrowDown();
                 }

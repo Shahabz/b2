@@ -113,15 +113,22 @@ public class NPInputManager : MonoBehaviour {
 		}
 	}
 
-    //public static PlayerActions input;
-    public PlayerActions input;
+    static PlayerActions _input;
+	public static PlayerActions input {
+		get {
+			if(_input == null)
+				Debug.LogError("No instance of InputManager in scene.");
+			return _input;
+		}
+	}
+//    public PlayerActions input;
     PlayerActions playerActions;
 	string saveData;
 
 	void OnEnable() {
 		playerActions = PlayerActions.CreateWithDefaultBindings();
 		LoadBindings();
-		input = playerActions;
+		_input = playerActions;
 	}
 
 	void OnDisable() {

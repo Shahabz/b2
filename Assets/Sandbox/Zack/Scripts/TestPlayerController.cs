@@ -20,7 +20,8 @@ public class TestPlayerController : MonoBehaviour {
 
     public static TestPlayerController s_instance;
 
-	public bool lockInput = false;
+	public enum InputLock { CameraOnly, Locked, Unlocked }
+	public InputLock lockInput = InputLock.Unlocked;
 
     void Awake()
     {
@@ -46,43 +47,47 @@ public class TestPlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
-		if(lockInput)
+		if(lockInput == InputLock.Locked)
 			return;
-		//---------------------Movement----------------------//
+
+		if(lockInput == InputLock.Unlocked)
+			HandleMovement();
+
+		HandleAiming();
+	}
+
+	public void HandleMovement() {
 		float speedMod = input.sprint ? sprintSpeedMod : 1.0f;
 		rigidbody.angularVelocity = Vector3.zero;
 
-        if (input.moveDir.magnitude > 0.0f) {
-//            footstepHandler.PlayFootStep(input.moveDir.magnitude); //this is always 1, I need to figure out how to differentiate between running and walking and pass it to this param
+		if (input.moveDir.magnitude > 0.0f) {
+			rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
 
-            rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
+			Vector3 lookDir = Vector3.zero;
+			if (Mathf.Abs(input.moveDir.z) > 0.0f)
+				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
+			if (Mathf.Abs(input.moveDir.x) > 0.0f)
+				lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
+			lookDir.Normalize();
+			lookDir.y = 0.0f;
 
-            Vector3 lookDir = Vector3.zero;
-            if (Mathf.Abs(input.moveDir.z) > 0.0f)
-                lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
-            if (Mathf.Abs(input.moveDir.x) > 0.0f)
-                lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
-            lookDir.Normalize();
-            lookDir.y = 0.0f;
-
-            if (lookDir != Vector3.zero)
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(lookDir), turnSpeed * Time.deltaTime);
-        }
-        else
-        {
-            
-        }
+			if (lookDir != Vector3.zero)
+				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(lookDir), turnSpeed * Time.deltaTime);
+		}
 
 		//Wonky code because idle: 0, walk: 0.5, sprint: 1
 		anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 5f*Time.deltaTime) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
 		anim.SetFloat("Movement", Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime));
-		anim.SetBool("Aim", input.aim);
 
 		if (input.moveDir.magnitude > 0.0f) {
 			footstepHandler.PlayFootStep(Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime)); //this is always 1, I need to figure out how to differentiate between running and walking and pass it to this param
 		} else {
 			footstepHandler.CallCeaseFootStep();
 		}
+	}
+
+	public void HandleAiming() {
+		anim.SetBool("Aim", input.aim);
 
 		if(input.aim) {
 			gameplayCamera.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(gameplayCamera.GetComponent<CameraFollow>().distanceMax, 1f, Time.deltaTime*5f);
@@ -97,31 +102,33 @@ public class TestPlayerController : MonoBehaviour {
 			lookDir.y = 0.0f;
 			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 15f*Time.deltaTime);
 
-            //			RaycastHit hit = new RaycastHit(); 
-            //			if(Physics.Raycast(gameplayCamera.ScreenPointToRay(Input.mousePosition), out hit)) {
-            laserTarget.gameObject.SetActive(true);
+			//			RaycastHit hit = new RaycastHit(); 
+			//			if(Physics.Raycast(gameplayCamera.ScreenPointToRay(Input.mousePosition), out hit)) {
+			laserTarget.gameObject.SetActive(true);
 			laserTarget.SetPositions( new Vector3[] {laserTarget.transform.position, laserTarget.transform.position + (laserTarget.transform.up * 50f)});
-//			if(Mathf.Abs(transform.eulerAngles.y - Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime).eulerAngles.y) < 3f) {
-//				GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
-//				GetComponent<RootMotion.FinalIK.AimIK>().enabled = true;
-//			}
-//			}
+			//			if(Mathf.Abs(transform.eulerAngles.y - Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime).eulerAngles.y) < 3f) {
+			//				GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
+			//				GetComponent<RootMotion.FinalIK.AimIK>().enabled = true;
+			//			}
+			//			}
 
-			if(input.shoot) {
-				anim.SetTrigger("Fire");
-				GetComponent<WeaponManager>().Fire();
-				cameraObj.GetComponent<CameraFollow>().Recoil(GetComponent<WeaponManager>().CurrentWeapon.recoil);
-			}
-			if(input.melee) {
-				anim.SetTrigger("punch");
-				GetComponent<WeaponManager>().Melee();
+			if(lockInput == InputLock.Unlocked) { //Could be cleaner than checking for this here
+				if(input.shoot) {
+					anim.SetTrigger("Fire");
+					GetComponent<WeaponManager>().Fire();
+					cameraObj.GetComponent<CameraFollow>().Recoil(GetComponent<WeaponManager>().CurrentWeapon.recoil);
+				}
+				if(input.melee) {
+					anim.SetTrigger("punch");
+					GetComponent<WeaponManager>().Melee();
 
-				GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
-				GetComponent<RootMotion.FinalIK.AimIK>().enabled = false;
+					GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
+					GetComponent<RootMotion.FinalIK.AimIK>().enabled = false;
+				}
 			}
 
 		} else {
-            gameplayCamera.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(gameplayCamera.GetComponent<CameraFollow>().distanceMax, 1.8f, Time.deltaTime*5f);
+			gameplayCamera.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(gameplayCamera.GetComponent<CameraFollow>().distanceMax, 1.8f, Time.deltaTime*5f);
 			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
 			targetPos.x = 0f;
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
@@ -132,8 +139,6 @@ public class TestPlayerController : MonoBehaviour {
 			GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = true;
 			GetComponent<RootMotion.FinalIK.AimIK>().enabled = false;
 		}
-
-
 	}
 
 	public void AimDone() {
@@ -143,13 +148,15 @@ public class TestPlayerController : MonoBehaviour {
 
     public void EnterTherapy ()
     {
-        lockInput = true;
+		TestUIManager.instance.SetState(TestUIManager.UIState.Cutscene);
+//		lockInput = InputLock.CameraOnly;
         anim.SetTrigger("sit");
     }
 
     public void ExitTherapy()
     {
-        lockInput = false;
+		TestUIManager.instance.SetState(TestUIManager.UIState.None);
+//		lockInput = InputLock.Unlocked;
         anim.SetTrigger("stand");
     }
 }
