@@ -8,6 +8,8 @@ public class OptionManager : MonoBehaviour {
 	public static float BGMVolume = 0.7f;
 	public static float VOVolume = 0.7f;
 
+	static bool isDirty = false;
+
 	void Awake() {
 		if(PlayerPrefs.HasKey("FXVolume")) {
 			FXVolume = PlayerPrefs.GetFloat("FXVolume");
@@ -15,12 +17,12 @@ public class OptionManager : MonoBehaviour {
 			PlayerPrefs.SetFloat("FXVolume", FXVolume);
 		}
 		if(PlayerPrefs.HasKey("BGMVolume")) {
-			FXVolume = PlayerPrefs.GetFloat("BGMVolume");
+			BGMVolume = PlayerPrefs.GetFloat("BGMVolume");
 		} else {
 			PlayerPrefs.SetFloat("BGMVolume", BGMVolume);
 		}
 		if(PlayerPrefs.HasKey("VOVolume")) {
-			FXVolume = PlayerPrefs.GetFloat("VOVolume");
+			VOVolume = PlayerPrefs.GetFloat("VOVolume");
 		} else {
 			PlayerPrefs.SetFloat("VOVolume", VOVolume);
 		}
@@ -28,11 +30,22 @@ public class OptionManager : MonoBehaviour {
 		PlayerPrefs.Save();
 	}
 
+	public static void SetDirty() {
+		isDirty = true;
+	}
+
 //	void Start () {
 //		
 //	}
 //	
-//	void Update () {
-//		
-//	}
+	void Update () {
+		if(isDirty) {
+			PlayerPrefs.SetFloat("FXVolume", FXVolume);
+			PlayerPrefs.SetFloat("BGMVolume", BGMVolume);
+			PlayerPrefs.SetFloat("VOVolume", VOVolume);
+
+			PlayerPrefs.Save();
+			isDirty = false;
+		}
+	}
 }

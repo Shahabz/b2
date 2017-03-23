@@ -56,12 +56,20 @@ public class TestPlayerController : MonoBehaviour {
 		HandleAiming();
 	}
 
-	public void HandleMovement() {
+	public void FixedUpdate() {
 		float speedMod = input.sprint ? sprintSpeedMod : 1.0f;
 		rigidbody.angularVelocity = Vector3.zero;
 
 		if (input.moveDir.magnitude > 0.0f) {
-			rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
+			Vector3 targetVelocity = transform.forward * moveSpeed * speedMod;
+			Vector3 velocity = rigidbody.velocity;
+			Vector3 velocityChange = (targetVelocity - velocity);
+//			velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+//			velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+//			velocityChange.y = 0;
+			rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+//			rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
+
 
 			Vector3 lookDir = Vector3.zero;
 			if (Mathf.Abs(input.moveDir.z) > 0.0f)
@@ -72,8 +80,27 @@ public class TestPlayerController : MonoBehaviour {
 			lookDir.y = 0.0f;
 
 			if (lookDir != Vector3.zero)
-				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(lookDir), turnSpeed * Time.deltaTime);
+				rigidbody.MoveRotation(Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(lookDir), turnSpeed * Time.deltaTime));
 		}
+	}
+
+	public void HandleMovement() {
+//		float speedMod = input.sprint ? sprintSpeedMod : 1.0f;
+//
+//		if (input.moveDir.magnitude > 0.0f) {
+//			rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
+//
+//			Vector3 lookDir = Vector3.zero;
+//			if (Mathf.Abs(input.moveDir.z) > 0.0f)
+//				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
+//			if (Mathf.Abs(input.moveDir.x) > 0.0f)
+//				lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
+//			lookDir.Normalize();
+//			lookDir.y = 0.0f;
+//
+//			if (lookDir != Vector3.zero)
+//				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(lookDir), turnSpeed * Time.deltaTime);
+//		}
 
 		//Wonky code because idle: 0, walk: 0.5, sprint: 1
 		anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 5f*Time.deltaTime) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
@@ -114,9 +141,11 @@ public class TestPlayerController : MonoBehaviour {
 
 			if(lockInput == InputLock.Unlocked) { //Could be cleaner than checking for this here
 				if(input.shoot) {
-					anim.SetTrigger("Fire");
-					GetComponent<WeaponManager>().Fire();
-					cameraObj.GetComponent<CameraFollow>().Recoil(GetComponent<WeaponManager>().CurrentWeapon.recoil);
+					if(GetComponent<WeaponManager>().CanFire()) {
+						anim.SetTrigger("Fire");
+						GetComponent<WeaponManager>().Fire();
+						cameraObj.GetComponent<CameraFollow>().Recoil(GetComponent<WeaponManager>().CurrentWeapon.recoil);
+					}
 				}
 				if(input.melee) {
 					anim.SetTrigger("punch");

@@ -8,7 +8,7 @@ public class WeaponManager : MonoBehaviour {
 	public class Weapon {
 		public string name;
 		public AudioClip[] fireSounds;
-		public float fireRate = 1f;
+		public float fireRate = 0.5f;
 		public float recoil = 5f;
 	}
 
@@ -24,7 +24,19 @@ public class WeaponManager : MonoBehaviour {
 
 	const float MAX_DISTANCE = 50f;
 
+	float fireCD = 0f;
+
+	void Update() {
+		if(fireCD > 0f)
+			fireCD -= Time.deltaTime;
+	}
+
+	public bool CanFire() {
+		return (fireCD <= 0f);
+	}
+
 	public void Fire() {
+		fireCD = CurrentWeapon.fireRate;
 		//Play sound here
 		GetComponent<AudioSource>().volume = OptionManager.FXVolume;
 		GetComponent<AudioSource>().clip = CurrentWeapon.fireSounds[Random.Range(0, CurrentWeapon.fireSounds.Length)];

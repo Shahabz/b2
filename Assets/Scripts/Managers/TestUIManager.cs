@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.UI;
+
 public class TestUIManager : MonoBehaviour {
 
 	public enum UIState {
@@ -19,6 +21,12 @@ public class TestUIManager : MonoBehaviour {
 
 	void Awake () {
 		instance = this;
+	}
+
+	void Start() {
+		transform.FindChild("Menu/Volume/FX/Slider").GetComponent<Slider>().value = OptionManager.FXVolume;
+		transform.FindChild("Menu/Volume/Music/Slider").GetComponent<Slider>().value = OptionManager.BGMVolume;
+		transform.FindChild("Menu/Volume/VO/Slider").GetComponent<Slider>().value = OptionManager.VOVolume;
 	}
 
 	void Update () {
@@ -71,13 +79,16 @@ public class TestUIManager : MonoBehaviour {
 
 	public void UpdateFXVolume(float volume) {
 		OptionManager.FXVolume = volume;
+		OptionManager.SetDirty();
 	}
 
 	public void UpdateMusicVolume(float volume) {
 		OptionManager.BGMVolume = volume;
+		OptionManager.SetDirty();
 	}
 
 	public void UpdateDialogueVolume(float volume) {
 		OptionManager.VOVolume = volume;
+		OptionManager.SetDirty();
 	}
 }
