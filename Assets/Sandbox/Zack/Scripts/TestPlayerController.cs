@@ -44,6 +44,7 @@ public class TestPlayerController : MonoBehaviour {
 		laserTarget = GetComponentInChildren<LineRenderer>();
 
         GetComponent<RootMotion.FinalIK.AimIK>().solver.target = GetComponent<RootMotion.FinalIK.LookAtIK>().solver.target = cameraObj.FindChild("LaserEnd");
+		GetComponent<RootMotion.FinalIK.AimIK>().solver.transform = laserTarget.transform.parent.FindChild("FirePos");
 	}
 	
 	void Update () {
