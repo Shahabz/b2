@@ -118,7 +118,7 @@ public class TestPlayerController : MonoBehaviour {
 		anim.SetBool("Aim", input.aim);
 
 		if(input.aim) {
-			gameplayCamera.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(gameplayCamera.GetComponent<CameraFollow>().distanceMax, 1f, Time.deltaTime*5f);
+			gameplayCamera.GetComponent<CameraFollow>().zoomedIn = true;
 			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
 			targetPos.x = 0.5f;
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
@@ -158,7 +158,7 @@ public class TestPlayerController : MonoBehaviour {
 			}
 
 		} else {
-			gameplayCamera.GetComponent<CameraFollow>().distanceMax = Mathf.Lerp(gameplayCamera.GetComponent<CameraFollow>().distanceMax, 1.8f, Time.deltaTime*5f);
+			gameplayCamera.GetComponent<CameraFollow>().zoomedIn = false;
 			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
 			targetPos.x = 0f;
 			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);

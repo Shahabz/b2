@@ -5,20 +5,33 @@ public class CameraFollow : MonoBehaviour {
 
 	public Transform target;
 
-	public float distance = 5.0f;
-	public float xSpeed = 120.0f;
-	public float ySpeed = 120.0f;
-	
-	public float yMinLimit = -20f;
-	public float yMaxLimit = 80f;
-	
-	public float distanceMin = .5f;
-	public float distanceMax = 15f;
+	float distance = 5.0f;
+	[SerializeField]
+	float xSpeed = 120.0f;
+	[SerializeField]
+	float ySpeed = 120.0f;
+
+	[SerializeField]
+	float yMinLimit = -20f;
+	[SerializeField]
+	float yMaxLimit = 80f;
+
+	[SerializeField]
+	float distanceMin = .5f;
+	[SerializeField]
+	float idleDistanceMax = 1f;
+	[SerializeField]
+	float zoomedDistanceMax = 2f;
+
+	float currentMaxDistance = 0f;
+
+	[HideInInspector]
+	public bool zoomedIn = false;
 	
 	float x = 0.0f;
 	float y = 0.0f;
 
-	public LayerMask mask;
+	public LayerMask collisionMask;
 
 	public float clipBuffer = 0.1f;
 
@@ -44,7 +57,9 @@ public class CameraFollow : MonoBehaviour {
 	Vector3 HandleCollisionZoom() {
 
 		Vector3 camOut = Vector3.Normalize(target.position - transform.position);
-		Vector3 maxCamPos = target.position - (camOut * distanceMax);
+
+		currentMaxDistance = Mathf.Lerp(currentMaxDistance, (zoomedIn ? idleDistanceMax : zoomedDistanceMax), Time.deltaTime * 5f);
+		Vector3 maxCamPos = target.position - (camOut * currentMaxDistance);
 
 		float minHitDistance = 9999f; 
 
@@ -55,7 +70,7 @@ public class CameraFollow : MonoBehaviour {
 			RaycastHit hit;
 			Vector3 rayEnd = maxCamPos + offsetToCorner;
 			Debug.DrawLine(target.position + offsetToCorner, rayEnd, Color.red);
-			if(Physics.Linecast(target.position + offsetToCorner, rayEnd, out hit, mask)) {
+			if(Physics.Linecast(target.position + offsetToCorner, rayEnd, out hit, collisionMask)) {
 				if(Vector3.Distance(hit.point, target.position) > 0.5f)
 					minHitDistance = hit.distance;
 			}
