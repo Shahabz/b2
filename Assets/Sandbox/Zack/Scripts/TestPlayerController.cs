@@ -55,6 +55,10 @@ public class TestPlayerController : MonoBehaviour {
 			HandleMovement();
 
 		HandleAiming();
+
+		if(input.reload) {
+			GetComponent<WeaponManager>().Reload();
+		}
 	}
 
 	public void FixedUpdate() {

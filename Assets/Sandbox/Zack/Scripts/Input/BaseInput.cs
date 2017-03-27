@@ -11,6 +11,7 @@ public class BaseInput : MonoBehaviour {
 	public bool aim;
 	public bool shoot;
 	public bool melee;
+	public bool reload;
 
 	void Start () {
 	

@@ -17,6 +17,7 @@ public class PlayerInput : BaseInput {
 		shoot = NPInputManager.input.Fire.WasPressed;
 		aim = NPInputManager.input.Aim.IsPressed;
 		lookDir = NPInputManager.input.Look;
+		reload = NPInputManager.input.Reload.WasPressed;
 
 		if(aim) {
 			moveDir = Vector3.zero;
