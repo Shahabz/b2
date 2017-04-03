@@ -16,7 +16,7 @@ public class TherapySessionAsset {
 	[MenuItem("Assets/Create/TherapySession")]
 	public static void CreateAsset ()
 	{
-		CustomAssetUtility.CreateAsset<TherapySession>(); //Dialogue which is a scriptable object allow us to create an instance of it which does not need to be attached to gameobject / is not a monobehaviour
+		CustomAssetUtility.CreateAsset<TherapySession>(true); //Dialogue which is a scriptable object allow us to create an instance of it which does not need to be attached to gameobject / is not a monobehaviour
 	}
 }
 #endif

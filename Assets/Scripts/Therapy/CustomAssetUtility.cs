@@ -12,12 +12,15 @@ using UnityEditor;
 
 public static class CustomAssetUtility
 {
-	public static void CreateAsset<T> () where T : ScriptableObject
+    /// <summary>
+    /// Creates the asset at Selection.activeObject.
+    /// </summary>
+    /// <param name="focusAsset">If set to <c>true</c> focus asset.</param>
+    /// <typeparam name="T">The 1st type parameter.</typeparam>
+    public static void CreateAsset<T> (bool focusAsset) where T : ScriptableObject
 	{
-		T asset = ScriptableObject.CreateInstance<T> ();
-
-		string path = AssetDatabase.GetAssetPath (Selection.activeObject);
-		if (path == "") 
+	    string path = AssetDatabase.GetAssetPath (Selection.activeObject);
+		if (path == "")
 		{
 			path = "Assets";
 		} 
@@ -28,11 +31,26 @@ public static class CustomAssetUtility
 
 		string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath (path + "/New " + typeof(T).ToString() + ".asset");
 
-		AssetDatabase.CreateAsset (asset, assetPathAndName);
-
-		AssetDatabase.SaveAssets ();
-		EditorUtility.FocusProjectWindow ();
-		Selection.activeObject = asset;
+        CreateAssetAtPath<T>(assetPathAndName, focusAsset);
 	}
+
+    public static void CreateAssetAtPath<T> (string path, bool focusAsset) where T : ScriptableObject
+    {
+        if (!path.EndsWith(".asset"))
+        {
+            path += ".asset";
+        }
+
+        T asset = ScriptableObject.CreateInstance<T> ();
+
+        AssetDatabase.CreateAsset (asset, path);
+
+        AssetDatabase.SaveAssets ();
+        if (focusAsset)
+        {
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = asset;
+        }
+    }
 }
 #endif
