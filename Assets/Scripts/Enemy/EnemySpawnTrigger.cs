@@ -8,9 +8,23 @@ public class EnemySpawnTrigger : MonoBehaviour {
     public bool triggered = false;
     private bool initialized = false;
 
-    public EnemySceneSpawns spawnInfo;
+//    public EnemySceneSpawns spawnInfo;
+    public EnemySpawnInfo[] spawnInfo;
+
+    GameObject[] enemies;
 
 	void Start () {
+        if (GetComponent<Collider>() == null)
+        {
+            Debug.LogError("SpawnTrigger has no collider", this);
+            this.enabled = false;
+            return;
+        }
+        if (GetComponent<Collider>().isTrigger == false)
+        {
+            Debug.LogError("SpawnTrigger collider isn't trigger", this);
+            GetComponent<Collider>().isTrigger = true;
+        }
         InitialSpawn(); //Temp until called from load time
 	}
 
@@ -30,7 +44,11 @@ public class EnemySpawnTrigger : MonoBehaviour {
     /// Initialize the enemies and sets them inactive. To be called at loading time.
     /// </summary>
     public void InitialSpawn() {
+        enemies = new GameObject[spawnInfo.Length];
         //TODO move this to a spawnManager
+        for(int i = 0; i < spawnInfo.Length; i++) {
+            enemies[i] = spawnInfo[i].Spawn();
+        }
     }
 
     /// <summary>

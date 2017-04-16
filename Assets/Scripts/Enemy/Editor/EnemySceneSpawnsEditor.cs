@@ -6,7 +6,9 @@ using UnityEditor;
 [CustomEditor(typeof(EnemySceneSpawns))]
 public class EnemySceneSpawnsEditor : Editor {
 
-    public static int focusedEnemyInfo = -1;
+    public static int focusedEnemyInfoIndex = -1;
+
+    static EnemySceneSpawns.EnemySpawnInfo focusedEnemyInfo;
 
     public override void OnInspectorGUI()
     {
@@ -34,13 +36,13 @@ public class EnemySceneSpawnsEditor : Editor {
             EnemySceneSpawns.EnemySpawnInfo spawnInfo = sceneSpawns.spawnInfo[i];
             if (GUILayout.Button("Spawn " + i + " - " + spawnInfo.enemyType.ToString()))
             {
-                if (focusedEnemyInfo == i)
-                    focusedEnemyInfo = -1;
+                if (focusedEnemyInfoIndex == i)
+                    focusedEnemyInfoIndex = -1;
                 else
-                    focusedEnemyInfo = i;
+                    focusedEnemyInfoIndex = i;
             }
 
-            if (focusedEnemyInfo == i)
+            if (focusedEnemyInfoIndex == i)
             {
                 GUILayout.EndHorizontal();
                 EditorGUI.indentLevel = 2;
@@ -67,33 +69,55 @@ public class EnemySceneSpawnsEditor : Editor {
         }
     }
 
-//    void OnEnable()
-//    {
-//        SceneView.onSceneGUIDelegate += OnSceneGUI;
-//    }
-//
-//    void OnDisable()
-//    {
-//        SceneView.onSceneGUIDelegate -= OnSceneGUI;
-//    }
+    void OnEnable()
+    {
+        SceneView.onSceneGUIDelegate += OnSceneGUI;
+    }
 
-//    void OnSceneGUI(SceneView sceneView)
-//    {
-//        EnemySceneSpawns sceneSpawns = (EnemySceneSpawns)target;
-//        if (target == null)
+    void OnDisable()
+    {
+        SceneView.onSceneGUIDelegate -= OnSceneGUI;
+    }
+
+    [DrawGizmo(GizmoType.NotInSelectionHierarchy)]
+    static void RenderCustomGizmo(Transform objectTransform, GizmoType gizmoType) {
+//        if (window == null)
 //            return;
-//
-//        if (sceneSpawns.spawnInfo == null)
-//            return;
-//        
+        // Draw gizmos...
+//        Debug.LogError("error");
+
+    }
+
+    void OnSceneGUI(SceneView sceneView)
+    {
+        EnemySceneSpawns sceneSpawns = (EnemySceneSpawns)target;
+        if (target == null)
+            return;
+
+        if (sceneSpawns.spawnInfo == null)
+            return;
+        
 //        for (int i = 0; i < sceneSpawns.spawnInfo.Count; i++)
 //        {
-//            EnemySceneSpawns.EnemySpawnInfo spawnInfo = sceneSpawns.spawnInfo[i];
-//
-//            if(focusedEnemyInfo == i)   {
+        EnemySceneSpawns.EnemySpawnInfo spawnInfo = focusedEnemyInfo;
+        if(spawnInfo != null) {
+
+//            if(focusedEnemyInfoIndex == i)   {
+            float size = HandleUtility.GetHandleSize(spawnInfo.spawnPosition) * 0.5f;
+            Vector3 snap = Vector3.one * 0.5f;
+
+            EditorGUI.BeginChangeCheck();
+            Vector3 newTargetPosition = Handles.FreeMoveHandle(spawnInfo.spawnPosition, Quaternion.identity, size, snap, Handles.RectangleHandleCap);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(sceneSpawns, "Change Look At Target Position");
+                spawnInfo.spawnPosition = newTargetPosition;
+//                    sceneSpawns.Update();
+            }
 //            } else {
-////                Graphics.DrawWireSphere(spawnInfo.spawnPosition, 1f);
+//                Graphics.DrawWireSphere(spawnInfo.spawnPosition, 1f);
 //            }
 //        }
-//    }
+        }
+    }
 }
