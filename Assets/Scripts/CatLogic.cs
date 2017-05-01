@@ -56,7 +56,7 @@ public class CatLogic : MonoBehaviour {
 
     void FollowPlayer()
     {
-        transform.LookAt(PlayerController.s_instance.transform.position);
+		transform.LookAt(TestPlayerController.s_instance.transform.position);
         transform.Translate(Vector3.forward * catRunSpeed);
         
     }
@@ -85,7 +85,7 @@ public class CatLogic : MonoBehaviour {
 
     void WaitForPlayerToComeClose()
     {
-        if (Vector3.Distance(transform.position, PlayerController.s_instance.transform.position) < triggerFollowDistance) {
+		if (Vector3.Distance(transform.position, TestPlayerController.s_instance.transform.position) < triggerFollowDistance) {
             if (!CheckIsPlayerLookingAtCat())
             {
                 switchToFollowing = true;
@@ -103,8 +103,8 @@ public class CatLogic : MonoBehaviour {
     }
 
     float GetAngleBetweenPlayerForwardAndCat() {
-        Vector3 playerForward = PlayerController.s_instance.transform.forward;
-        Vector3 towardCat = -PlayerController.s_instance.transform.position + transform.position;
+		Vector3 playerForward = TestPlayerController.s_instance.transform.forward;
+		Vector3 towardCat = -TestPlayerController.s_instance.transform.position + transform.position;
         return Vector3.Angle(playerForward, towardCat);
     }
 
@@ -112,7 +112,7 @@ public class CatLogic : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            PlayerController.s_instance.switchToPassiveState = true;
+//            PlayerController.s_instance.switchToPassiveState = true;
             DestroyCat();
 
         }
@@ -120,7 +120,7 @@ public class CatLogic : MonoBehaviour {
 
     void DestroyCat()
     {
-        PlayerController.s_instance.ReceiveAnxiety();
+//        PlayerController.s_instance.ReceiveAnxiety();
         Destroy(gameObject);
     }
 

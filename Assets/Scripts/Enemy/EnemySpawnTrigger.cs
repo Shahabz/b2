@@ -49,6 +49,7 @@ public class EnemySpawnTrigger : MonoBehaviour {
         for(int i = 0; i < spawnInfo.Length; i++) {
             enemies[i] = spawnInfo[i].Spawn();
         }
+		initialized = true;
     }
 
     /// <summary>
@@ -60,6 +61,8 @@ public class EnemySpawnTrigger : MonoBehaviour {
             Debug.LogError("Enemy spawn trigger not initialized", this);
             return;
         }
-
+		for(int i = 0; i < spawnInfo.Length; i++) {
+			enemies[i].SetActive(true);
+		}
     }
 }

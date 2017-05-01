@@ -11,6 +11,8 @@ public class EnemySpawnInfo : MonoBehaviour {
         Cat, 
     }
 
+	public GameObject catPrefab;
+
     public EnemyType enemyType = EnemyType.Cat;
     public List<Vector3> patrolPoints;
 
@@ -19,6 +21,11 @@ public class EnemySpawnInfo : MonoBehaviour {
 	}
 
     public GameObject Spawn() {
+		if(enemyType == EnemyType.Cat) {
+			GameObject cat = (GameObject)Instantiate(catPrefab, transform.position, transform.rotation);
+			cat.SetActive(false);
+			return cat;
+		}
         return null;
     }
 
