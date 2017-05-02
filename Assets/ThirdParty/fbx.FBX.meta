@@ -1,0 +1,478 @@
+fileFormatVersion: 2
+guid: b6e9ab380f1f3014ca9fe245ceb4c09f
+timeCreated: 1493706527
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 1
+    100002: 1 1
+    100004: 2
+    100006: 2_MeshPart0
+    100008: 2_MeshPart1
+    100010: Chimney_top_hexagon
+    100012: Chimney_top_hexagon002
+    100014: Circle006
+    100016: Circle008
+    100018: //RootNode
+    100020: Group001
+    100022: Group003
+    100024: Group004
+    100026: handles
+    100028: handles001
+    100030: handles002
+    100032: handles003
+    100034: handles004
+    100036: handles005
+    100038: handles006
+    100040: handles014
+    100042: handles015
+    100044: handles016
+    100046: handles017
+    100048: handles018
+    100050: handles019
+    100052: handles020
+    100054: Object002
+    100056: Object003
+    100058: Object004
+    100060: Object005
+    100062: Object006
+    100064: Object007
+    100066: Object008
+    100068: Object009
+    100070: Object010
+    100072: Object011
+    100074: Object012
+    100076: Object013
+    100078: Object014
+    100080: Object015
+    100082: Object016
+    100084: Object017
+    100086: Object018
+    100088: Object019
+    100090: Object020
+    100092: Object021
+    100094: Object022
+    100096: Object023
+    100098: Object024
+    100100: Object025
+    100102: Object026
+    100104: Object027
+    100106: Object028
+    100108: Object029
+    100110: Object058
+    100112: Object059
+    100114: Object060
+    100116: Object061
+    100118: Object062
+    100120: Object063
+    100122: Object064
+    100124: Object065
+    100126: Object066
+    100128: Object067
+    100130: Object068
+    100132: Object069
+    100134: Object070
+    100136: Object071
+    100138: Object072
+    100140: Object073
+    100142: Object074
+    100144: Object075
+    100146: Object076
+    100148: Object077
+    100150: Object078
+    100152: Object079
+    100154: Object080
+    100156: Object081
+    100158: Object082
+    100160: Object083
+    100162: Object084
+    100164: Object085
+    100166: Particle View 001
+    100168: Particle View 01
+    100170: Particle View 01 1
+    100172: Particle View 01 2
+    100174: Particle View 01 3
+    100176: Particle View 01 4
+    100178: Text001
+    100180: Todeo 039
+    100182: vintochimney base
+    100184: vintochimney base002
+    100186: VRayLight01
+    100188: VRayLight02
+    100190: VRayPhysicalCamera002
+    100192: VRayPhysicalCamera002.Target
+    100194: VRayPhysicalCamera01
+    100196: VRayPhysicalCamera01.Target
+    400000: 1
+    400002: 1 1
+    400004: 2
+    400006: 2_MeshPart0
+    400008: 2_MeshPart1
+    400010: Chimney_top_hexagon
+    400012: Chimney_top_hexagon002
+    400014: Circle006
+    400016: Circle008
+    400018: //RootNode
+    400020: Group001
+    400022: Group003
+    400024: Group004
+    400026: handles
+    400028: handles001
+    400030: handles002
+    400032: handles003
+    400034: handles004
+    400036: handles005
+    400038: handles006
+    400040: handles014
+    400042: handles015
+    400044: handles016
+    400046: handles017
+    400048: handles018
+    400050: handles019
+    400052: handles020
+    400054: Object002
+    400056: Object003
+    400058: Object004
+    400060: Object005
+    400062: Object006
+    400064: Object007
+    400066: Object008
+    400068: Object009
+    400070: Object010
+    400072: Object011
+    400074: Object012
+    400076: Object013
+    400078: Object014
+    400080: Object015
+    400082: Object016
+    400084: Object017
+    400086: Object018
+    400088: Object019
+    400090: Object020
+    400092: Object021
+    400094: Object022
+    400096: Object023
+    400098: Object024
+    400100: Object025
+    400102: Object026
+    400104: Object027
+    400106: Object028
+    400108: Object029
+    400110: Object058
+    400112: Object059
+    400114: Object060
+    400116: Object061
+    400118: Object062
+    400120: Object063
+    400122: Object064
+    400124: Object065
+    400126: Object066
+    400128: Object067
+    400130: Object068
+    400132: Object069
+    400134: Object070
+    400136: Object071
+    400138: Object072
+    400140: Object073
+    400142: Object074
+    400144: Object075
+    400146: Object076
+    400148: Object077
+    400150: Object078
+    400152: Object079
+    400154: Object080
+    400156: Object081
+    400158: Object082
+    400160: Object083
+    400162: Object084
+    400164: Object085
+    400166: Particle View 001
+    400168: Particle View 01
+    400170: Particle View 01 1
+    400172: Particle View 01 2
+    400174: Particle View 01 3
+    400176: Particle View 01 4
+    400178: Text001
+    400180: Todeo 039
+    400182: vintochimney base
+    400184: vintochimney base002
+    400186: VRayLight01
+    400188: VRayLight02
+    400190: VRayPhysicalCamera002
+    400192: VRayPhysicalCamera002.Target
+    400194: VRayPhysicalCamera01
+    400196: VRayPhysicalCamera01.Target
+    2300000: 1
+    2300002: 1 1
+    2300004: 2_MeshPart0
+    2300006: 2_MeshPart1
+    2300008: Chimney_top_hexagon
+    2300010: Chimney_top_hexagon002
+    2300012: Circle006
+    2300014: Circle008
+    2300016: Object002
+    2300018: Object003
+    2300020: Object004
+    2300022: Object005
+    2300024: Object006
+    2300026: Object007
+    2300028: Object008
+    2300030: Object009
+    2300032: Object010
+    2300034: Object011
+    2300036: Object012
+    2300038: Object013
+    2300040: Object014
+    2300042: Object015
+    2300044: Object016
+    2300046: Object017
+    2300048: Object018
+    2300050: Object019
+    2300052: Object020
+    2300054: Object021
+    2300056: Object022
+    2300058: Object023
+    2300060: Object024
+    2300062: Object025
+    2300064: Object026
+    2300066: Object027
+    2300068: Object028
+    2300070: Object029
+    2300072: Object058
+    2300074: Object059
+    2300076: Object060
+    2300078: Object061
+    2300080: Object062
+    2300082: Object063
+    2300084: Object064
+    2300086: Object065
+    2300088: Object066
+    2300090: Object067
+    2300092: Object068
+    2300094: Object069
+    2300096: Object070
+    2300098: Object071
+    2300100: Object072
+    2300102: Object073
+    2300104: Object074
+    2300106: Object075
+    2300108: Object076
+    2300110: Object077
+    2300112: Object078
+    2300114: Object079
+    2300116: Object080
+    2300118: Object081
+    2300120: Object082
+    2300122: Object083
+    2300124: Object084
+    2300126: Object085
+    2300128: Text001
+    2300130: vintochimney base
+    2300132: vintochimney base002
+    3300000: 1
+    3300002: 1 1
+    3300004: 2_MeshPart0
+    3300006: 2_MeshPart1
+    3300008: Chimney_top_hexagon
+    3300010: Chimney_top_hexagon002
+    3300012: Circle006
+    3300014: Circle008
+    3300016: Object002
+    3300018: Object003
+    3300020: Object004
+    3300022: Object005
+    3300024: Object006
+    3300026: Object007
+    3300028: Object008
+    3300030: Object009
+    3300032: Object010
+    3300034: Object011
+    3300036: Object012
+    3300038: Object013
+    3300040: Object014
+    3300042: Object015
+    3300044: Object016
+    3300046: Object017
+    3300048: Object018
+    3300050: Object019
+    3300052: Object020
+    3300054: Object021
+    3300056: Object022
+    3300058: Object023
+    3300060: Object024
+    3300062: Object025
+    3300064: Object026
+    3300066: Object027
+    3300068: Object028
+    3300070: Object029
+    3300072: Object058
+    3300074: Object059
+    3300076: Object060
+    3300078: Object061
+    3300080: Object062
+    3300082: Object063
+    3300084: Object064
+    3300086: Object065
+    3300088: Object066
+    3300090: Object067
+    3300092: Object068
+    3300094: Object069
+    3300096: Object070
+    3300098: Object071
+    3300100: Object072
+    3300102: Object073
+    3300104: Object074
+    3300106: Object075
+    3300108: Object076
+    3300110: Object077
+    3300112: Object078
+    3300114: Object079
+    3300116: Object080
+    3300118: Object081
+    3300120: Object082
+    3300122: Object083
+    3300124: Object084
+    3300126: Object085
+    3300128: Text001
+    3300130: vintochimney base
+    3300132: vintochimney base002
+    4300000: 1
+    4300002: 2_MeshPart0
+    4300004: 2_MeshPart1
+    4300006: 1
+    4300008: Circle006
+    4300010: Object005
+    4300012: Object003
+    4300014: Object002
+    4300016: Object004
+    4300018: Object006
+    4300020: Object007
+    4300022: Object008
+    4300024: Object009
+    4300026: Object010
+    4300028: Object011
+    4300030: Object012
+    4300032: Object013
+    4300034: Object014
+    4300036: Object015
+    4300038: Object016
+    4300040: Object017
+    4300042: Object018
+    4300044: Object019
+    4300046: Object020
+    4300048: Object021
+    4300050: Object022
+    4300052: Object023
+    4300054: Object024
+    4300056: Object025
+    4300058: Object026
+    4300060: Object027
+    4300062: Object028
+    4300064: Object029
+    4300066: Chimney_top_hexagon
+    4300068: vintochimney base
+    4300070: Text001
+    4300072: Circle008
+    4300074: Object058
+    4300076: Object059
+    4300078: Object060
+    4300080: Object061
+    4300082: Object062
+    4300084: Object063
+    4300086: Object064
+    4300088: Object065
+    4300090: Object066
+    4300092: Object067
+    4300094: Object068
+    4300096: Object069
+    4300098: Object070
+    4300100: Object071
+    4300102: Object072
+    4300104: Object073
+    4300106: Object074
+    4300108: Object075
+    4300110: Object076
+    4300112: Object077
+    4300114: Object078
+    4300116: Object079
+    4300118: Object080
+    4300120: Object081
+    4300122: Object082
+    4300124: Object083
+    4300126: Object084
+    4300128: Object085
+    4300130: Chimney_top_hexagon002
+    4300132: vintochimney base002
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
