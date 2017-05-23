@@ -8,8 +8,7 @@ public class LethalHallway : MonoBehaviour {
 	bool isPlayerRunning;
 	float spawnTime = .3f, spawnTimer;
 
-	[SerializeField]
-	float distanceBetweenLethalObjects;
+	float distanceBetweenLethalObjects = 2.5f;
 
 	[SerializeField]
 	GameObject lethalObjectPrefab;
@@ -18,6 +17,9 @@ public class LethalHallway : MonoBehaviour {
 	int ForeMostLethalObjectSpawned = 0; //counter: how to keep track of which lethal object currently exists in front
 	List<GameObject> ListOfLethalObjects = new List<GameObject>();
 	PlayerInput playerInputReference;
+
+	[SerializeField]
+	Transform spawnTransform;
 
 	bool hasPriorSpawnCompleted;
 
@@ -59,18 +61,19 @@ public class LethalHallway : MonoBehaviour {
 	}
 
 	void RetractLethalObjects () {
-		if (ListOfLethalObjects [ForeMostLethalObjectSpawned - 1] != null) {
+		if (ListOfLethalObjects.Count > 0) {
 			ListOfLethalObjects [ForeMostLethalObjectSpawned - 1].GetComponent<LethalObject> ().RetractObject ();
+			ListOfLethalObjects.Remove (ListOfLethalObjects [ForeMostLethalObjectSpawned - 1]);
+			ForeMostLethalObjectSpawned--;
 		}
 
 	}
 
 
 	void SpawnLethalObject() {
-
-
-		Vector3 spawnPosition = new Vector3 (transform.position.x, transform.position.y, transform.position.z + distanceBetweenLethalObjects * ForeMostLethalObjectSpawned);
-		Instantiate(lethalObjectPrefab, spawnPosition, transform.rotation);
+		Vector3 spawnPosition = spawnTransform.position + spawnTransform.forward * distanceBetweenLethalObjects * ForeMostLethalObjectSpawned;
+		GameObject tempLO = (GameObject)Instantiate (lethalObjectPrefab, spawnPosition, spawnTransform.rotation) as GameObject;
+		ListOfLethalObjects.Add (tempLO);
 		ForeMostLethalObjectSpawned++;
 	}
 }
