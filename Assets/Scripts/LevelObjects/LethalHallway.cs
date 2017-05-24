@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LethalHallway : MonoBehaviour {
 
-	bool isPlayerInHallway;
+	public bool isPlayerInHallway;
 	bool isPlayerRunning;
 	float spawnTime = .3f, spawnTimer;
 
@@ -23,18 +23,17 @@ public class LethalHallway : MonoBehaviour {
 
 	bool hasPriorSpawnCompleted;
 
-	// Use this for initialization
 	void Start () {
 		playerInputReference = TestPlayerController.s_instance.gameObject.GetComponent<PlayerInput> ();
 
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if (isPlayerInHallway) {
 			HandleLethalObjectAnimation ();
+		} else {
+			RetractLethalObjects ();
 		}
-
 	}
 
 	void OnTriggerEnter(Collider other) {
