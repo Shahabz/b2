@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Toilet : MonoBehaviour {
 
+	[SerializeField]
+	ParticleSystem thisPiss;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -17,12 +20,14 @@ public class Toilet : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player") {
 			GetComponent<AudioSource> ().Play ();
+			thisPiss.Play ();
 		}
 	}
 
 	void OnTriggerExit(Collider other) {
 		if (other.tag == "Player") {
 			GetComponent<AudioSource> ().Stop ();
+			thisPiss.Stop ();
 		}
 	}
 }
