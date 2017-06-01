@@ -5,6 +5,7 @@ using InControl;
 
 public class PlayerInput : BaseInput {
 
+	bool isCinematicMode; 
     //was getting null ref on this sorry you can replace this it just didnt work calling the class directly
 //    NPInputManager thisNPInputManager;
 
@@ -14,10 +15,12 @@ public class PlayerInput : BaseInput {
     }
     
 	void Update () {
-		shoot = NPInputManager.input.Fire.WasPressed;
-		aim = NPInputManager.input.Aim.IsPressed;
+		if (!isCinematicMode) {
+			shoot = NPInputManager.input.Fire.WasPressed;
+			aim = NPInputManager.input.Aim.IsPressed;
+			reload = NPInputManager.input.Reload.WasPressed;
+		}
 		lookDir = NPInputManager.input.Look;
-		reload = NPInputManager.input.Reload.WasPressed;
 
 		if(aim) {
 			moveDir = Vector3.zero;
@@ -28,5 +31,9 @@ public class PlayerInput : BaseInput {
 			sprint = NPInputManager.input.Sprint;
 			melee = false;
 		}
+	}
+
+	public void ToggleIsCinematicMode(bool toggleOn) {
+		isCinematicMode = toggleOn;
 	}
 }
