@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum PlayerMode {Normal, WalkLookOnly, LookOnly, Cutscene};
+
+
 public class TestPlayerController : MonoBehaviour {
+
+	PlayerMode thisPlayerMode = PlayerMode.Normal;
 
 	BaseInput input;
 	
@@ -51,13 +56,13 @@ public class TestPlayerController : MonoBehaviour {
 		if(lockInput == InputLock.Locked)
 			return;
 
-		if(lockInput == InputLock.Unlocked)
-			HandleMovement();
+		if (lockInput == InputLock.Unlocked) {
+			HandleMovement ();
+			HandleAiming ();
 
-		HandleAiming();
-
-		if(input.reload) {
-			GetComponent<WeaponManager>().Reload();
+			if(input.reload) {
+				GetComponent<WeaponManager>().Reload();
+			}
 		}
 	}
 
@@ -118,60 +123,86 @@ public class TestPlayerController : MonoBehaviour {
 		}
 	}
 
+	public void SetPlayerMode(PlayerMode switchToThisMode) {
+		switch (switchToThisMode) {
+
+		case PlayerMode.Normal:
+
+			break;
+
+		case PlayerMode.Cutscene:
+
+			break;
+
+		case PlayerMode.LookOnly:
+
+			break;
+
+		case PlayerMode.WalkLookOnly:
+
+			break;
+
+		}
+	}
+
 	public void HandleAiming() {
-		anim.SetBool("Aim", input.aim);
+		if (thisPlayerMode == PlayerMode.Normal) {
+			anim.SetBool ("Aim", input.aim);
+			if (input.aim) {
+				gameplayCamera.GetComponent<CameraFollow> ().zoomedIn = true;
+				Vector3 targetPos = transform.FindChild ("CameraTarget").localPosition;
+				targetPos.x = 0.5f;
+				transform.FindChild ("CameraTarget").localPosition = Vector3.Lerp (transform.FindChild ("CameraTarget").localPosition, targetPos, Time.deltaTime * 4f);
 
-		if(input.aim) {
-			gameplayCamera.GetComponent<CameraFollow>().zoomedIn = true;
-			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
-			targetPos.x = 0.5f;
-			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
+				Vector3 lookDir = Vector3.zero;
+				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign (input.moveDir.z);
+				lookDir += Vector3.Cross (transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign (input.moveDir.x);
+				lookDir.Normalize ();
+				lookDir.y = 0.0f;
+				transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.LookRotation (lookDir), 15f * Time.deltaTime);
 
-			Vector3 lookDir = Vector3.zero;
-			lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
-			lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
-			lookDir.Normalize();
-			lookDir.y = 0.0f;
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 15f*Time.deltaTime);
+				//			RaycastHit hit = new RaycastHit(); 
+				//			if(Physics.Raycast(gameplayCamera.ScreenPointToRay(Input.mousePosition), out hit)) {
+				laserTarget.gameObject.SetActive (true);
+				laserTarget.SetPositions (new Vector3[] {
+					laserTarget.transform.position,
+					laserTarget.transform.position + (laserTarget.transform.up * 50f)
+				});
+				//			if(Mathf.Abs(transform.eulerAngles.y - Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime).eulerAngles.y) < 3f) {
+				//				GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
+				//				GetComponent<RootMotion.FinalIK.AimIK>().enabled = true;
+				//			}
+				//			}
 
-			//			RaycastHit hit = new RaycastHit(); 
-			//			if(Physics.Raycast(gameplayCamera.ScreenPointToRay(Input.mousePosition), out hit)) {
-			laserTarget.gameObject.SetActive(true);
-			laserTarget.SetPositions( new Vector3[] {laserTarget.transform.position, laserTarget.transform.position + (laserTarget.transform.up * 50f)});
-			//			if(Mathf.Abs(transform.eulerAngles.y - Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime).eulerAngles.y) < 3f) {
-			//				GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
-			//				GetComponent<RootMotion.FinalIK.AimIK>().enabled = true;
-			//			}
-			//			}
+				if (lockInput == InputLock.Unlocked) { //Could be cleaner than checking for this here
+					if (input.shoot) {
+						if (GetComponent<WeaponManager> ().CanFire ()) {
+							anim.SetTrigger ("Fire");
+							GetComponent<WeaponManager> ().Fire ();
+							cameraObj.GetComponent<CameraFollow> ().Recoil (GetComponent<WeaponManager> ().CurrentWeapon.recoil);
+						}
+					}
+					if (input.melee) {
+						anim.SetTrigger ("punch");
+						GetComponent<WeaponManager> ().Melee ();
 
-			if(lockInput == InputLock.Unlocked) { //Could be cleaner than checking for this here
-				if(input.shoot) {
-					if(GetComponent<WeaponManager>().CanFire()) {
-						anim.SetTrigger("Fire");
-						GetComponent<WeaponManager>().Fire();
-						cameraObj.GetComponent<CameraFollow>().Recoil(GetComponent<WeaponManager>().CurrentWeapon.recoil);
+						GetComponent<RootMotion.FinalIK.LookAtIK> ().enabled = false;
+						GetComponent<RootMotion.FinalIK.AimIK> ().enabled = false;
 					}
 				}
-				if(input.melee) {
-					anim.SetTrigger("punch");
-					GetComponent<WeaponManager>().Melee();
 
-					GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = false;
-					GetComponent<RootMotion.FinalIK.AimIK>().enabled = false;
-				}
+			} else {
+				gameplayCamera.GetComponent<CameraFollow> ().zoomedIn = false;
+				Vector3 targetPos = transform.FindChild ("CameraTarget").localPosition;
+				targetPos.x = 0f;
+				transform.FindChild ("CameraTarget").localPosition = Vector3.Lerp (transform.FindChild ("CameraTarget").localPosition, targetPos, Time.deltaTime * 4f);
+
+
+				//Do i care about this every frame?
+				laserTarget.gameObject.SetActive (false);
+				GetComponent<RootMotion.FinalIK.LookAtIK> ().enabled = true;
+				GetComponent<RootMotion.FinalIK.AimIK> ().enabled = false;
 			}
-
-		} else {
-			gameplayCamera.GetComponent<CameraFollow>().zoomedIn = false;
-			Vector3 targetPos = transform.FindChild("CameraTarget").localPosition;
-			targetPos.x = 0f;
-			transform.FindChild("CameraTarget").localPosition = Vector3.Lerp(transform.FindChild("CameraTarget").localPosition, targetPos, Time.deltaTime*4f);
-
-
-			//Do i care about this every frame?
-			laserTarget.gameObject.SetActive(false);
-			GetComponent<RootMotion.FinalIK.LookAtIK>().enabled = true;
-			GetComponent<RootMotion.FinalIK.AimIK>().enabled = false;
 		}
 	}
 
