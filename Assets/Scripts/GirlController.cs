@@ -5,6 +5,12 @@ using UnityEngine.AI;
 
 public class GirlController : MonoBehaviour {
 
+	enum GirlState {Following, Idle};
+	GirlState thisGirlState = GirlState.Idle;
+
+	float distanceToTriggerFollow = 20f;
+	float tooClose = 5f;
+
 	[SerializeField]
 	NavMeshAgent thisNavMeshAgent;
 
@@ -16,6 +22,36 @@ public class GirlController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		switch (thisGirlState) {
+		case GirlState.Following:
+			CheckIsPlayerFarOrTooClose ();
+			thisNavMeshAgent.isStopped = false;
+			thisNavMeshAgent.SetDestination (TestPlayerController.s_instance.transform.position);
+
+			break;
+
+		case GirlState.Idle:
+			CheckIsPlayerClose ();
+			thisNavMeshAgent.isStopped = true;
+			break;
+		}
+	}
+
+	void CheckIsPlayerClose () {
+		if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) < distanceToTriggerFollow
+			&& Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > tooClose) {
+			GetComponent<Animator> ().SetTrigger ("walk");
+			thisGirlState = GirlState.Following;
+		}
+	}
+
+	void CheckIsPlayerFarOrTooClose() {
+		if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > distanceToTriggerFollow) {
+			GetComponent<Animator> ().SetTrigger ("idle");
+			thisGirlState = GirlState.Idle;
+		} else if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) < tooClose){
+			GetComponent<Animator> ().SetTrigger ("idle");
+			thisGirlState = GirlState.Idle;
+		}
 	}
 }
