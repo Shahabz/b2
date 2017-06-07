@@ -48,8 +48,8 @@ public class TestPlayerController : MonoBehaviour {
 		anim = GetComponent<Animator>();
 		laserTarget = GetComponentInChildren<LineRenderer>();
 
-        GetComponent<RootMotion.FinalIK.AimIK>().solver.target = GetComponent<RootMotion.FinalIK.LookAtIK>().solver.target = cameraObj.FindChild("LaserEnd");
-		GetComponent<RootMotion.FinalIK.AimIK>().solver.transform = laserTarget.transform.parent.FindChild("FirePos");
+        GetComponent<RootMotion.FinalIK.AimIK>().solver.target = GetComponent<RootMotion.FinalIK.LookAtIK>().solver.target = cameraObj.Find("LaserEnd");
+		GetComponent<RootMotion.FinalIK.AimIK>().solver.transform = laserTarget.transform.parent.Find("FirePos");
 	}
 	
 	void Update () {
@@ -150,9 +150,9 @@ public class TestPlayerController : MonoBehaviour {
 			anim.SetBool ("Aim", input.aim);
 			if (input.aim) {
 				gameplayCamera.GetComponent<CameraFollow> ().zoomedIn = true;
-				Vector3 targetPos = transform.FindChild ("CameraTarget").localPosition;
+				Vector3 targetPos = transform.Find ("CameraTarget").localPosition;
 				targetPos.x = 0.5f;
-				transform.FindChild ("CameraTarget").localPosition = Vector3.Lerp (transform.FindChild ("CameraTarget").localPosition, targetPos, Time.deltaTime * 4f);
+				transform.Find ("CameraTarget").localPosition = Vector3.Lerp (transform.Find ("CameraTarget").localPosition, targetPos, Time.deltaTime * 4f);
 
 				Vector3 lookDir = Vector3.zero;
 				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign (input.moveDir.z);
@@ -193,9 +193,9 @@ public class TestPlayerController : MonoBehaviour {
 
 			} else {
 				gameplayCamera.GetComponent<CameraFollow> ().zoomedIn = false;
-				Vector3 targetPos = transform.FindChild ("CameraTarget").localPosition;
+				Vector3 targetPos = transform.Find ("CameraTarget").localPosition;
 				targetPos.x = 0f;
-				transform.FindChild ("CameraTarget").localPosition = Vector3.Lerp (transform.FindChild ("CameraTarget").localPosition, targetPos, Time.deltaTime * 4f);
+				transform.Find ("CameraTarget").localPosition = Vector3.Lerp (transform.Find ("CameraTarget").localPosition, targetPos, Time.deltaTime * 4f);
 
 
 				//Do i care about this every frame?

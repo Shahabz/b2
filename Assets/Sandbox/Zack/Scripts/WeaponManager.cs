@@ -59,12 +59,12 @@ public class WeaponManager : MonoBehaviour {
 		GetComponent<AudioSource>().clip = CurrentWeapon.fireSounds[Random.Range(0, CurrentWeapon.fireSounds.Length)];
 		GetComponent<AudioSource>().Play();
 
-		ParticleSystem muzzleFlash = CurrentWeapon.weaponObj.FindChild("MuzzleFlash") != null ? CurrentWeapon.weaponObj.FindChild("MuzzleFlash").GetComponent<ParticleSystem>() : null;
+		ParticleSystem muzzleFlash = CurrentWeapon.weaponObj.Find("MuzzleFlash") != null ? CurrentWeapon.weaponObj.Find("MuzzleFlash").GetComponent<ParticleSystem>() : null;
 		if(muzzleFlash != null) {
 			muzzleFlash.Emit(30);//(true);
 		}
 
-		Transform firePos = CurrentWeapon.weaponObj.FindChild("FirePos");
+		Transform firePos = CurrentWeapon.weaponObj.Find("FirePos");
 		RaycastHit hit;
 		LayerMask hitMask = LayerMask.GetMask(new string[] {"Default"});
 		if(Physics.Raycast(new Ray(firePos.position, firePos.up), out hit, MAX_DISTANCE, hitMask, QueryTriggerInteraction.Ignore)) {
