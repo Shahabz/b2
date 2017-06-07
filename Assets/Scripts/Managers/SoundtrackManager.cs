@@ -3,7 +3,18 @@ using System.Collections;
 
 public class SoundtrackManager : MonoBehaviour {
 
-	public AudioSource pink, water, drowning, chat, melancholy, ambient, jacob, wind, lakeAmbient, megaAmbient, nightAmbience, insignificance, donnie, three, garby; //soundtrack files
+	public AudioSource
+	AnxietyHit1,
+	AnxietyHit2,
+	AnxietyHit3,
+	AnxietyHit4,
+	Fed_AnxietyLightning,
+	Player_HeartBeatFast,
+	Player_HeartBeatSlow
+
+
+
+	; //soundtrack files
 	public static SoundtrackManager s_instance;
 
 	void Awake () {

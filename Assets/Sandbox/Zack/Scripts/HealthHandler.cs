@@ -35,7 +35,7 @@ public class HealthHandler : MonoBehaviour {
 
 	void Start () {
 		health = maxHealth;
-		stress = maxStress;
+		stress = 0;
 	}
 	
 	void Update () {
@@ -43,9 +43,9 @@ public class HealthHandler : MonoBehaviour {
 			health += healthRegenAmount * Time.deltaTime;
 		}
 
-		if(stress < maxStress && Time.time >= lastStressor + stressRegenDelay) {
+		/*if(stress < maxStress && Time.time >= lastStressor + stressRegenDelay) {
 			stress += stressRegenAmount * Time.deltaTime;
-		}
+		}*/
 	}
 
 	public void TakeDamage(float damageAmount) {
@@ -57,7 +57,17 @@ public class HealthHandler : MonoBehaviour {
 
 	public void TakeStress(int stressAmount) {
 		lastStressor = Time.time;
-		stress -= stressAmount;
+		stress += stressAmount;
+		if (stress >= 80) {
+			OverlayManager.s_instance.SetImageOscillation (true, 2);
+			OverlayManager.s_instance.SetTransparencyOnBloodSprite (1f);
+		} else if (stress >= 50) { 
+			OverlayManager.s_instance.SetImageOscillation (true, 1);
+			OverlayManager.s_instance.SetTransparencyOnBloodSprite (.6f);
+		} else if (stress >= 20) {
+			OverlayManager.s_instance.SetImageOscillation (false);
+			OverlayManager.s_instance.FlashBloodSprite ();
+		}
 	}
 
 	void OnGUI() {
@@ -67,5 +77,8 @@ public class HealthHandler : MonoBehaviour {
 
 	public void Death() {
 		//Do game over BS
+		OverlayManager.s_instance.ShowDeathOverlay();
+		TestPlayerController.s_instance.lockInput= TestPlayerController.InputLock.Locked;
+		TestPlayerController.s_instance.GetComponent<Animator> ().SetTrigger ("death");
 	}
 }
