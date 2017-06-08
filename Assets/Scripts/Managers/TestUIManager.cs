@@ -24,9 +24,9 @@ public class TestUIManager : MonoBehaviour {
 	}
 
 	void Start() {
-		transform.FindChild("Menu/Volume/FX/Slider").GetComponent<Slider>().value = OptionManager.FXVolume;
-		transform.FindChild("Menu/Volume/Music/Slider").GetComponent<Slider>().value = OptionManager.BGMVolume;
-		transform.FindChild("Menu/Volume/VO/Slider").GetComponent<Slider>().value = OptionManager.VOVolume;
+		transform.Find("Menu/Volume/FX/Slider").GetComponent<Slider>().value = OptionManager.FXVolume;
+		transform.Find("Menu/Volume/Music/Slider").GetComponent<Slider>().value = OptionManager.BGMVolume;
+		transform.Find("Menu/Volume/VO/Slider").GetComponent<Slider>().value = OptionManager.VOVolume;
 	}
 
 	void Update () {

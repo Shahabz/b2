@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
 
 			break;
 		case DebugStartPosition.Intro:
-
+				TestPlayerController.s_instance.transform.position = IntroTransform.position;
 			break;
 
 		case DebugStartPosition.Tolstoy:

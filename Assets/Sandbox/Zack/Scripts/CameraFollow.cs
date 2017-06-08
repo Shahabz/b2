@@ -120,8 +120,8 @@ public class CameraFollow : MonoBehaviour {
 			transform.rotation = rotation;
 			transform.position = position;	
 
-			Vector3 endPos = transform.FindChild("LaserEnd").localPosition;
-			transform.FindChild("LaserEnd").localPosition = Vector3.Lerp(endPos, new Vector3(0f, 0f, endPos.z), 5f*Time.deltaTime);
+			Vector3 endPos = transform.Find("LaserEnd").localPosition;
+			transform.Find("LaserEnd").localPosition = Vector3.Lerp(endPos, new Vector3(0f, 0f, endPos.z), 5f*Time.deltaTime);
 		}
 	}
 	
@@ -135,6 +135,6 @@ public class CameraFollow : MonoBehaviour {
 	}
 
 	public void Recoil(float recoil) {
-		transform.FindChild("LaserEnd").localPosition += new Vector3(0f, recoil, 0f);
+		transform.Find("LaserEnd").localPosition += new Vector3(0f, recoil, 0f);
 	}
 }
