@@ -1,0 +1,179 @@
+fileFormatVersion: 2
+guid: 05a3b7a195f69704caa8af39c60bc26d
+timeCreated: 1427121453
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: SCALE_woman
+    100004: SPP_MOD_Anti_diarrheal
+    100006: SPP_MOD_Antibacterial_soap
+    100008: SPP_MOD_Body_bag
+    100010: SPP_MOD_Exam_glove_box
+    100012: SPP_MOD_Face_mask.001
+    100014: SPP_MOD_Face_mask_box
+    100016: SPP_MOD_Hospital_bed
+    100018: SPP_MOD_Hospital_blanket
+    100020: SPP_MOD_Hospital_mattress
+    100022: SPP_MOD_Hospital_pillow
+    100024: SPP_MOD_Liquid_bleach
+    100026: SPP_MOD_Plastic_sheeting
+    100028: SPP_MOD_Quarantine_barricade
+    100030: SPP_MOD_Quarantine_sign
+    100032: SPP_MOD_Safety_goggles
+    100034: SPP_MOD_Thermometer
+    100036: SPP_MOD_Toilet_paper
+    100038: SPP_MOD_Trash_bags
+    100040: SPP_MOD_Water_bottle
+    100042: SPP_MOD_Water_bottle_02
+    100044: SPP_MOD_Water_filter_bottle
+    400000: //RootNode
+    400002: SCALE_woman
+    400004: SPP_MOD_Anti_diarrheal
+    400006: SPP_MOD_Antibacterial_soap
+    400008: SPP_MOD_Body_bag
+    400010: SPP_MOD_Exam_glove_box
+    400012: SPP_MOD_Face_mask.001
+    400014: SPP_MOD_Face_mask_box
+    400016: SPP_MOD_Hospital_bed
+    400018: SPP_MOD_Hospital_blanket
+    400020: SPP_MOD_Hospital_mattress
+    400022: SPP_MOD_Hospital_pillow
+    400024: SPP_MOD_Liquid_bleach
+    400026: SPP_MOD_Plastic_sheeting
+    400028: SPP_MOD_Quarantine_barricade
+    400030: SPP_MOD_Quarantine_sign
+    400032: SPP_MOD_Safety_goggles
+    400034: SPP_MOD_Thermometer
+    400036: SPP_MOD_Toilet_paper
+    400038: SPP_MOD_Trash_bags
+    400040: SPP_MOD_Water_bottle
+    400042: SPP_MOD_Water_bottle_02
+    400044: SPP_MOD_Water_filter_bottle
+    2300000: //RootNode
+    2300002: SCALE_woman
+    2300004: SPP_MOD_Anti_diarrheal
+    2300006: SPP_MOD_Antibacterial_soap
+    2300008: SPP_MOD_Body_bag
+    2300010: SPP_MOD_Exam_glove_box
+    2300012: SPP_MOD_Face_mask.001
+    2300014: SPP_MOD_Face_mask_box
+    2300016: SPP_MOD_Hospital_bed
+    2300018: SPP_MOD_Hospital_blanket
+    2300020: SPP_MOD_Hospital_mattress
+    2300022: SPP_MOD_Hospital_pillow
+    2300024: SPP_MOD_Liquid_bleach
+    2300026: SPP_MOD_Plastic_sheeting
+    2300028: SPP_MOD_Quarantine_barricade
+    2300030: SPP_MOD_Quarantine_sign
+    2300032: SPP_MOD_Safety_goggles
+    2300034: SPP_MOD_Thermometer
+    2300036: SPP_MOD_Toilet_paper
+    2300038: SPP_MOD_Trash_bags
+    2300040: SPP_MOD_Water_bottle
+    2300042: SPP_MOD_Water_bottle_02
+    2300044: SPP_MOD_Water_filter_bottle
+    3300000: //RootNode
+    3300002: SCALE_woman
+    3300004: SPP_MOD_Anti_diarrheal
+    3300006: SPP_MOD_Antibacterial_soap
+    3300008: SPP_MOD_Body_bag
+    3300010: SPP_MOD_Exam_glove_box
+    3300012: SPP_MOD_Face_mask.001
+    3300014: SPP_MOD_Face_mask_box
+    3300016: SPP_MOD_Hospital_bed
+    3300018: SPP_MOD_Hospital_blanket
+    3300020: SPP_MOD_Hospital_mattress
+    3300022: SPP_MOD_Hospital_pillow
+    3300024: SPP_MOD_Liquid_bleach
+    3300026: SPP_MOD_Plastic_sheeting
+    3300028: SPP_MOD_Quarantine_barricade
+    3300030: SPP_MOD_Quarantine_sign
+    3300032: SPP_MOD_Safety_goggles
+    3300034: SPP_MOD_Thermometer
+    3300036: SPP_MOD_Toilet_paper
+    3300038: SPP_MOD_Trash_bags
+    3300040: SPP_MOD_Water_bottle
+    3300042: SPP_MOD_Water_bottle_02
+    3300044: SPP_MOD_Water_filter_bottle
+    4300000: SPP_MOD_Quarantine_barricade
+    4300002: SPP_MOD_Quarantine_sign
+    4300004: SPP_MOD_Hospital_blanket
+    4300006: SPP_MOD_Hospital_mattress
+    4300008: SPP_MOD_Hospital_bed
+    4300010: SPP_MOD_Body_bag
+    4300012: SPP_MOD_Thermometer
+    4300014: SPP_MOD_Anti_diarrheal
+    4300016: SPP_MOD_Trash_bags
+    4300018: SPP_MOD_Safety_goggles
+    4300020: SPP_MOD_Water_filter_bottle
+    4300022: SPP_MOD_Plastic_sheeting
+    4300024: SPP_MOD_Water_bottle_02
+    4300026: SPP_MOD_Water_bottle
+    4300028: SPP_MOD_Toilet_paper
+    4300030: SPP_MOD_Face_mask_box
+    4300032: SPP_MOD_Face_mask.001
+    4300034: SPP_MOD_Exam_glove_box
+    4300036: SPP_MOD_Liquid_bleach
+    4300038: SPP_MOD_Antibacterial_soap
+    4300040: SCALE_woman
+    4300042: SPP_MOD_Hospital_pillow
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
