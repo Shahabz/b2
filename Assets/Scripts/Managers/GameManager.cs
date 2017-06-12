@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+		TestPlayerController.s_instance.gameObject.SetActive (true);
 		switch (thisDebugStartPosition) {
 		case DebugStartPosition.Computer:
 			Camera.main.transform.position = ComputerCam.transform.position;
