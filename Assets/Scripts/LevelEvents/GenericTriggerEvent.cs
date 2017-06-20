@@ -10,15 +10,7 @@ public class GenericTriggerEvent : MonoBehaviour {
 	public ParticleSystem PlayThisParticle;
 	public ParticleSystem[] PlayTheseParticles;
 	bool hasPlayed;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && !hasPlayed) {
