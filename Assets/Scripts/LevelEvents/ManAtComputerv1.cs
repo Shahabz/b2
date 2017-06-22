@@ -8,6 +8,8 @@ public class ManAtComputerv1 : MonoBehaviour {
 	NavMeshAgent thisNavMeshAgent;
 	public Transform escapePoint, dodgePoint;
 	bool isEscapeAround, isEscapeDirect;
+
+	float distanceToToggleNextWaypoint = 4f;
 	// Use this for initialization
 	void Start () {
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
@@ -26,11 +28,13 @@ public class ManAtComputerv1 : MonoBehaviour {
 
 	public void EscapeDirect(){
 		isEscapeDirect = true;
+		GetComponent<Animator> ().SetTrigger ("alert");
 		StartCoroutine (ReactThenEscapeDirect ());
 	}
 
 	public void EscapeAround() {
 		isEscapeAround = true;
+		GetComponent<Animator> ().SetTrigger ("alert");
 		StartCoroutine (ReactThenDodge ());
 	}
 
@@ -38,25 +42,27 @@ public class ManAtComputerv1 : MonoBehaviour {
 		transform.LookAt (TestPlayerController.s_instance.transform);
 		yield return new WaitForSeconds (.5f);
 		thisNavMeshAgent.SetDestination (escapePoint.position);
-
+		GetComponent<Animator> ().SetTrigger ("run");
 	}
 
 	IEnumerator ReactThenDodge () {
 		transform.LookAt (TestPlayerController.s_instance.transform);
 		yield return new WaitForSeconds (.5f);
 		thisNavMeshAgent.SetDestination (dodgePoint.position);
+		GetComponent<Animator> ().SetTrigger ("run");
 	}
 
 
 	void CheckDistToDodgePoint() {
-		if (Vector3.Distance (transform.position, dodgePoint.position) < 1f) {
+		if (Vector3.Distance (transform.position, dodgePoint.position) < distanceToToggleNextWaypoint) {
 			isEscapeAround = false;
-			EscapeDirect ();
+			isEscapeDirect = true;
+			thisNavMeshAgent.SetDestination (escapePoint.position);
 		}
 	}
 
 	void CheckDistToEscapePoint () {
-		if (Vector3.Distance (transform.position, escapePoint.position) < 1f) {
+		if (Vector3.Distance (transform.position, escapePoint.position) < distanceToToggleNextWaypoint) {
 			Destroy (gameObject);
 		}
 	}
