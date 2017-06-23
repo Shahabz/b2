@@ -17,4 +17,9 @@ public class UnityEventTrigger : MonoBehaviour {
 			}
 		}
 	}
+
+	void Start() {
+		if (GetComponent<MeshRenderer>() != null)
+			GetComponent<MeshRenderer> ().enabled = false;
+	}
 }
