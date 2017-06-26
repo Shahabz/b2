@@ -10,6 +10,7 @@ public class NPInputManager : MonoBehaviour {
 		public PlayerAction Fire;
 		public PlayerAction Reload;
 		public PlayerAction Melee;
+        public PlayerAction Interact;
 		public PlayerAction Aim;
 		public PlayerAction Sprint;
 		public PlayerAction Left;
@@ -28,6 +29,7 @@ public class NPInputManager : MonoBehaviour {
 			Fire = CreatePlayerAction( "Fire" );
 			Reload = CreatePlayerAction( "Reload" );
 			Melee = CreatePlayerAction( "Melee" );
+            Interact = CreatePlayerAction( "Interact" );
 			Aim = CreatePlayerAction( "Aim" );
 			Sprint = CreatePlayerAction( "Sprint" );
 			Left = CreatePlayerAction( "Move Left" );
@@ -54,6 +56,9 @@ public class NPInputManager : MonoBehaviour {
 
 			playerActions.Melee.AddDefaultBinding( Key.F );
 			playerActions.Melee.AddDefaultBinding( InputControlType.Action2 );
+
+            playerActions.Interact.AddDefaultBinding( Key.E );
+            playerActions.Interact.AddDefaultBinding( InputControlType.Action1 );
 
 			playerActions.Aim.AddDefaultBinding( Mouse.RightButton );
 			playerActions.Aim.AddDefaultBinding( InputControlType.LeftTrigger );

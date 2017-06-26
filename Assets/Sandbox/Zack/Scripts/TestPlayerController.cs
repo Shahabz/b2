@@ -63,6 +63,26 @@ public class TestPlayerController : MonoBehaviour {
 			if(input.reload) {
 				GetComponent<WeaponManager>().Reload();
 			}
+
+            if (thisPlayerMode == PlayerMode.Normal)
+            {
+                if (input.interact)
+                {
+                    Vector3 center = transform.position + transform.forward + transform.up;
+                    Collider[] cols = Physics.OverlapSphere(center, 1.5f, LayerMask.GetMask("Interactable"));
+                    if(cols.Length > 0) {
+                        Collider closest = cols[0];
+                        for (int i = 1; i < cols.Length; i++)
+                        {
+                            if (Vector3.Distance(center, cols[i].transform.position) < Vector3.Distance(center, closest.transform.position))
+                            {
+                                closest = cols[i];
+                            }
+                        }
+                        closest.GetComponent<IInteractable>().Interact();
+                    }
+                }
+            }
 		}
 	}
 

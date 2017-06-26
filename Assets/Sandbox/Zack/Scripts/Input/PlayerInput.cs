@@ -30,6 +30,7 @@ public class PlayerInput : BaseInput {
 			moveDir = new Vector3(NPInputManager.input.Move.X, 0f, NPInputManager.input.Move.Y); //its an x,y vec EW
 			sprint = NPInputManager.input.Sprint;
 			melee = false;
+            interact = NPInputManager.input.Interact.WasPressed;
 		}
 	}
 
