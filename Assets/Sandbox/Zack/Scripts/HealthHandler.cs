@@ -63,10 +63,9 @@ public class HealthHandler : MonoBehaviour {
 			OverlayManager.s_instance.SetTransparencyOnBloodSprite (1f);
 		} else if (stress >= 50) { 
 			OverlayManager.s_instance.SetImageOscillation (true, 1);
-			OverlayManager.s_instance.SetTransparencyOnBloodSprite (.6f);
+			OverlayManager.s_instance.SetTransparencyOnBloodSprite (.5f);
 		} else if (stress >= 20) {
 			OverlayManager.s_instance.SetImageOscillation (false);
-			OverlayManager.s_instance.FlashBloodSprite ();
 		}
 	}
 
