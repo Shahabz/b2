@@ -59,13 +59,11 @@ public class HealthHandler : MonoBehaviour {
 		lastStressor = Time.time;
 		stress += stressAmount;
 		if (stress >= 80) {
-			OverlayManager.s_instance.SetImageOscillation (true, 2);
-			OverlayManager.s_instance.SetTransparencyOnBloodSprite (1f);
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.4f);
 		} else if (stress >= 50) { 
-			OverlayManager.s_instance.SetImageOscillation (true, 1);
-			OverlayManager.s_instance.SetTransparencyOnBloodSprite (.5f);
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.2f);
 		} else if (stress >= 20) {
-			OverlayManager.s_instance.SetImageOscillation (false);
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.1f);
 		}
 	}
 

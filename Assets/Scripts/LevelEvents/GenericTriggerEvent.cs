@@ -10,6 +10,7 @@ public class GenericTriggerEvent : MonoBehaviour {
 	public ParticleSystem PlayThisParticle;
 	public ParticleSystem[] PlayTheseParticles;
 	bool hasPlayed;
+	public bool slowDownTime;
 
 
 	void OnTriggerEnter(Collider other) {
@@ -31,8 +32,20 @@ public class GenericTriggerEvent : MonoBehaviour {
 				x.gameObject.SetActive (true);
 				x.Play ();
 			}
+
+			if (slowDownTime) {
+				StartCoroutine ("SlowDownTime");
+			}
+
 			if (PlayThisParticle!=null)
 				PlayThisParticle.Play ();
+
 		}
+	}
+
+	IEnumerator SlowDownTime () {
+		Time.timeScale = .5f;
+		yield return new WaitForSeconds (.5f);
+		Time.timeScale = 1f;
 	}
 }

@@ -10,7 +10,8 @@ public class OverlayManager : MonoBehaviour {
 	public Sprite[] criminalSprites;
 	public Image infection, blood;
 
-	bool isOscillatingBloodVeil = false;
+	bool isFading = false;
+	bool showDeathFX;
 	float oscillationSpeed = 1f;
 	float startingAlphaforBloodSprite, bloodSpriteFadeoutSpeed = .0005f;
 
@@ -32,18 +33,17 @@ public class OverlayManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isOscillatingBloodVeil) {
-			OscillateBloodVeil ();
+		if (isFading) {
 			FadeOutBloodSprite ();
 		}
-	}
 
-	public void SetImageOscillation (bool isOscillating, float speed = 1f) {
-		isOscillatingBloodVeil = isOscillating;
-		oscillationSpeed = speed;
+		if (showDeathFX) {
+			PlayDeathPulseOverlay ();
+		}
 	}
-
+		
 	public void ShowDeathOverlay() {
+		showDeathFX = true; 
 		int choose = Random.Range (0, infectionSprites.Length - 1);
 		infection.enabled = true;
 		infection.sprite = infectionSprites [choose];
@@ -60,28 +60,18 @@ public class OverlayManager : MonoBehaviour {
 
 	}
 
-	public void OscillateBloodVeil(){
-		float materialVal = .1f + Mathf.PingPong (Time.time * 4f, .5f);
+	public void PlayDeathPulseOverlay(){
+		float materialVal = .1f + Mathf.PingPong (Time.time, .5f);
 		blood.material.SetFloat ("_Cutoff", materialVal);
 	}
 
-	public void SetTransparencyOnBloodSprite(float alpha) {
+	public void ShowAnxietyFadeOut(float transparency) {
+		isFading = true;
 		blood.enabled = true;
-		startingAlphaforBloodSprite = alpha;
+		startingAlphaforBloodSprite = transparency;
 		Color temp = blood.material.color;
-		temp.a = alpha;
+		temp.a = transparency;
 		blood.material.SetColor ("_Color", temp);
-	}
-
-	void EnableRandomBloodSprite () {
-		int choose = Random.Range (0, bloodSprites.Length - 1);
-		blood.enabled = true;
-		blood.sprite = bloodSprites [choose];
-	}
-
-	IEnumerator TurnOffThisImage(Image thisImage) {
-		yield return new WaitForSeconds (5f);
-		thisImage.enabled = false;
 	}
 
 	void FadeOutBloodSprite () {
@@ -90,7 +80,7 @@ public class OverlayManager : MonoBehaviour {
 		temp.a = startingAlphaforBloodSprite;
 		blood.material.SetColor ("_Color", temp);
 		if (startingAlphaforBloodSprite <= 0) {
-			isOscillatingBloodVeil = false;
+			isFading = false;
 			blood.enabled = false;
 		}
 
