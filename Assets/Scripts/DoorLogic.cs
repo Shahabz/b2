@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorLogic : MonoBehaviour {
+public class DoorLogic : MonoBehaviour, IInteractable {
 
     bool isOpening, isOpened;
     public float endRotation = 80f;
@@ -33,14 +33,11 @@ public class DoorLogic : MonoBehaviour {
         }
 	}
 
-    private void OnTriggerEnter(Collider other)
+	public void Interact()
     {
-        if (other.tag == "Player")
-        {
-            if (!isOpened) {
-                OpenDoor();
-            }
-        }
+		if (!isOpened) {
+			OpenDoor ();
+		}
     }
 
     void OpenDoor()
