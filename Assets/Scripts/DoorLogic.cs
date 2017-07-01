@@ -13,6 +13,10 @@ public class DoorLogic : MonoBehaviour, IInteractable {
     private float startTime, duration = 2f;
 
 	void Start () {
+		if (gameObject.layer != LayerMask.NameToLayer("Interactable"))
+		{
+			Debug.LogError("Needs to be on interactable layer to interact with", this);
+		}
 		if (rotatorRoot == null)
         {
             rotatorRoot = transform;
