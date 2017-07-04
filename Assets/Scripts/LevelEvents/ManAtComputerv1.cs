@@ -8,7 +8,7 @@ public class ManAtComputerv1 : MonoBehaviour {
 	NavMeshAgent thisNavMeshAgent;
 	public Transform escapePoint, dodgePoint;
 	bool isEscapeAround, isEscapeDirect;
-
+	public bool hasReaction = true;
 	float distanceToToggleNextWaypoint = 4f;
 	// Use this for initialization
 	void Start () {
@@ -28,8 +28,12 @@ public class ManAtComputerv1 : MonoBehaviour {
 
 	public void EscapeDirect(){
 		isEscapeDirect = true;
-		GetComponent<Animator> ().SetTrigger ("alert");
-		StartCoroutine (ReactThenEscapeDirect ());
+		if (hasReaction) {
+			GetComponent<Animator> ().SetTrigger ("alert");
+			StartCoroutine (ReactThenEscapeDirect ());
+		} else {
+			thisNavMeshAgent.SetDestination (escapePoint.position);
+		}
 	}
 
 	public void EscapeAround() {
