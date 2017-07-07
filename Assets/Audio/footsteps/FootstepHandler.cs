@@ -8,7 +8,8 @@ public class FootstepHandler : MonoBehaviour {
     GameObject currentFootstep = null;
     int upperMax;
     float cooldown = .5f, fadeSpeed = 0.15f;
-    public float walkCooldown = .5f, runCooldown = .2f;
+    float walkCooldown = .52f, runCooldown = .35f;
+	int lastFootStepIndex;
 
     // Use this for initialization
     void Start () {
@@ -34,7 +35,8 @@ public class FootstepHandler : MonoBehaviour {
         if (currentFootstep == null)
         {
             upperMax = footSteps.Length;
-            int footStepIndex = UnityEngine.Random.Range(0, upperMax);
+			int footStepIndex = HandleRepeatFootstep (UnityEngine.Random.Range (0, upperMax));
+			lastFootStepIndex = footStepIndex;
             currentFootstep = (GameObject)Instantiate(footSteps[footStepIndex]);
             currentFootstep.tag = "foot";
             currentFootstep.GetComponent<AudioSource>().volume = OptionManager.FXVolume;
@@ -55,6 +57,18 @@ public class FootstepHandler : MonoBehaviour {
         StartCoroutine("CeaseFootstep");
 
     }
+
+	int HandleRepeatFootstep (int thisIndex) {
+		if (thisIndex == lastFootStepIndex) {
+			if (thisIndex > 0) {
+				return thisIndex - 1;
+			} else {
+				return thisIndex + 1;
+			}
+		}
+		return thisIndex;
+	}
+
     IEnumerator CeaseFootstep()
     {
         while (currentFootstep != null && currentFootstep.GetComponent<AudioSource>().volume > 0.0f)
