@@ -63,7 +63,7 @@ public class HealthHandler : MonoBehaviour {
 		} else if (stress >= 50) { 
 			OverlayManager.s_instance.ShowAnxietyFadeOut (.2f);
 		} else if (stress >= 20) {
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.1f);
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.7f);
 		}
 	}
 

@@ -8,10 +8,14 @@ public class ManCrawlsAway : MonoBehaviour {
 	NavMeshAgent thisNavMeshAgent;
 	public Transform escapePoint, dodgePoint;
 	bool isEscapeAround, isEscapeDirect;
-
+	public bool pauseAnim = false;
 	float distanceToToggleNextWaypoint = 4f;
 	// Use this for initialization
 	void Start () {
+		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
+		if (pauseAnim) {
+			GetComponent<Animator> ().enabled = false;
+		}
 	}
 	
 	// Update is called once per frame
@@ -26,6 +30,9 @@ public class ManCrawlsAway : MonoBehaviour {
 	}
 
 	public void EscapeDirect(){
+		if (pauseAnim) {
+			GetComponent<Animator> ().enabled = true;
+		}
 		isEscapeDirect = true;
 		thisNavMeshAgent.SetDestination (escapePoint.position);
 		GetComponent<Animator> ().SetTrigger ("run");

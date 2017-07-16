@@ -16,25 +16,21 @@ public class Elevator : MonoBehaviour {
 	float travelSpeed, pauseTime;
 	float pauseTimer;
 
+	public bool isActive;
+
 	// Use this for initialization
 	void Start () {
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+		if (isActive) {
 		switch (thisElevatorState) {
 		case ElevatorState.Ascending:
-			transform.Translate (Vector3.Normalize (EndPoint.position - StartPoint.position) * travelSpeed);
-			if (Vector3.Distance (transform.position, EndPoint.position) < .1f) {
-				thisElevatorState = ElevatorState.PausingAtTop;
-			}
+			Ascend ();
 			break;
 		case ElevatorState.Descending:
-			transform.Translate (Vector3.Normalize (StartPoint.position - EndPoint.position) * travelSpeed);
-			if (Vector3.Distance (transform.position, StartPoint.position) < .1f) {
-				thisElevatorState = ElevatorState.PausingAtBottom;
-			}
+			Descend ();
 			break;
 		case ElevatorState.PausingAtTop:
 			if (GenericTimer.RunGenericTimer (pauseTime, ref pauseTimer)) {
@@ -49,4 +45,19 @@ public class Elevator : MonoBehaviour {
 
 		}
 	}
+	}
+
+	void Ascend() {
+		transform.Translate (Vector3.Normalize (EndPoint.position - StartPoint.position) * travelSpeed);
+		if (Vector3.Distance (transform.position, EndPoint.position) < .1f) {
+			thisElevatorState = ElevatorState.PausingAtTop;
+		}
+	}
+	void Descend(){
+		transform.Translate (Vector3.Normalize (StartPoint.position - EndPoint.position) * travelSpeed);
+		if (Vector3.Distance (transform.position, StartPoint.position) < .1f) {
+			thisElevatorState = ElevatorState.PausingAtBottom;
+		}
+	}
+
 }
