@@ -15,14 +15,15 @@ public class SaveManager : MonoBehaviour {
             string fileName = "NPSave.txt";
             if(File.Exists(fileName)){
                 var sr = File.OpenText(fileName);
-                level = sr.ReadLine();
-                checkPoint = sr.ReadLine();
-                anxietyModifiers = sr.ReadLine();
+                level = int.Parse(sr.ReadLine());
+                checkPoint = int.Parse(sr.ReadLine());
+                anxietyModifiers = int.Parse(sr.ReadLine());
 
                 string line = sr.ReadLine(); //Header string. Skip
                 line = sr.ReadLine();
                 while(!line.Contains("/Triggers")){
-                    triggers.Add(line.Split(new string[] { " " }, System.StringSplitOptions.None));
+                    string[] split = line.Split(new string[] { " " }, System.StringSplitOptions.None);
+                    triggers.Add(split[0], bool.Parse(split[1]));
                     line = sr.ReadLine();
                 }  
             } else {
@@ -64,7 +65,7 @@ public class SaveManager : MonoBehaviour {
         sw.WriteLine(saveData.checkPoint + "\n");
         sw.WriteLine(saveData.anxietyModifiers + "\n");
         sw.WriteLine("Triggers\n");
-        for (var enumerator = saveData.triggers.GetEnumerator(); enumerator.Current != null; enumerator.MoveNext())
+        for (var enumerator = saveData.triggers.GetEnumerator(); enumerator.MoveNext(); ) //Verify this doesn't lose one at end
         {
             if (enumerator.Current.Key == "")
             {
