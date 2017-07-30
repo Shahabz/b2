@@ -14,6 +14,7 @@ public class OverlayManager : MonoBehaviour {
 	bool showDeathFX;
 	float oscillationSpeed = 1f;
 	float startingAlphaforBloodSprite, bloodSpriteFadeoutSpeed = .0005f;
+	Fader[] AnxietyFaders;
 
 	// Use this for initialization
 
@@ -29,6 +30,10 @@ public class OverlayManager : MonoBehaviour {
 		{
 			Destroy(this);
 		}
+	}
+
+	void Start () {
+		AnxietyFaders = GetComponentsInChildren<Fader> ();
 	}
 	
 	// Update is called once per frame
