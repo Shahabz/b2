@@ -15,6 +15,7 @@ public class OverlayManager : MonoBehaviour {
 	float oscillationSpeed = 1f;
 	float startingAlphaforBloodSprite, bloodSpriteFadeoutSpeed = .0005f;
 	Fader[] AnxietyFaders;
+	public Slider anxietySlider;
 
 	// Use this for initialization
 
@@ -77,6 +78,10 @@ public class OverlayManager : MonoBehaviour {
 		Color temp = blood.material.color;
 		temp.a = transparency;
 		blood.material.SetColor ("_Color", temp);
+		foreach (Fader x in AnxietyFaders) {
+			x.StartFadeOut (3);
+		}
+
 	}
 
 	void FadeOutBloodSprite () {

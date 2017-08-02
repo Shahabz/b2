@@ -10,8 +10,8 @@ public class SoundtrackManager : MonoBehaviour {
 	AnxietyHit4,
 	Fed_AnxietyLightning,
 	Player_HeartBeatFast,
-	Player_HeartBeatSlow
-
+	Player_HeartBeatSlow,
+	uruhit2
 
 
 	; //soundtrack files

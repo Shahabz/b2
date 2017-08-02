@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthHandler : MonoBehaviour {
 
@@ -18,6 +19,8 @@ public class HealthHandler : MonoBehaviour {
 
 	float health;
 	float stress;
+
+	public Slider anxietySlider;
 
 	public enum StressLevel {
 		None, Mild, Nervous, Shaking, FreakingOut, Insane
@@ -58,12 +61,13 @@ public class HealthHandler : MonoBehaviour {
 	public void TakeStress(int stressAmount) {
 		lastStressor = Time.time;
 		stress += stressAmount;
+		OverlayManager.s_instance.anxietySlider.value = stress / 100;
 		if (stress >= 80) {
 			OverlayManager.s_instance.ShowAnxietyFadeOut (.4f);
 		} else if (stress >= 50) { 
 			OverlayManager.s_instance.ShowAnxietyFadeOut (.2f);
 		} else if (stress >= 20) {
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.7f);
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.4f);
 		}
 	}
 
