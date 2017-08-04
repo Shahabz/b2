@@ -91,6 +91,8 @@ public class TestPlayerController : MonoBehaviour {
 	}
 
 	public void FixedUpdate() {
+		if(lockInput == InputLock.Locked)
+			return;
 		float speedMod = input.sprint ? sprintSpeedMod : 1.0f;
 		rigidbody.angularVelocity = Vector3.zero;
 

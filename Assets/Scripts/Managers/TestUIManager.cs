@@ -27,6 +27,7 @@ public class TestUIManager : MonoBehaviour {
 		transform.Find("Menu/Volume/FX/Slider").GetComponent<Slider>().value = OptionManager.FXVolume;
 		transform.Find("Menu/Volume/Music/Slider").GetComponent<Slider>().value = OptionManager.BGMVolume;
 		transform.Find("Menu/Volume/VO/Slider").GetComponent<Slider>().value = OptionManager.VOVolume;
+		SetState (UIState.None);
 	}
 
 	void Update () {
@@ -75,6 +76,14 @@ public class TestUIManager : MonoBehaviour {
 	public void SetState(UIState state) {
 		lastState = this.state;
 		this.state = state;
+
+		if(state == TestUIManager.UIState.None) {
+			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.Unlocked;
+		} else if(state == TestUIManager.UIState.Menu) {
+			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.Locked;
+		} else if(state == TestUIManager.UIState.Cutscene) {
+			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.Locked;
+		}
 	}
 
 	public void UpdateFXVolume(float volume) {

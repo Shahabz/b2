@@ -45,13 +45,7 @@ public class CameraManager : MonoBehaviour {
     }
 
     void Update () {
-		if(TestUIManager.instance.State == TestUIManager.UIState.None) {
-			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.Unlocked;
-		} else if(TestUIManager.instance.State == TestUIManager.UIState.Menu) {
-			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.Locked;
-		} else if(TestUIManager.instance.State == TestUIManager.UIState.Cutscene) {
-			TestPlayerController.s_instance.lockInput = TestPlayerController.InputLock.CameraOnly;
-		}
+		
 	}
 
     public void ToggleGameplayCamera (bool isEnabled)

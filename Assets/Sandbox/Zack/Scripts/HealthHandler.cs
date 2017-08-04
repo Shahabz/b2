@@ -62,13 +62,17 @@ public class HealthHandler : MonoBehaviour {
 		lastStressor = Time.time;
 		stress += stressAmount;
 		OverlayManager.s_instance.anxietySlider.value = stress / 100;
-		if (stress >= 80) {
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.4f);
-		} else if (stress >= 50) { 
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.2f);
-		} else if (stress >= 20) {
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.4f);
+		OverlayManager.s_instance.anxietyText.text = "Anxiety: " + stress +"%";
+		if (stress >= 100) {
+			Death ();
 		}
+		else if (stress >= 80) {
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.41f);
+		} else if (stress >= 50) { 
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.41f);
+		} else if (stress >= 20) {
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.41f);
+		} 
 	}
 
 	void OnGUI() {
@@ -79,7 +83,10 @@ public class HealthHandler : MonoBehaviour {
 	public void Death() {
 		//Do game over BS
 		OverlayManager.s_instance.ShowDeathOverlay();
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.deathguillo);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.deathscream);
 		TestPlayerController.s_instance.lockInput= TestPlayerController.InputLock.Locked;
 		TestPlayerController.s_instance.GetComponent<Animator> ().SetTrigger ("death");
+		TestUIManager.instance.SetState (TestUIManager.UIState.Cutscene);
 	}
 }

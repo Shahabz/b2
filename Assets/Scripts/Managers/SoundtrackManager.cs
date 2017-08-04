@@ -11,7 +11,9 @@ public class SoundtrackManager : MonoBehaviour {
 	Fed_AnxietyLightning,
 	Player_HeartBeatFast,
 	Player_HeartBeatSlow,
-	uruhit2
+	uruhit2,
+	deathguillo,
+	deathscream
 
 
 	; //soundtrack files

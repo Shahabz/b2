@@ -16,6 +16,8 @@ public class OverlayManager : MonoBehaviour {
 	float startingAlphaforBloodSprite, bloodSpriteFadeoutSpeed = .0005f;
 	Fader[] AnxietyFaders;
 	public Slider anxietySlider;
+	public Text anxietyText, deathText;
+
 
 	// Use this for initialization
 
@@ -39,20 +41,25 @@ public class OverlayManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isFading) {
-			FadeOutBloodSprite ();
-		}
-
 		if (showDeathFX) {
 			PlayDeathPulseOverlay ();
 		}
+		else if (isFading) {
+			FadeOutBloodSprite ();
+		}
+
+
 	}
 		
 	public void ShowDeathOverlay() {
 		showDeathFX = true; 
-		int choose = Random.Range (0, infectionSprites.Length - 1);
-		infection.enabled = true;
-		infection.sprite = infectionSprites [choose];
+		deathText.gameObject.SetActive (true);
+		//int choose = Random.Range (0, infectionSprites.Length - 1);
+		blood.enabled = true;
+		isFading = false;
+		Color temp = blood.material.color;
+		temp.a = 1;
+		blood.material.color = temp;
 	}
 
 	public void FlashInfectionSprite() {
@@ -67,12 +74,13 @@ public class OverlayManager : MonoBehaviour {
 	}
 
 	public void PlayDeathPulseOverlay(){
-		float materialVal = .1f + Mathf.PingPong (Time.time, .5f);
+		float materialVal = .3f + Mathf.PingPong (Time.time/2, .5f);
 		blood.material.SetFloat ("_Cutoff", materialVal);
 	}
 
 	public void ShowAnxietyFadeOut(float transparency) {
 		isFading = true;
+		blood.material.SetFloat ("_Cutoff", .9f);
 		blood.enabled = true;
 		startingAlphaforBloodSprite = transparency;
 		Color temp = blood.material.color;
