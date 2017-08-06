@@ -8,6 +8,7 @@ public class GateTerminal : MonoBehaviour, IInteractable {
 	public GameObject[] terminalIndicators;
 	int terminalsDestroyed;
 	bool hasEnabledGate;
+	public Material greenSelectedMaterial;
 	// Use this for initialization
 	void Start () {
 		
@@ -22,11 +23,12 @@ public class GateTerminal : MonoBehaviour, IInteractable {
 		if (terminalsDestroyed == terminalIndicators.Length) {
 			EnableGate ();
 		} else {
-			TextManager.s_instance.SetNotification ("Quarantine Gate Locked - " + (terminalIndicators.Length - terminalsDestroyed).ToString() + " Terminals Remain");
+			TextManager.s_instance.SetNotification ("Quarantine Gate Locked \n" + (terminalIndicators.Length - terminalsDestroyed).ToString() + " Terminals Remain");
 		}
 	}
 
 	public void BlueTerminalDestroyed() {
+		terminalIndicators [terminalsDestroyed].GetComponent<MeshRenderer> ().material = greenSelectedMaterial;
 		terminalsDestroyed++;
 		TextManager.s_instance.SetNotification(terminalsDestroyed.ToString() + "/" + terminalIndicators.Length.ToString() + " Terminals Destroyed", 2f);
 	}

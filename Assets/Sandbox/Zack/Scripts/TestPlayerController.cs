@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum PlayerMode {Normal, WalkLookOnly, LookOnly, Cutscene};
 
@@ -74,16 +75,22 @@ public class TestPlayerController : MonoBehaviour {
                 {
                     Vector3 center = transform.position + transform.forward + transform.up;
                     Collider[] cols = Physics.OverlapSphere(center, 1.5f, LayerMask.GetMask("Interactable"));
-                    if(cols.Length > 0) {
-                        Collider closest = cols[0];
-                        for (int i = 1; i < cols.Length; i++)
+					List<GameObject> interactables = new List<GameObject> ();
+					for (int i = 0; i < cols.Length; i++) {
+						if (cols [i].GetComponent<IInteractable> () != null) {
+							interactables.Add (cols [i].gameObject);
+						}
+					}
+					if(interactables.Count > 0) {
+						GameObject closest = interactables[0];
+						for (int i = 1; i < interactables.Count; i++)
                         {
-                            if (Vector3.Distance(center, cols[i].transform.position) < Vector3.Distance(center, closest.transform.position))
+							if (Vector3.Distance(center, interactables[i].transform.position) < Vector3.Distance(center, closest.transform.position))
                             {
-                                closest = cols[i];
+								closest = interactables[i];
                             }
                         }
-                        closest.GetComponent<IInteractable>().Interact();
+						closest.GetComponent<IInteractable>().Interact();
                     }
                 }
             }
