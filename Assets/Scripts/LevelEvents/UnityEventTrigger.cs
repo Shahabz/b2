@@ -7,19 +7,23 @@ public class UnityEventTrigger : MonoBehaviour {
 
 	public UnityEvent myUnityEvent;
 
-	bool hasPlayed;
+	protected bool hasPlayed;
 
-	void OnTriggerEnter(Collider other) {
+	protected virtual void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && !hasPlayed) {
-			hasPlayed = true;
-			if (myUnityEvent.GetPersistentTarget (0) != null) {
-				myUnityEvent.Invoke ();
-			}
+			ExecuteEvent ();
 		}
 	}
 
 	void Start() {
 		if (GetComponent<MeshRenderer>() != null)
 			GetComponent<MeshRenderer> ().enabled = false;
+	}
+
+	protected void ExecuteEvent () {
+		hasPlayed = true;
+		if (myUnityEvent.GetPersistentTarget (0) != null) {
+			myUnityEvent.Invoke ();
+		}
 	}
 }

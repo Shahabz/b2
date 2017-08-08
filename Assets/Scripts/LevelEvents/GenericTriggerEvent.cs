@@ -11,35 +11,39 @@ public class GenericTriggerEvent : MonoBehaviour {
 	public ParticleSystem[] PlayTheseParticles;
 	bool hasPlayed;
 	public bool slowDownTime;
+	public bool doNotTriggerOnCollide = false;
 
+	public void CallTriggerItems() {
+		hasPlayed = true;
+		foreach (AudioSource x in OnEventTriggerSounds) {
+			x.Play ();
+		}
+		foreach (AudioSource x in OnEventStopSounds) {
+			x.Stop ();
+		}
+		foreach (GameObject x in DisableThisObject) {
+			x.SetActive (false);
+		}
+		foreach (GameObject x in EnableThisObject) {
+			x.SetActive (true);
+		}
+		foreach (ParticleSystem x in PlayTheseParticles) {
+			x.gameObject.SetActive (true);
+			x.Play ();
+		}
+
+		if (slowDownTime) {
+			StartCoroutine ("SlowDownTime");
+		}
+
+		if (PlayThisParticle!=null)
+			PlayThisParticle.Play ();
+
+	}
 
 	void OnTriggerEnter(Collider other) {
-		if (other.tag == "Player" && !hasPlayed) {
-			hasPlayed = true;
-			foreach (AudioSource x in OnEventTriggerSounds) {
-				x.Play ();
-			}
-			foreach (AudioSource x in OnEventStopSounds) {
-				x.Stop ();
-			}
-			foreach (GameObject x in DisableThisObject) {
-				x.SetActive (false);
-			}
-			foreach (GameObject x in EnableThisObject) {
-				x.SetActive (true);
-			}
-			foreach (ParticleSystem x in PlayTheseParticles) {
-				x.gameObject.SetActive (true);
-				x.Play ();
-			}
-
-			if (slowDownTime) {
-				StartCoroutine ("SlowDownTime");
-			}
-
-			if (PlayThisParticle!=null)
-				PlayThisParticle.Play ();
-
+		if (other.tag == "Player" && !hasPlayed && !doNotTriggerOnCollide) {
+			CallTriggerItems ();
 		}
 	}
 

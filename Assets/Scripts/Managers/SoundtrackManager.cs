@@ -8,6 +8,7 @@ public class SoundtrackManager : MonoBehaviour {
 	AnxietyHit2,
 	AnxietyHit3,
 	AnxietyHit4,
+	AnxietyHit5,
 	Fed_AnxietyLightning,
 	Player_HeartBeatFast,
 	Player_HeartBeatSlow,
