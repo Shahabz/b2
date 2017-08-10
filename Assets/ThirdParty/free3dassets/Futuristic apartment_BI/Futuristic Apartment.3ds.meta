@@ -1,0 +1,214 @@
+fileFormatVersion: 2
+guid: 8b98c20fd00eb9847aec16d7c39c54cd
+timeCreated: 1502338149
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: Ceiling_gree.000
+    100002: Ceiling_whit.000
+    100004: ceiling_whit.000
+    100006: Cube.009
+    100008: Door_Frame
+    100010: Door_Frame.0.001
+    100012: Door_Frame.0.002
+    100014: Door_Glass
+    100016: Door_Glass.0
+    100018: Door_Glass.0.000
+    100020: FLoor_white
+    100022: //RootNode
+    100024: Glas
+    100026: Inside_Floor.001
+    100028: Inside_Floor.002
+    100030: Inside_wall_.004
+    100032: Inside_wall_.005
+    100034: Inside_wall_.006
+    100036: Inside_wall_.007
+    100038: Inside_wall_.008
+    100040: Inside_Wood
+    100042: Lampswitches.000
+    100044: Lampswitches.001
+    100046: Metal_1
+    100048: Tiles_outsid.000
+    100050: Walls_outsid.000
+    100052: Wood_Foor
+    400000: Ceiling_gree.000
+    400002: Ceiling_whit.000
+    400004: ceiling_whit.000
+    400006: Cube.009
+    400008: Door_Frame
+    400010: Door_Frame.0.001
+    400012: Door_Frame.0.002
+    400014: Door_Glass
+    400016: Door_Glass.0
+    400018: Door_Glass.0.000
+    400020: FLoor_white
+    400022: //RootNode
+    400024: Glas
+    400026: Inside_Floor.001
+    400028: Inside_Floor.002
+    400030: Inside_wall_.004
+    400032: Inside_wall_.005
+    400034: Inside_wall_.006
+    400036: Inside_wall_.007
+    400038: Inside_wall_.008
+    400040: Inside_Wood
+    400042: Lampswitches.000
+    400044: Lampswitches.001
+    400046: Metal_1
+    400048: Tiles_outsid.000
+    400050: Walls_outsid.000
+    400052: Wood_Foor
+    2300000: Ceiling_gree.000
+    2300002: Ceiling_whit.000
+    2300004: ceiling_whit.000
+    2300006: Cube.009
+    2300008: Door_Frame
+    2300010: Door_Frame.0.001
+    2300012: Door_Frame.0.002
+    2300014: Door_Glass
+    2300016: Door_Glass.0
+    2300018: Door_Glass.0.000
+    2300020: FLoor_white
+    2300022: Glas
+    2300024: Inside_Floor.001
+    2300026: Inside_Floor.002
+    2300028: Inside_wall_.004
+    2300030: Inside_wall_.005
+    2300032: Inside_wall_.006
+    2300034: Inside_wall_.007
+    2300036: Inside_wall_.008
+    2300038: Inside_Wood
+    2300040: Lampswitches.000
+    2300042: Lampswitches.001
+    2300044: Metal_1
+    2300046: Tiles_outsid.000
+    2300048: Walls_outsid.000
+    2300050: Wood_Foor
+    3300000: Ceiling_gree.000
+    3300002: Ceiling_whit.000
+    3300004: ceiling_whit.000
+    3300006: Cube.009
+    3300008: Door_Frame
+    3300010: Door_Frame.0.001
+    3300012: Door_Frame.0.002
+    3300014: Door_Glass
+    3300016: Door_Glass.0
+    3300018: Door_Glass.0.000
+    3300020: FLoor_white
+    3300022: Glas
+    3300024: Inside_Floor.001
+    3300026: Inside_Floor.002
+    3300028: Inside_wall_.004
+    3300030: Inside_wall_.005
+    3300032: Inside_wall_.006
+    3300034: Inside_wall_.007
+    3300036: Inside_wall_.008
+    3300038: Inside_Wood
+    3300040: Lampswitches.000
+    3300042: Lampswitches.001
+    3300044: Metal_1
+    3300046: Tiles_outsid.000
+    3300048: Walls_outsid.000
+    3300050: Wood_Foor
+    4300000: Ceiling_gree.000
+    4300002: ceiling_whit.000
+    4300004: Ceiling_whit.000
+    4300006: Cube.009
+    4300008: Door_Frame.0.001
+    4300010: Door_Frame.0.002
+    4300012: Door_Frame
+    4300014: Door_Glass.0
+    4300016: Door_Glass.0.000
+    4300018: Door_Glass
+    4300020: FLoor_white
+    4300022: Glas
+    4300024: Inside_Floor.001
+    4300026: Inside_Floor.002
+    4300028: Inside_wall_.004
+    4300030: Inside_wall_.005
+    4300032: Inside_wall_.006
+    4300034: Inside_wall_.007
+    4300036: Inside_wall_.008
+    4300038: Inside_Wood
+    4300040: Lampswitches.000
+    4300042: Lampswitches.001
+    4300044: Metal_1
+    4300046: Tiles_outsid.000
+    4300048: Walls_outsid.000
+    4300050: Wood_Foor
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
