@@ -107,28 +107,5 @@ public class OverlayManager : MonoBehaviour {
 
 	}
 
-	public string textShownOnScreen;
-	public string fullText = "The text you want shown on screen with typewriter effect.";
-	public float wordsPerSecond = 2; // speed of typewriter
-	private float timeElapsed = 0;   
 
-
-
-	private string GetWords(string text, int wordCount)
-	{
-		int words = wordCount;
-		// loop through each character in text
-		for (int i = 0; i < text.Length; i++)
-		{ 
-			if (text[i] == ' ')
-			{
-				words--;
-			}
-			if (words <= 0)
-			{
-				return text.Substring(0, i);
-			}
-		}
-		return text;
-	}
 }
