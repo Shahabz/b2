@@ -20,23 +20,30 @@ public class WhodunitCat : CatLogic, IInteractable {
 
 	// Use this for initialization
 	void Start () {
+		base.Start ();
 		myManagerRef = FindObjectOfType<CatWhoDunitManager> ();
+
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	void Update() {
+		base.Update ();
 	}
 
 	public string myFlashbackStory;
 
 	public void Interact() {
-		if (hasPlayerHeardThisStory) {
-			myManagerRef.OnInteractWithWhoDunitCat ();
-		}
-		if (myManagerRef.hasDisplayedPuzzlePrompt) {
-			TextManager.s_instance.SetSubtitle (thisCatStory);
-			hasPlayerHeardThisStory = true;
+		if (thisCatState == CatStates.Waypoints) {
+			thisCatAnimator.SetTrigger ("idle");
+			thisCatState = CatStates.Talking;
+			thisNavMeshAgent.isStopped = true;
+			transform.LookAt (TestPlayerController.s_instance.transform);
+			/*if (hasPlayerHeardThisStory) {
+				myManagerRef.OnInteractWithWhoDunitCat ();
+			}
+			if (myManagerRef.hasDisplayedPuzzlePrompt) {
+				TextManager.s_instance.SetSubtitle (thisCatStory);
+				hasPlayerHeardThisStory = true;
+			}*/
 		}
 	}
 }

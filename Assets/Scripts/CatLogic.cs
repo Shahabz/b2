@@ -1,32 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.AI;
 
-enum CatStates {Sitting, Following, Waypoints};
+
+public enum CatStates {Idle, Talking, Following, Waypoints};
 
 public class CatLogic : MonoBehaviour {
 
     public Animator thisCatAnimator;
-    
-    CatStates thisCatState;
+	protected NavMeshAgent thisNavMeshAgent;
+    protected CatStates thisCatState;
     float catRunSpeed = .02f;
     float triggerFollowDistance = 10f;
     float catLookAngle = 50;
     float waypointToggleDistance = 3f;
 
+
     public GameObject[] waypoints;
     int waypointIndex;
     // Use this for initialization
 
+	[SerializeField]
     bool switchToFollowing, switchToSitting, switchToWaypoints;
-	void Start () {
-	
+	protected void Start () {
+		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
+		SwitchToState (CatStates.Waypoints);
+		thisCatAnimator.SetTrigger("run");
+
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected void Update () {
 	switch (thisCatState)
         {
-            case CatStates.Sitting:
+            case CatStates.Idle:
                 WaitForPlayerToComeClose();
                 if (switchToFollowing)
                 {
@@ -36,19 +43,23 @@ public class CatLogic : MonoBehaviour {
                 }
                 break;
 
+		case CatStates.Talking:
+
+			break;
+
             case CatStates.Following:
                 FollowPlayer();
                 if (CheckIsPlayerLookingAtCat()) { switchToSitting = true; }
                 if (switchToSitting)
                 {
                     thisCatAnimator.SetTrigger("idle");
-                    thisCatState = CatStates.Sitting;
+                    thisCatState = CatStates.Idle;
                     switchToSitting = false;
                 }
                 break;
 
-            case CatStates.Waypoints:
-
+		case CatStates.Waypoints:
+			HandleWaypointChecking ();
                 break;
 
         }
@@ -64,8 +75,8 @@ public class CatLogic : MonoBehaviour {
     void GotoNextWaypoint()
     {
        
-        transform.LookAt(waypoints[waypointIndex].transform);
-        transform.Translate(Vector3.forward * catRunSpeed);
+        //transform.LookAt(waypoints[waypointIndex].transform);
+		thisNavMeshAgent.SetDestination (waypoints [waypointIndex].transform.position);
 
     }
 
@@ -81,6 +92,8 @@ public class CatLogic : MonoBehaviour {
                 waypointIndex++;
             }
         }
+		GotoNextWaypoint ();
+
     }
 
     void WaitForPlayerToComeClose()
@@ -113,10 +126,26 @@ public class CatLogic : MonoBehaviour {
         if (other.tag == "Player")
         {
 //            PlayerController.s_instance.switchToPassiveState = true;
-            DestroyCat();
+            //DestroyCat();
 
         }
     }
+
+	protected void SwitchToState(CatStates switchToThisState) {
+		switch (switchToThisState) {
+		case CatStates.Waypoints:
+			thisCatState = CatStates.Waypoints;
+			GotoNextWaypoint ();
+			break;
+
+		case CatStates.Idle:
+			thisCatState = CatStates.Idle;
+
+			break;
+		}
+
+	}
+
 
     void DestroyCat()
     {
