@@ -21,17 +21,13 @@ public class CatWhoDunitManager : MonoBehaviour {
 		
 	}
 
-	public void OnInteractWithWhoDunitCat () {
-		if (!hasDisplayedPuzzlePrompt) {
-			DisplayPrompt ();
-		} else {
-			catsCompleted++;
-		}
+	public void CatCompleted () {
+		catsCompleted++;
 	}
 
-	void DisplayPrompt() {
+	public void DisplayPrompt() {
 		TextManager.s_instance.SetSubtitle (puzzlePrompt);
-	
+		hasDisplayedPuzzlePrompt = true;
 	}
 
 }

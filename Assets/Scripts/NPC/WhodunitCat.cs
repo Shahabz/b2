@@ -18,6 +18,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 	public string thisCatStory;
 	bool hasPlayerHeardThisStory;
 
+
 	// Use this for initialization
 	void Start () {
 		base.Start ();
@@ -37,13 +38,17 @@ public class WhodunitCat : CatLogic, IInteractable {
 			thisCatState = CatStates.Talking;
 			thisNavMeshAgent.isStopped = true;
 			transform.LookAt (TestPlayerController.s_instance.transform);
-			/*if (hasPlayerHeardThisStory) {
-				myManagerRef.OnInteractWithWhoDunitCat ();
+			if (!myManagerRef.hasDisplayedPuzzlePrompt) {
+				myManagerRef.DisplayPrompt ();
+				return;
+			}
+			if (!hasPlayerHeardThisStory) {
+				myManagerRef.CatCompleted ();
 			}
 			if (myManagerRef.hasDisplayedPuzzlePrompt) {
 				TextManager.s_instance.SetSubtitle (thisCatStory);
 				hasPlayerHeardThisStory = true;
-			}*/
+			}
 		}
 	}
 }

@@ -10,12 +10,8 @@ public class TextManager : MonoBehaviour {
 	float promptTime, promptTimer;
 	bool showNotification, showPrompt;
 	public static TextManager s_instance;
-	bool isShowingTypeWriterEffect;
-	public string textShownOnScreen;
-	public string typeWriterText = "The text you want shown on screen with typewriter effect.";
-	public float wordsPerSecond = 2, wordTimer; // speed of typewriter
-	private float timeElapsed = 0;   
-	int thisWordCount;
+
+
 
 	void Awake()
 	{
@@ -46,10 +42,7 @@ public class TextManager : MonoBehaviour {
 			}
 		}
 		if (isShowingTypeWriterEffect) {
-			if (GenericTimer.RunGenericTimer(wordsPerSecond, ref wordTimer)) {
-				//textShownOnScreen = GetWords (typeWriterText, thisWordCount);
-				notification.text = textShownOnScreen;
-			}
+			TypeWrite ();
 		}
 	}
 		
@@ -65,34 +58,43 @@ public class TextManager : MonoBehaviour {
 		showPrompt = true;
 	}
 
-	public void SetSubtitle(string inString) {
+	bool isShowingTypeWriterEffect;
+	public bool HasFinishedTypeWriting(){
+		return isShowingTypeWriterEffect;
+	}
 
+	//TYPE WRITER LOGIC
+
+	string stringToDisplay;
+	float typeCharTime = .03f, typeCharTimer; // speed of typewriter
+	int typeCharIterator;
+	private float timeElapsed = 0;   
+	int thisWordCount;
+
+	public void SetSubtitle(string inString) {
+		typeCharIterator = 0;
 		timeElapsed = 0;
 		isShowingTypeWriterEffect = true;
-		typeWriterText = inString;
-		//thisWordCount = inString.Split(new string[] {" "}, 1000000).Length;
-
+		stringToDisplay = inString;
+		print (stringToDisplay);
 	}
 
+	void TypeWrite () {
 
-
-
-	private string GetWords(string text)
-	{
-		// loop through each character in text
-		for (int i = 0; i < text.Length; i++)
-		{ 
-			if (text[i] == ' ')
-			{
-				thisWordCount--;
-			}
-			if (thisWordCount <= 0)
-			{
-				return text.Substring(0, i);
+		if (GenericTimer.RunGenericTimer(typeCharTime, ref typeCharTimer)) {
+			print (stringToDisplay);
+			if (stringToDisplay.Length > typeCharIterator) {
+				subtitle.text += stringToDisplay.ToCharArray ()[typeCharIterator];
+				typeCharIterator++;
+			} else {
+				isShowingTypeWriterEffect = false;
 			}
 		}
-		return text;
 	}
 
+	public void CompleteTypeWrite() {
+		isShowingTypeWriterEffect = false;
+		subtitle.text = stringToDisplay;
+	}
 
 }
