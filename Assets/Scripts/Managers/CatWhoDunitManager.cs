@@ -26,7 +26,7 @@ public class CatWhoDunitManager : MonoBehaviour {
 	}
 
 	public void DisplayPrompt() {
-		TextManager.s_instance.SetSubtitle (puzzlePrompt);
+		GetComponent<DialogueSystem> ().StartDialogue ();
 		hasDisplayedPuzzlePrompt = true;
 	}
 

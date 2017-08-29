@@ -27,9 +27,9 @@ public class DialogueSystem : MonoBehaviour {
     //TODO call from player input or some shit?
     public void PlayNext() {
         TestPlayerController.s_instance.GetComponent<AudioSource>().Stop();
-        talkerOne.Stop();
-        talkerTwo.Stop();
-        talkerThree.Stop();
+		if (talkerOne) talkerOne.Stop();
+		if (talkerTwo) talkerTwo.Stop();
+		if (talkerThree) talkerThree.Stop();
 
         TextManager.s_instance.SetSubtitle(dialogueData.dialogue[current].text);
         switch (dialogueData.dialogue[current].talker)
@@ -71,14 +71,15 @@ public class DialogueSystem : MonoBehaviour {
     void Update() {
         if (active)
         {
-            if (NPInputManager.input.Aim.WasPressed || NPInputManager.input.Fire.WasPressed)
+			if (NPInputManager.input.Aim.WasPressed || NPInputManager.input.Fire.WasPressed || NPInputManager.input.Interact.WasPressed)
             {
-                //TODO finsh this in TextManager
-//                if (TextManager.s_instance.isScrolling)
-//                { //Can make this a function idc
-//                    TextManager.s_instance.FinishScrolling(); //Can change this name idc
-//                }
-//                else
+				if (TextManager.s_instance.GetIsTypeWriting())
+                { //Can make this a function idc
+					TextManager.s_instance.CompleteTypeWrite(); //Can change this name idc
+					print ("CHECK");
+
+                }
+                 else
                 {
                     PlayNext();
                 }

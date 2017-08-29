@@ -59,7 +59,7 @@ public class TextManager : MonoBehaviour {
 	}
 
 	bool isShowingTypeWriterEffect;
-	public bool HasFinishedTypeWriting(){
+	public bool GetIsTypeWriting(){
 		return isShowingTypeWriterEffect;
 	}
 
@@ -72,17 +72,17 @@ public class TextManager : MonoBehaviour {
 	int thisWordCount;
 
 	public void SetSubtitle(string inString) {
+		subtitle.text = "";
 		typeCharIterator = 0;
 		timeElapsed = 0;
 		isShowingTypeWriterEffect = true;
 		stringToDisplay = inString;
-		print (stringToDisplay);
 	}
 
 	void TypeWrite () {
 
 		if (GenericTimer.RunGenericTimer(typeCharTime, ref typeCharTimer)) {
-			print (stringToDisplay);
+			//print (stringToDisplay);
 			if (stringToDisplay.Length > typeCharIterator) {
 				subtitle.text += stringToDisplay.ToCharArray ()[typeCharIterator];
 				typeCharIterator++;
