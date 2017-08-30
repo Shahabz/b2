@@ -39,7 +39,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 			thisNavMeshAgent.isStopped = true;
 			transform.LookAt (TestPlayerController.s_instance.transform);
 			if (!myManagerRef.hasDisplayedPuzzlePrompt) {
-				myManagerRef.DisplayPrompt ();
+				myManagerRef.DisplayPrompt (gameObject);
 				return;
 			}
 			if (!hasPlayerHeardThisStory) {

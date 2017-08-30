@@ -30,7 +30,6 @@ public class TextManager : MonoBehaviour {
 			if (GenericTimer.RunGenericTimer (notificationTime, ref notificationTimer)) {
 				showNotification = false;
 				notification.text = "";
-
 			}
 		}
 
@@ -38,7 +37,6 @@ public class TextManager : MonoBehaviour {
 			if (GenericTimer.RunGenericTimer (promptTime, ref promptTimer)) {
 				showPrompt = false;
 				prompt.text = "";
-
 			}
 		}
 		if (isShowingTypeWriterEffect) {

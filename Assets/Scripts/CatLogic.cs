@@ -25,8 +25,6 @@ public class CatLogic : MonoBehaviour {
 	protected void Start () {
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
 		SwitchToState (CatStates.Waypoints);
-		thisCatAnimator.SetTrigger("run");
-
 	}
 	
 	// Update is called once per frame
@@ -131,11 +129,13 @@ public class CatLogic : MonoBehaviour {
         }
     }
 
-	protected void SwitchToState(CatStates switchToThisState) {
+	public void SwitchToState(CatStates switchToThisState) {
 		switch (switchToThisState) {
 		case CatStates.Waypoints:
 			thisCatState = CatStates.Waypoints;
+			thisNavMeshAgent.isStopped = false;
 			GotoNextWaypoint ();
+			thisCatAnimator.SetTrigger("run");
 			break;
 
 		case CatStates.Idle:

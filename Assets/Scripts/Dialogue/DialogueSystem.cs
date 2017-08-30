@@ -26,6 +26,11 @@ public class DialogueSystem : MonoBehaviour {
 
     //TODO call from player input or some shit?
     public void PlayNext() {
+		if (current >= dialogueData.dialogue.Count)
+		{
+			EndDialogue();
+			return;
+		}
         TestPlayerController.s_instance.GetComponent<AudioSource>().Stop();
 		if (talkerOne) talkerOne.Stop();
 		if (talkerTwo) talkerTwo.Stop();
@@ -56,16 +61,13 @@ public class DialogueSystem : MonoBehaviour {
         }   
 
         dialogueData.dialogue[current].unityEvent.Invoke();
-
         current++;
-        if (current > dialogueData.dialogue.Count)
-        {
-            EndDialogue();
-        }
     }
 
     void EndDialogue() {
+		active = false;
         onDialogueEnd.Invoke();
+		TextManager.s_instance.subtitle.text = "";
     }
 
     void Update() {
@@ -76,8 +78,6 @@ public class DialogueSystem : MonoBehaviour {
 				if (TextManager.s_instance.GetIsTypeWriting())
                 { //Can make this a function idc
 					TextManager.s_instance.CompleteTypeWrite(); //Can change this name idc
-					print ("CHECK");
-
                 }
                  else
                 {
