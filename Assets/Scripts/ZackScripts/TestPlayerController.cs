@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public enum PlayerMode {Normal, WalkLookOnly, LookOnly, Cutscene};
 
 
+
 public class TestPlayerController : MonoBehaviour {
 
 	PlayerMode thisPlayerMode = PlayerMode.Normal;
@@ -30,6 +31,8 @@ public class TestPlayerController : MonoBehaviour {
 	public InputLock lockInput = InputLock.Unlocked;
 
 	Transform laserEnd;
+	[SerializeField]
+	GameObject hostageCat;
 
     void Awake()
     {
@@ -267,4 +270,10 @@ public class TestPlayerController : MonoBehaviour {
 //		lockInput = InputLock.Unlocked;
         anim.SetTrigger("stand");
     }
+
+	public void HoldCatHostage(GameObject thisCat) {
+		hostageCat.SetActive (true);
+		anim.SetTrigger ("hostage");
+		TextManager.s_instance.SetPrompt ("Press Interact to Release Cat or Fire for Death Penalty", 6f);
+	}
 }

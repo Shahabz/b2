@@ -24,6 +24,11 @@ public class DialogueSystem : MonoBehaviour {
         active = true;
     }
 
+	void Start () {
+		if (GetComponent<AudioSource>() || talkerOne==null)
+			talkerOne = GetComponent<AudioSource> ();
+	}
+
     //TODO call from player input or some shit?
     public void PlayNext() {
 		if (current >= dialogueData.dialogue.Count)

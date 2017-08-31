@@ -46,9 +46,16 @@ public class WhodunitCat : CatLogic, IInteractable {
 				myManagerRef.CatCompleted ();
 			}
 			if (myManagerRef.hasDisplayedPuzzlePrompt) {
-				TextManager.s_instance.SetSubtitle (thisCatStory);
+				GetComponent<DialogueSystem> ().StartDialogue ();
 				hasPlayerHeardThisStory = true;
 			}
 		}
 	}
+
+	public void HoldMeHostage() {
+		TestPlayerController.s_instance.HoldCatHostage (gameObject);
+		transform.GetChild (0).gameObject.SetActive (false);
+	}
+
+
 }
