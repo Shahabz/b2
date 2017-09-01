@@ -22,6 +22,7 @@ public class DialogueSystem : MonoBehaviour {
         onDialogueStart.Invoke();
         PlayNext();
         active = true;
+		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Cutscene);
     }
 
 	void Start () {
@@ -73,6 +74,7 @@ public class DialogueSystem : MonoBehaviour {
 		active = false;
         onDialogueEnd.Invoke();
 		TextManager.s_instance.subtitle.text = "";
+		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Normal); 
     }
 
     void Update() {

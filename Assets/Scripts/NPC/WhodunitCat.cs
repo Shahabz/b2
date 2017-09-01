@@ -54,7 +54,12 @@ public class WhodunitCat : CatLogic, IInteractable {
 
 	public void HoldMeHostage() {
 		TestPlayerController.s_instance.HoldCatHostage (gameObject);
+		TestPlayerController.s_instance.
 		transform.GetChild (0).gameObject.SetActive (false);
+	}
+
+	public void OnDialogueEnd() {
+		SwitchToState (CatStates.Waypoints);
 	}
 
 

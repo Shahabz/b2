@@ -8,7 +8,7 @@ public enum PlayerMode {Normal, WalkLookOnly, LookOnly, Cutscene};
 
 public class TestPlayerController : MonoBehaviour {
 
-	PlayerMode thisPlayerMode = PlayerMode.Normal;
+	public PlayerMode thisPlayerMode = PlayerMode.Normal;
 
 	BaseInput input;
 	
@@ -74,7 +74,7 @@ public class TestPlayerController : MonoBehaviour {
 
             if (thisPlayerMode == PlayerMode.Normal)
             {
-                if (input.interact)
+				if (input.interact)
                 {
                     Vector3 center = transform.position + transform.forward + transform.up;
                     Collider[] cols = Physics.OverlapSphere(center, 1.5f, LayerMask.GetMask("Interactable"));
@@ -163,10 +163,13 @@ public class TestPlayerController : MonoBehaviour {
 		switch (switchToThisMode) {
 
 		case PlayerMode.Normal:
-
+			lockInput = InputLock.Unlocked;
 			break;
 
 		case PlayerMode.Cutscene:
+			lockInput = InputLock.Locked;
+			anim.SetFloat ("Movement",0 );
+			anim.SetFloat ("Sprint",0 );
 
 			break;
 

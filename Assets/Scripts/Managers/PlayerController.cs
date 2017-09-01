@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 using InControl;
 
-public enum PlayerState {Walking, Computer, PassiveAnxietyAnimations, Therapy, AppliedToJob};
+public enum PlayerState {Idle, Computer, PassiveAnxietyAnimations, Therapy, AppliedToJob};
 public enum AnxietyDescription {None, Mild, Moderate, Severe, Debilitating, Psychotic, _Size}
 public enum DevLevel {None, Amateur=10, Inexperienced = 20, Beginner=30, Novice=50, Junior=70, Green = 90, Intermediate = 100, _Size}
 
 public class PlayerController : MonoBehaviour {
 	public static PlayerController s_instance;
 
-	PlayerState thisPlayerState = PlayerState.Walking, lastPlayerState;
+	PlayerState thisPlayerState = PlayerState.Idle, lastPlayerState;
 	public Animator thisAnimator;
 	const string walkingBool = "fwd", walkingBackBool = "back";
 	float walkAxis, rotateAxis;
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour {
             print(thisPlayerState);
         }
 		switch (thisPlayerState) {
-		case PlayerState.Walking:
+		case PlayerState.Idle:
 			if (switchToComputer) {
 				switchToComputer = false;
                 thisPlayerState = PlayerState.Computer;
@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour {
 			}
 			if (switchToWalking) {
 				switchToWalking = false;
-				thisPlayerState = PlayerState.Walking;
+				thisPlayerState = PlayerState.Idle;
 			}
 			if (switchToPassiveState) {
                 switchToPassiveState = false;
@@ -173,7 +173,7 @@ public class PlayerController : MonoBehaviour {
 			if (switchToWalking) {
 				switchToWalking = false;
 				thisAnimator.SetTrigger ("stand");
-                thisPlayerState = PlayerState.Walking;
+                thisPlayerState = PlayerState.Idle;
 			}
             if (switchToPassiveState)
             {
@@ -201,7 +201,7 @@ public class PlayerController : MonoBehaviour {
         lastPlayerState = thisPlayerState;
         switch (thisPlayerState)
         {
-            case PlayerState.Walking:
+            case PlayerState.Idle:
                 CameraManager.s_instance.SetLastInLevelCamTransform();
                 CameraManager.s_instance.SwitchToAnxietyCam();
                 break;
@@ -231,7 +231,7 @@ public class PlayerController : MonoBehaviour {
                 CameraManager.s_instance.MultipleChoiceCameraOn();
                 break;
 
-            case PlayerState.Walking:
+            case PlayerState.Idle:
                 CameraManager.s_instance.UseLastInLevelCamTransform();
 
                 break;
@@ -383,7 +383,7 @@ public class PlayerController : MonoBehaviour {
         thisAnimator.SetTrigger("punch");
         currentComputer.PunchComputer();
         yield return new WaitForSeconds(2f);
-        thisPlayerState = PlayerState.Walking;
+        thisPlayerState = PlayerState.Idle;
 
     }
 
