@@ -15,6 +15,9 @@ public class CatLogic : MonoBehaviour {
     float catLookAngle = 50;
     float waypointToggleDistance = 3f;
 
+	[SerializeField]
+	protected SkinnedMeshRenderer thisSkinnedMeshRenderer;
+
 
     public GameObject[] waypoints;
     int waypointIndex;
@@ -25,6 +28,8 @@ public class CatLogic : MonoBehaviour {
 	protected void Start () {
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
 		SwitchToState (CatStates.Waypoints);
+		if (thisSkinnedMeshRenderer == null)
+			thisSkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer> ();
 	}
 	
 	// Update is called once per frame

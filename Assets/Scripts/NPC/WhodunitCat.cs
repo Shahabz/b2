@@ -2,38 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-/*
- *Every WHODUNIT cat can be talked to 
- * it has a string which is its story
- * 
- * 
- * 
- * 
- * 
- */
+//this is the cat used in the whodunit mini game
 public class WhodunitCat : CatLogic, IInteractable {
 
 	CatWhoDunitManager myManagerRef;
 	public string thisCatStory;
 	bool hasPlayerHeardThisStory;
-
+	bool inHostageMode;
+	[SerializeField]
+	bool isEvilCat;
 
 	// Use this for initialization
 	void Start () {
 		base.Start ();
 		myManagerRef = FindObjectOfType<CatWhoDunitManager> ();
+		GetComponent<DialogueSystem> ().onDialogueEnd.AddListener (OnDialogueEnd);
+		TestPlayerController.s_instance.InteractiveCutscene_Interact.AddListener (ReleaseHostage);
+		TestPlayerController.s_instance.InteractiveCutscene_Fire.AddListener(KillCat);
 
 	}
 	
 	void Update() {
 		base.Update ();
+
 	}
 
 	public string myFlashbackStory;
 
 	public void Interact() {
-		if (thisCatState == CatStates.Waypoints) {
+		if (thisCatState == CatStates.Waypoints && TestPlayerController.s_instance.thisPlayerMode == PlayerMode.Normal) {
 			thisCatAnimator.SetTrigger ("idle");
 			thisCatState = CatStates.Talking;
 			thisNavMeshAgent.isStopped = true;
@@ -53,14 +50,31 @@ public class WhodunitCat : CatLogic, IInteractable {
 	}
 
 	public void HoldMeHostage() {
-		TestPlayerController.s_instance.HoldCatHostage (gameObject);
-		TestPlayerController.s_instance.
-		transform.GetChild (0).gameObject.SetActive (false);
+		TestPlayerController.s_instance.HoldCatHostage ();
+		thisSkinnedMeshRenderer.enabled = false;
+
 	}
 
 	public void OnDialogueEnd() {
-		SwitchToState (CatStates.Waypoints);
+		HoldMeHostage ();
 	}
 
+
+
+	public void ReleaseHostage () {
+		print ("ReleaseHostage");
+		thisSkinnedMeshRenderer.enabled = true;
+		TestPlayerController.s_instance.ReleaseCatHostage ();
+		SwitchToState (CatStates.Waypoints);
+
+	}
+
+	public void KillCat() {
+		if (isEvilCat) {
+
+		} else {
+
+		}
+	}
 
 }

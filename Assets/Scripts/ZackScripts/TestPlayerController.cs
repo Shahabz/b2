@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
-public enum PlayerMode {Normal, WalkLookOnly, LookOnly, Cutscene};
+using UnityEngine.Events;
+public enum PlayerMode {Normal, WalkLookOnly, LookOnly, Cutscene, InteractiveCutscene};
 
 
 
@@ -25,6 +25,8 @@ public class TestPlayerController : MonoBehaviour {
     public Camera gameplayCamera;
 	LineRenderer laserTarget;
 
+	public UnityEvent InteractiveCutscene_Interact, InteractiveCutscene_Fire;
+
     public static TestPlayerController s_instance;
 
 	public enum InputLock { CameraOnly, Locked, Unlocked }
@@ -32,7 +34,7 @@ public class TestPlayerController : MonoBehaviour {
 
 	Transform laserEnd;
 	[SerializeField]
-	GameObject hostageCat;
+	GameObject hostageCatChildObj;
 
     void Awake()
     {
@@ -61,42 +63,49 @@ public class TestPlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
-		if(lockInput == InputLock.Locked)
-			return;
-
-		if (lockInput == InputLock.Unlocked) {
-			HandleMovement ();
-			HandleAiming ();
-
-			if(input.reload) {
-				GetComponent<WeaponManager>().Reload();
+		switch (thisPlayerMode){
+		case PlayerMode.InteractiveCutscene:
+			if (NPInputManager.input.Fire.WasPressed) {
+				InteractiveCutscene_Fire.Invoke ();
 			}
+			if (NPInputManager.input.Interact.WasPressed) {
+				InteractiveCutscene_Interact.Invoke ();
+			}
+			break;
+		case PlayerMode.Normal:
+			if (thisPlayerMode == PlayerMode.Normal) {
+				if (lockInput == InputLock.Locked)
+					return;
 
-            if (thisPlayerMode == PlayerMode.Normal)
-            {
-				if (input.interact)
-                {
-                    Vector3 center = transform.position + transform.forward + transform.up;
-                    Collider[] cols = Physics.OverlapSphere(center, 1.5f, LayerMask.GetMask("Interactable"));
-					List<GameObject> interactables = new List<GameObject> ();
-					for (int i = 0; i < cols.Length; i++) {
-						if (cols [i].GetComponent<IInteractable> () != null) {
-							interactables.Add (cols [i].gameObject);
+				if (lockInput == InputLock.Unlocked) {
+					HandleMovement ();
+					HandleAiming ();
+
+					if (input.reload) {
+						GetComponent<WeaponManager> ().Reload ();
+					}
+					if (NPInputManager.input.Interact.WasPressed) {
+						Vector3 center = transform.position + transform.forward + transform.up;
+						Collider[] cols = Physics.OverlapSphere (center, 1.5f, LayerMask.GetMask ("Interactable"));
+						List<GameObject> interactables = new List<GameObject> ();
+						for (int i = 0; i < cols.Length; i++) {
+							if (cols [i].GetComponent<IInteractable> () != null) {
+								interactables.Add (cols [i].gameObject);
+							}
+						}
+						if (interactables.Count > 0) {
+							GameObject closest = interactables [0];
+							for (int i = 1; i < interactables.Count; i++) {
+								if (Vector3.Distance (center, interactables [i].transform.position) < Vector3.Distance (center, closest.transform.position)) {
+									closest = interactables [i];
+								}
+							}
+							closest.GetComponent<IInteractable> ().Interact ();
 						}
 					}
-					if(interactables.Count > 0) {
-						GameObject closest = interactables[0];
-						for (int i = 1; i < interactables.Count; i++)
-                        {
-							if (Vector3.Distance(center, interactables[i].transform.position) < Vector3.Distance(center, closest.transform.position))
-                            {
-								closest = interactables[i];
-                            }
-                        }
-						closest.GetComponent<IInteractable>().Interact();
-                    }
-                }
-            }
+				}
+			}
+			break;
 		}
 	}
 
@@ -164,12 +173,15 @@ public class TestPlayerController : MonoBehaviour {
 
 		case PlayerMode.Normal:
 			lockInput = InputLock.Unlocked;
+			thisPlayerMode = PlayerMode.Normal;
 			break;
 
 		case PlayerMode.Cutscene:
 			lockInput = InputLock.Locked;
-			anim.SetFloat ("Movement",0 );
-			anim.SetFloat ("Sprint",0 );
+
+			anim.SetFloat ("Movement", 0);
+			anim.SetFloat ("Sprint", 0);
+			thisPlayerMode = PlayerMode.Cutscene;
 
 			break;
 
@@ -181,11 +193,16 @@ public class TestPlayerController : MonoBehaviour {
 
 			break;
 
+		case PlayerMode.InteractiveCutscene:
+			thisPlayerMode = PlayerMode.InteractiveCutscene;
+			lockInput = InputLock.Locked;
+
+			break;
+
 		}
 	}
 
 	public void HandleAiming() {
-		if (thisPlayerMode == PlayerMode.Normal) {
 			anim.SetBool ("Aim", input.aim);
 			if (input.aim) {
 				gameplayCamera.GetComponent<CameraFollow> ().zoomedIn = true;
@@ -206,15 +223,15 @@ public class TestPlayerController : MonoBehaviour {
 				laserTarget.gameObject.SetActive (true);
 //				Vector3 laserEnd;
 				RaycastHit hit;
-				if(Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Screen.width/2f, Screen.height/2f)), out hit, 100f, LayerMask.GetMask("Default"))) {
-					laserEnd.position = Vector3.Lerp(laserEnd.position, hit.point, Time.deltaTime*1f);
+				if (Physics.Raycast (Camera.main.ScreenPointToRay (new Vector3 (Screen.width / 2f, Screen.height / 2f)), out hit, 100f, LayerMask.GetMask ("Default"))) {
+					laserEnd.position = Vector3.Lerp (laserEnd.position, hit.point, Time.deltaTime * 1f);
 				} else {
-					laserEnd.position = Vector3.Lerp(laserEnd.position, laserTarget.transform.position + (laserTarget.transform.up * 50f), Time.deltaTime*1f);
+					laserEnd.position = Vector3.Lerp (laserEnd.position, laserTarget.transform.position + (laserTarget.transform.up * 50f), Time.deltaTime * 1f);
 				}
 
 				laserTarget.SetPositions (new Vector3[] {
 					laserTarget.transform.position,
-					laserTarget.transform.position + laserTarget.transform.up*30f
+					laserTarget.transform.position + laserTarget.transform.up * 30f
 //					laserEnd.position
 				});
 				//			if(Mathf.Abs(transform.eulerAngles.y - Quaternion.Lerp(transform.rotation, Quaternion.LookRotation (lookDir), 11f*Time.deltaTime).eulerAngles.y) < 3f) {
@@ -252,7 +269,7 @@ public class TestPlayerController : MonoBehaviour {
 				GetComponent<RootMotion.FinalIK.LookAtIK> ().enabled = true;
 				GetComponent<RootMotion.FinalIK.AimIK> ().enabled = false;
 			}
-		}
+		
 	}
 
 	public void AimDone() {
@@ -274,9 +291,19 @@ public class TestPlayerController : MonoBehaviour {
         anim.SetTrigger("stand");
     }
 
-	public void HoldCatHostage(GameObject thisCat) {
-		hostageCat.SetActive (true);
+	public void HoldCatHostage() {
+		hostageCatChildObj.SetActive (true);
 		anim.SetTrigger ("hostage");
-		TextManager.s_instance.SetPrompt ("Press Interact to Release Cat or Fire for Death Penalty", 6f);
+		TextManager.s_instance.SetPrompt ("Press E to Release Cat\n Click to Kill It", 6f);
+		SetPlayerMode (PlayerMode.InteractiveCutscene);
+
+	}
+
+	public void ReleaseCatHostage() {
+		hostageCatChildObj.SetActive (false);
+		anim.SetTrigger ("hostage");
+		TextManager.s_instance.SetPrompt ("", 6f);
+		SetPlayerMode (PlayerMode.Normal);
+
 	}
 }

@@ -15,6 +15,7 @@ public class DialogueSystem : MonoBehaviour {
     public UnityEvent onDialogueEnd;
 
     int current = 0;
+	public bool isDialogueInfinitelyRepeatable = true;
 
     bool active = false;
 
@@ -71,10 +72,12 @@ public class DialogueSystem : MonoBehaviour {
     }
 
     void EndDialogue() {
+		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Normal);
 		active = false;
         onDialogueEnd.Invoke();
 		TextManager.s_instance.subtitle.text = "";
-		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Normal); 
+		if (isDialogueInfinitelyRepeatable)
+			current = 0;
     }
 
     void Update() {
