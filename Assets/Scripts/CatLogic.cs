@@ -145,14 +145,15 @@ public class CatLogic : MonoBehaviour {
 
 		case CatStates.Idle:
 			thisCatState = CatStates.Idle;
-
+			thisCatAnimator.SetTrigger ("idle");
+			thisNavMeshAgent.isStopped = true;
 			break;
 		}
 
 	}
 
 
-    void DestroyCat()
+    protected void DestroyCat()
     {
 //        PlayerController.s_instance.ReceiveAnxiety();
         Destroy(gameObject);

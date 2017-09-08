@@ -34,7 +34,8 @@ public class TestPlayerController : MonoBehaviour {
 
 	Transform laserEnd;
 	[SerializeField]
-	GameObject hostageCatChildObj;
+	GameObject hostageCatChildObj, bloodGunshotParticleFX;
+
 
     void Awake()
     {
@@ -296,11 +297,18 @@ public class TestPlayerController : MonoBehaviour {
 		anim.SetTrigger ("hostage");
 		TextManager.s_instance.SetPrompt ("Press E to Release Cat\n Click to Kill It", 6f);
 		SetPlayerMode (PlayerMode.InteractiveCutscene);
-
 	}
 
-	public void ReleaseCatHostage() {
-		hostageCatChildObj.SetActive (false);
+	public void ReleaseCatHostage(bool killHostage = false) {
+		if (killHostage) {
+			bloodGunshotParticleFX.SetActive (true);
+			hostageCatChildObj.transform.parent = null;
+			hostageCatChildObj.GetComponent<Rigidbody> ().useGravity = true;
+			hostageCatChildObj.GetComponent<CapsuleCollider> ().enabled = true;
+
+		} else {
+			hostageCatChildObj.SetActive (false);
+		}
 		anim.SetTrigger ("hostage");
 		TextManager.s_instance.SetPrompt ("", 6f);
 		SetPlayerMode (PlayerMode.Normal);

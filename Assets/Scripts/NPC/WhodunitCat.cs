@@ -52,6 +52,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 	public void HoldMeHostage() {
 		TestPlayerController.s_instance.HoldCatHostage ();
 		thisSkinnedMeshRenderer.enabled = false;
+		inHostageMode = true;
 
 	}
 
@@ -62,19 +63,35 @@ public class WhodunitCat : CatLogic, IInteractable {
 
 
 	public void ReleaseHostage () {
-		print ("ReleaseHostage");
-		thisSkinnedMeshRenderer.enabled = true;
-		TestPlayerController.s_instance.ReleaseCatHostage ();
-		SwitchToState (CatStates.Waypoints);
+		if (inHostageMode) {
+			thisSkinnedMeshRenderer.enabled = true;
+			TestPlayerController.s_instance.ReleaseCatHostage ();
+			SwitchToState (CatStates.Waypoints);
+			inHostageMode = false;
+		}
 
 	}
 
 	public void KillCat() {
+		TestPlayerController.s_instance.ReleaseCatHostage (true);
+
 		if (isEvilCat) {
-
+			myManagerRef.QuestSucceeded ();
 		} else {
-
+			myManagerRef.QuestFailed ();
 		}
 	}
 
+	public void FailState() {
+		if (inHostageMode) {
+			KillCat ();
+		} else {
+			SwitchToState (CatStates.Idle);
+		}
+
+	}
+
+	public void WinState() {
+		DestroyCat();
+	}
 }
