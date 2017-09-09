@@ -27,6 +27,9 @@ public class CatLogic : MonoBehaviour {
     bool switchToFollowing, switchToSitting, switchToWaypoints;
 	protected void Start () {
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
+		if (waypoints[0] == null) {
+			waypoints = GameObject.FindGameObjectsWithTag ("waypoints");
+		}
 		SwitchToState (CatStates.Waypoints);
 		if (thisSkinnedMeshRenderer == null)
 			thisSkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer> ();
