@@ -14,6 +14,9 @@ public class CatLogic : MonoBehaviour {
     float triggerFollowDistance = 10f;
     float catLookAngle = 50;
     float waypointToggleDistance = 3f;
+	float runawayTimer, runawayTime;
+	//cat runs back to this point after it attacks player
+	Vector3 runawayTarget;
 
 	[SerializeField]
 	protected SkinnedMeshRenderer thisSkinnedMeshRenderer;

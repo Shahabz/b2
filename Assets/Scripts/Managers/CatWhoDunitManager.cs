@@ -49,7 +49,7 @@ public class CatWhoDunitManager : MonoBehaviour {
 
 	public void QuestFailed() {
 		//show anxiety pop up
-		//state that the player failed\
+		//state that the player failed
 		//make the cats stop and be uninteractable 
 		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (25);
 		TextManager.s_instance.SetPrompt ("You Killed the Wrong Cat");

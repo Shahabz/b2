@@ -35,6 +35,9 @@ public class TestPlayerController : MonoBehaviour {
 	Transform laserEnd;
 	[SerializeField]
 	GameObject hostageCatChildObj, bloodGunshotParticleFX;
+	GameObject currentWhoDunitHeldHostage;
+
+	bool bSwitch_InteractiveCutscene, bSwitch_Normal, bSwitch_Cutscene;
 
 
     void Awake()
@@ -64,52 +67,69 @@ public class TestPlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
+
+		//had to make this block of code to avoid loop glitches
+		if (bSwitch_InteractiveCutscene) {
+			SetPlayerMode (PlayerMode.InteractiveCutscene);
+			bSwitch_InteractiveCutscene = false;
+		}
+		else if (bSwitch_Cutscene) {
+			SetPlayerMode (PlayerMode.Cutscene);
+			bSwitch_Cutscene = false;
+		}
+		else if (bSwitch_Normal) {
+			SetPlayerMode (PlayerMode.Normal);
+			bSwitch_Normal = false;
+		}
+		else {
 		switch (thisPlayerMode){
-		case PlayerMode.InteractiveCutscene:
-			if (NPInputManager.input.Fire.WasPressed) {
-				InteractiveCutscene_Fire.Invoke ();
-			}
-			if (NPInputManager.input.Interact.WasPressed) {
-				InteractiveCutscene_Interact.Invoke ();
-			}
-			break;
-		case PlayerMode.Normal:
-			if (thisPlayerMode == PlayerMode.Normal) {
-				if (lockInput == InputLock.Locked)
-					return;
+			case PlayerMode.Normal:
+				
+				if (thisPlayerMode == PlayerMode.Normal) {
+					if (lockInput == InputLock.Locked)
+						return;
 
-				if (lockInput == InputLock.Unlocked) {
-					HandleMovement ();
-					HandleAiming ();
+					if (lockInput == InputLock.Unlocked) {
+						HandleMovement ();
+						HandleAiming ();
 
-					if (input.reload) {
-						GetComponent<WeaponManager> ().Reload ();
-					}
-					if (NPInputManager.input.Interact.WasPressed) {
-						Vector3 center = transform.position + transform.forward + transform.up;
-						Collider[] cols = Physics.OverlapSphere (center, 1.5f, LayerMask.GetMask ("Interactable"));
-						List<GameObject> interactables = new List<GameObject> ();
-						for (int i = 0; i < cols.Length; i++) {
-							if (cols [i].GetComponent<IInteractable> () != null) {
-								interactables.Add (cols [i].gameObject);
-							}
+						if (input.reload) {
+							GetComponent<WeaponManager> ().Reload ();
 						}
-						if (interactables.Count > 0) {
-							GameObject closest = interactables [0];
-							for (int i = 1; i < interactables.Count; i++) {
-								if (Vector3.Distance (center, interactables [i].transform.position) < Vector3.Distance (center, closest.transform.position)) {
-									closest = interactables [i];
+						if (NPInputManager.input.Interact.WasPressed) {
+							Vector3 center = transform.position + transform.forward + transform.up;
+							Collider[] cols = Physics.OverlapSphere (center, 1.5f, LayerMask.GetMask ("Interactable"));
+							List<GameObject> interactables = new List<GameObject> ();
+							for (int i = 0; i < cols.Length; i++) {
+								if (cols [i].GetComponent<IInteractable> () != null) {
+									interactables.Add (cols [i].gameObject);
 								}
 							}
-							closest.GetComponent<IInteractable> ().Interact ();
+							if (interactables.Count > 0) {
+								GameObject closest = interactables [0];
+								for (int i = 1; i < interactables.Count; i++) {
+									if (Vector3.Distance (center, interactables [i].transform.position) < Vector3.Distance (center, closest.transform.position)) {
+										closest = interactables [i];
+									}
+								}
+								closest.GetComponent<IInteractable> ().Interact ();
+							}
 						}
 					}
 				}
+			break;
+		case PlayerMode.InteractiveCutscene:
+			
+			if (NPInputManager.input.Fire.WasPressed) {
+				ReleaseCatHostage (true);
+			}
+			if (NPInputManager.input.Interact.WasPressed) {
+				ReleaseCatHostage (false);
 			}
 			break;
 		}
 	}
-
+	}
 	public void FixedUpdate() {
 		if(lockInput == InputLock.Locked)
 			return;
@@ -292,26 +312,32 @@ public class TestPlayerController : MonoBehaviour {
         anim.SetTrigger("stand");
     }
 
-	public void HoldCatHostage() {
+	public void HoldCatHostage(GameObject thisCat) {
+		currentWhoDunitHeldHostage = thisCat;
 		hostageCatChildObj.SetActive (true);
 		anim.SetTrigger ("hostage");
 		TextManager.s_instance.SetPrompt ("Press E to Release Cat\n Click to Kill It", 6f);
-		SetPlayerMode (PlayerMode.InteractiveCutscene);
+		bSwitch_InteractiveCutscene = true;
+		
 	}
 
 	public void ReleaseCatHostage(bool killHostage = false) {
 		if (killHostage) {
 			bloodGunshotParticleFX.SetActive (true);
 			hostageCatChildObj.transform.parent = null;
+			hostageCatChildObj.AddComponent<Rigidbody> ();
 			hostageCatChildObj.GetComponent<Rigidbody> ().useGravity = true;
 			hostageCatChildObj.GetComponent<CapsuleCollider> ().enabled = true;
+			currentWhoDunitHeldHostage.GetComponent<WhodunitCat> ().KillCat ();
 
 		} else {
 			hostageCatChildObj.SetActive (false);
+			currentWhoDunitHeldHostage.GetComponent<WhodunitCat> ().ReleaseHostage ();
 		}
+		currentWhoDunitHeldHostage = null;
 		anim.SetTrigger ("hostage");
 		TextManager.s_instance.SetPrompt ("", 6f);
-		SetPlayerMode (PlayerMode.Normal);
+		bSwitch_Normal = true;
 
 	}
 }

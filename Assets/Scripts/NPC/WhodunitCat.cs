@@ -17,8 +17,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 		base.Start ();
 		myManagerRef = FindObjectOfType<CatWhoDunitManager> ();
 		GetComponent<DialogueSystem> ().onDialogueEnd.AddListener (OnDialogueEnd);
-		TestPlayerController.s_instance.InteractiveCutscene_Interact.AddListener (ReleaseHostage);
-		TestPlayerController.s_instance.InteractiveCutscene_Fire.AddListener(KillCat);
+
 
 	}
 	
@@ -50,9 +49,8 @@ public class WhodunitCat : CatLogic, IInteractable {
 	}
 
 	public void HoldMeHostage() {
-		TestPlayerController.s_instance.HoldCatHostage ();
-		thisSkinnedMeshRenderer.enabled = false;
-		inHostageMode = true;
+		TestPlayerController.s_instance.HoldCatHostage (gameObject);
+		transform.GetChild(0).gameObject.SetActive(false);
 
 	}
 
@@ -63,18 +61,13 @@ public class WhodunitCat : CatLogic, IInteractable {
 
 
 	public void ReleaseHostage () {
-		if (inHostageMode) {
-			thisSkinnedMeshRenderer.enabled = true;
-			TestPlayerController.s_instance.ReleaseCatHostage ();
-			SwitchToState (CatStates.Waypoints);
-			inHostageMode = false;
-		}
+			//transform.GetChild(0).gameObject.SetActive(true);
+		transform.GetChild(0).gameObject.SetActive(true);
+		SwitchToState (CatStates.Waypoints);
 
 	}
 
 	public void KillCat() {
-		TestPlayerController.s_instance.ReleaseCatHostage (true);
-
 		if (isEvilCat) {
 			myManagerRef.QuestSucceeded ();
 		} else {
