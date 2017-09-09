@@ -84,7 +84,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 
 	public void FailState() {
 		if (inHostageMode) {
-			KillCat ();
+			DestroyCat ();
 		} else {
 			SwitchToState (CatStates.Idle);
 		}
