@@ -11,46 +11,52 @@ public class CatLogic : MonoBehaviour {
 	protected NavMeshAgent thisNavMeshAgent;
     protected CatStates thisCatState;
     float catRunSpeed = .02f;
-    float triggerFollowDistance = 10f;
+    float triggerFollowDistance = 15f;
     float catLookAngle = 50;
     float waypointToggleDistance = 3f;
-	float runawayTimer, runawayTime;
 	//cat runs back to this point after it attacks player
 	Vector3 runawayTarget;
 
-	[SerializeField]
-	protected SkinnedMeshRenderer thisSkinnedMeshRenderer;
+	public GameObject deadCat;
 
+	float overlapTimeTilDeath;
+	public bool isKillable;
+	bool isOverlappingPlayer;
+	protected bool canCauseStress=true;
 
     public GameObject[] waypoints;
     int waypointIndex;
     // Use this for initialization
 
 	[SerializeField]
-    bool switchToFollowing, switchToSitting, switchToWaypoints, switchToRunaway;
+    bool switchToFollowing, switchToIdle, switchToWaypoints, switchToRunaway;
 	protected void Start () {
+
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
-		if (waypoints[0] == null) {
-			waypoints = GameObject.FindGameObjectsWithTag ("waypoints");
+
+		if (switchToFollowing) {
+			SwitchToState (CatStates.Following);
+			switchToFollowing = false;
+
+		} else {
+			SwitchToState (CatStates.Waypoints);
 		}
-		SwitchToState (CatStates.Waypoints);
-		if (thisSkinnedMeshRenderer == null)
-			thisSkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer> ();
 	}
 	
 	// Update is called once per frame
 	protected void Update () {
+		HandleCatStomp ();
+
 	switch (thisCatState)
         {
-            case CatStates.Idle:
-                WaitForPlayerToComeClose();
-                if (switchToFollowing)
-                {
-					SwitchToState (CatStates.Following);
-                    switchToFollowing = false;
-                }
-                break;
-
+		case CatStates.Idle:
+            WaitForPlayerToComeClose();
+            if (switchToFollowing)
+            {
+				SwitchToState (CatStates.Following);
+                switchToFollowing = false;
+            }
+            break;
 		case CatStates.Talking:
 
 			break;
@@ -58,67 +64,68 @@ public class CatLogic : MonoBehaviour {
 		case CatStates.Following:
 			FollowPlayer ();
 			if (CheckIsPlayerLookingAtCat ()) {
-				switchToSitting = true;
+				switchToIdle = true;
 			}
-			if (switchToSitting) {
-				thisCatAnimator.SetTrigger ("idle");
-				thisCatState = CatStates.Idle;
-				switchToSitting = false;
+			if (switchToIdle) {
+				SwitchToState (CatStates.Idle);
+				switchToIdle = false;
 			}
-			if (switchToRunaway) {
+			else if (switchToRunaway) {
 				SwitchToState (CatStates.Runaway);
 				switchToRunaway = false;
 			}
-                break;
+        	break;
 
 		case CatStates.Waypoints:
 			HandleWaypointChecking ();
-                break;
+        	break;
 
 
 		case CatStates.Runaway:
 			thisNavMeshAgent.SetDestination (runawayTarget);
 			CheckDistanceToRunawayTarget ();
 			if (switchToFollowing) {
-				SwitchToState (CatStates.Following);
-				switchToFollowing = false;
+				if (CheckIsPlayerLookingAtCat ()) {
+					switchToFollowing = false;
+					SwitchToState (CatStates.Idle);
+				} else {
+					switchToFollowing = false;
+					SwitchToState (CatStates.Following);
+				}
 			}
 				
 			break;
         }
 
 	}
+		
+
+	void HandleCatStomp() {
+		if (isOverlappingPlayer) {
+			overlapTimeTilDeath += Time.deltaTime;
+			if (overlapTimeTilDeath > 1) {
+				isOverlappingPlayer = false;
+				TestPlayerController.s_instance.GetComponent<Animator> ().SetTrigger ("stomp");
+				StartCoroutine ("StompCat");
+			}
+		}
+	}
+
+	IEnumerator StompCat() {
+		yield return new WaitForSeconds (.5f);
+		Instantiate (deadCat, transform.position, transform.rotation);
+		DestroyCat ();
+	}
 
     void FollowPlayer()
     {
-		transform.LookAt(TestPlayerController.s_instance.transform.position);
-        transform.Translate(Vector3.forward * catRunSpeed);
+		//transform.LookAt(TestPlayerController.s_instance.transform.position);
+		thisNavMeshAgent.SetDestination (TestPlayerController.s_instance.transform.position);
+
         
     }
 
-    void GotoNextWaypoint()
-    {
-       
-        //transform.LookAt(waypoints[waypointIndex].transform);
-		thisNavMeshAgent.SetDestination (waypoints [waypointIndex].transform.position);
-
-    }
-
-    void HandleWaypointChecking()
-    {
-        if (Vector3.Distance(transform.position, waypoints[waypointIndex].transform.position) < waypointToggleDistance) {
-            if (waypointIndex >= waypoints.Length - 1)
-            {
-                waypointIndex = 0;
-            }
-            else
-            {
-                waypointIndex++;
-            }
-        }
-		GotoNextWaypoint ();
-
-    }
+    
 
     void WaitForPlayerToComeClose()
     {
@@ -132,11 +139,8 @@ public class CatLogic : MonoBehaviour {
 
 	void CheckDistanceToRunawayTarget()
 	{
-		if (Vector3.Distance(transform.position, runawayTarget) < 1f) {
-			if (!CheckIsPlayerLookingAtCat())
-			{
-				switchToFollowing = true;
-			}
+		if (Vector3.Distance(transform.position, runawayTarget) < .1f) {
+			switchToFollowing = true;
 		}
 	}
 
@@ -157,38 +161,50 @@ public class CatLogic : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && canCauseStress)
         {
-			switchToRunaway = true;
-            //DestroyCat();
-
+			//if (thisCatState != CatStates.Waypoints&&thisCatState != CatStates.Talking) {
+				isOverlappingPlayer = true;
+				TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
+				switchToRunaway = true;
+			//}
         }
     }
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (other.tag == "Player")
+		{
+			isOverlappingPlayer = false;
+
+		}
+	}
+
 
 	public void SwitchToState(CatStates switchToThisState) {
 		switch (switchToThisState) {
 		case CatStates.Waypoints:
 			thisCatState = CatStates.Waypoints;
+			thisCatAnimator.SetTrigger("run");
 			thisNavMeshAgent.isStopped = false;
 			GotoNextWaypoint ();
-			thisCatAnimator.SetTrigger("run");
 			break;
 
 		case CatStates.Idle:
 			thisCatState = CatStates.Idle;
+			thisCatAnimator.ResetTrigger ("run");
 			thisCatAnimator.SetTrigger ("idle");
 			thisNavMeshAgent.isStopped = true;
 			break;
 		case CatStates.Following:
-			thisCatAnimator.SetTrigger ("run");
 			thisCatState = CatStates.Following;
+			thisCatAnimator.SetTrigger ("run");
 			thisNavMeshAgent.isStopped = false;
 			runawayTarget = transform.position;
 			break;
 		case CatStates.Runaway:
-			thisCatAnimator.SetTrigger ("run");
 			thisCatState = CatStates.Runaway;
-			thisNavMeshAgent.isStopped = false;
+			//thisCatAnimator.SetTrigger ("run");
 			break;
 		}
 	}
@@ -196,8 +212,31 @@ public class CatLogic : MonoBehaviour {
 
     protected void DestroyCat()
     {
-//        PlayerController.s_instance.ReceiveAnxiety();
+		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (10);
         Destroy(gameObject);
     }
 
+	void GotoNextWaypoint()
+	{
+
+		//transform.LookAt(waypoints[waypointIndex].transform);
+		thisNavMeshAgent.SetDestination (waypoints [waypointIndex].transform.position);
+
+	}
+
+	void HandleWaypointChecking()
+	{
+		if (Vector3.Distance(transform.position, waypoints[waypointIndex].transform.position) < waypointToggleDistance) {
+			if (waypointIndex >= waypoints.Length - 1)
+			{
+				waypointIndex = 0;
+			}
+			else
+			{
+				waypointIndex++;
+			}
+		}
+		GotoNextWaypoint ();
+
+	}
 }

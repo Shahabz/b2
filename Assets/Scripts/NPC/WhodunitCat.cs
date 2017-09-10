@@ -17,7 +17,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 		base.Start ();
 		myManagerRef = FindObjectOfType<CatWhoDunitManager> ();
 		GetComponent<DialogueSystem> ().onDialogueEnd.AddListener (OnDialogueEnd);
-
+		canCauseStress = false;
 
 	}
 	
@@ -73,18 +73,17 @@ public class WhodunitCat : CatLogic, IInteractable {
 		} else {
 			myManagerRef.QuestFailed ();
 		}
+		Destroy (gameObject);
 	}
 
 	public void FailState() {
-		if (inHostageMode) {
-			DestroyCat ();
-		} else {
+
 			SwitchToState (CatStates.Idle);
-		}
+			canCauseStress = true;
 
 	}
 
 	public void WinState() {
-		DestroyCat();
+		Destroy(gameObject);
 	}
 }
