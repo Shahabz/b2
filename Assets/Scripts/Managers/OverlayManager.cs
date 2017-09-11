@@ -7,7 +7,7 @@ public class OverlayManager : MonoBehaviour {
 
 	public Sprite[] infectionSprites;
 	public Sprite[] bloodSprites;
-	public Sprite[] criminalSprites;
+	public Sprite[] healSprites;
 	public Image infection, blood;
 
 	bool isFading = false;
@@ -17,6 +17,7 @@ public class OverlayManager : MonoBehaviour {
 	Fader[] AnxietyFaders;
 	public Slider anxietySlider;
 	public Text anxietyText, deathText;
+	bool isHealing;
 
 
 	// Use this for initialization
@@ -81,14 +82,19 @@ public class OverlayManager : MonoBehaviour {
 		blood.material.SetFloat ("_Cutoff", materialVal);
 	}
 
-	public void ShowAnxietyFadeOut(float transparency) {
+	public void ShowAnxietyFadeOut(float transparency, bool red=true) {
+		if (red) {
+			blood.sprite = bloodSprites [0];
+		} else {
+			blood.sprite = healSprites [0];
+		}
 		isFading = true;
-		blood.material.SetFloat ("_Cutoff", .9f);
 		blood.enabled = true;
 		startingAlphaforBloodSprite = transparency;
-		Color temp = blood.material.color;
+		Color temp = red ? Color.red : Color.green;
 		temp.a = transparency;
 		blood.material.SetColor ("_Color", temp);
+		blood.material.SetFloat ("_Cutoff", .9f);
 		foreach (Fader x in AnxietyFaders) {
 			x.StartFadeOut (3);
 		}

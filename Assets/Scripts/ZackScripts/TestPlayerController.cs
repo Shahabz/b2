@@ -25,6 +25,8 @@ public class TestPlayerController : MonoBehaviour {
     public Camera gameplayCamera;
 	LineRenderer laserTarget;
 
+	public Transform holdItemTransform;
+
 	public UnityEvent InteractiveCutscene_Interact, InteractiveCutscene_Fire;
 
     public static TestPlayerController s_instance;
@@ -36,6 +38,7 @@ public class TestPlayerController : MonoBehaviour {
 	[SerializeField]
 	GameObject hostageCatChildObj, bloodGunshotParticleFX;
 	GameObject currentWhoDunitHeldHostage;
+	GameObject heldObject;
 
 	bool bSwitch_InteractiveCutscene, bSwitch_Normal, bSwitch_Cutscene;
 
@@ -339,5 +342,23 @@ public class TestPlayerController : MonoBehaviour {
 		TextManager.s_instance.SetPrompt ("", 6f);
 		bSwitch_Normal = true;
 
+	}
+
+	public void GrabAndSwallowPills (GameObject thesePills) {
+		anim.SetTrigger ("pills");
+		bSwitch_Cutscene = true;
+		StartCoroutine ("EndPillGrab");
+		heldObject = thesePills;
+		thesePills.transform.SetParent (holdItemTransform);
+		thesePills.transform.position = holdItemTransform.position;
+		thesePills.transform.rotation = holdItemTransform.rotation;
+	}
+
+	IEnumerator EndPillGrab() {
+		yield return new WaitForSeconds (3f);
+		GetComponent<HealthHandler> ().ReduceStress (10);
+		heldObject.transform.parent = null;
+		heldObject.AddComponent<Rigidbody> ();
+		bSwitch_Normal = true;
 	}
 }

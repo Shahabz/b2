@@ -22,9 +22,14 @@ public class DialogueSystem : MonoBehaviour {
     public void StartDialogue() {
         onDialogueStart.Invoke();
         PlayNext();
-        active = true;
 		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Cutscene);
+		StartCoroutine ("InputLoopHackFix");
     }
+
+	IEnumerator InputLoopHackFix(){
+		yield return new WaitForSeconds (.01f);
+		active = true;
+	}
 
 	void Start () {
 		if (GetComponent<AudioSource>() || talkerOne==null)
@@ -87,7 +92,7 @@ public class DialogueSystem : MonoBehaviour {
             {
 				if (TextManager.s_instance.GetIsTypeWriting())
                 { //Can make this a function idc
-					TextManager.s_instance.CompleteTypeWrite(); //Can change this name idc
+					 TextManager.s_instance.CompleteTypeWrite(); //Can change this name idc
                 }
                  else
                 {

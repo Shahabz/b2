@@ -58,6 +58,17 @@ public class HealthHandler : MonoBehaviour {
 			Death();
 	}
 
+	public void ReduceStress (int stressAmount) {
+
+		stress -= stressAmount;
+		if (stress < 0)
+			stress = 0;
+		OverlayManager.s_instance.anxietySlider.value = stress / 100;
+		OverlayManager.s_instance.anxietyText.text = "Anxiety: " + stress +"%";
+		OverlayManager.s_instance.ShowAnxietyFadeOut (.14f, false);
+
+	}
+
 	public void TakeStress(int stressAmount) {
 		lastStressor = Time.time;
 		stress += stressAmount;
