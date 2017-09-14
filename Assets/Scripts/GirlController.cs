@@ -9,10 +9,10 @@ public class GirlController : MonoBehaviour {
 	GirlState thisGirlState = GirlState.Idle;
 
 	float distanceToTriggerFollow = 20f;
-	float tooClose = 5f;
+	public float stoppingDistance = 2f;
 
 	[SerializeField]
-	NavMeshAgent thisNavMeshAgent;
+	protected NavMeshAgent thisNavMeshAgent;
 
 
 	// Use this for initialization
@@ -39,7 +39,7 @@ public class GirlController : MonoBehaviour {
 
 	void CheckIsPlayerClose () {
 		if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) < distanceToTriggerFollow
-			&& Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > tooClose) {
+			&& Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > stoppingDistance) {
 			GetComponent<Animator> ().SetTrigger ("walk");
 			thisGirlState = GirlState.Following;
 		}
@@ -49,9 +49,11 @@ public class GirlController : MonoBehaviour {
 		if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > distanceToTriggerFollow) {
 			GetComponent<Animator> ().SetTrigger ("idle");
 			thisGirlState = GirlState.Idle;
-		} else if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) < tooClose){
+		} else if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) < stoppingDistance){
 			GetComponent<Animator> ().SetTrigger ("idle");
 			thisGirlState = GirlState.Idle;
 		}
 	}
+
+
 }
