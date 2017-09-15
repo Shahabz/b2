@@ -9,16 +9,20 @@ public class XanaxGirl : GirlController {
 	XanaxWaypoint currentXanWaypoint;
 	enum XanaxGirlState {normal, lookingforxanax, walkingtoxanax, taking_xanax, gotocomputer, turnoncomputer, dancing, dying};
 	XanaxGirlState thisState = XanaxGirlState.normal;
-	// Use this for initialization
-	void Start () {
-		
+
+	public void SwitchToXanaxSearch () {
+		thisState = XanaxGirlState.lookingforxanax;
 	}
-	
+
+	void Start () {
+		GetComponent<Animator> ().SetTrigger ("walk");
+	}
+
 	// Update is called once per frame
 	void Update () {
 		switch (thisState) {
 		case XanaxGirlState.normal:
-
+			thisNavMeshAgent.SetDestination (TestPlayerController.s_instance.transform.position);
 			break;
 
 		case XanaxGirlState.lookingforxanax:
