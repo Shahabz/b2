@@ -21,7 +21,7 @@ public class GirlController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected void Update () {
 		switch (thisGirlState) {
 		case GirlState.Following:
 			CheckIsPlayerFarOrTooClose ();
@@ -37,7 +37,7 @@ public class GirlController : MonoBehaviour {
 		}
 	}
 
-	void CheckIsPlayerClose () {
+	protected void CheckIsPlayerClose () {
 		if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) < distanceToTriggerFollow
 			&& Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > stoppingDistance) {
 			GetComponent<Animator> ().SetTrigger ("walk");
@@ -45,7 +45,7 @@ public class GirlController : MonoBehaviour {
 		}
 	}
 
-	void CheckIsPlayerFarOrTooClose() {
+	protected void CheckIsPlayerFarOrTooClose() {
 		if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > distanceToTriggerFollow) {
 			GetComponent<Animator> ().SetTrigger ("idle");
 			thisGirlState = GirlState.Idle;

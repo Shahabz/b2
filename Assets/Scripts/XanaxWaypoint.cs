@@ -8,7 +8,7 @@ public class XanaxWaypoint : MonoBehaviour {
 	public XanaxPickup thisXanaxPickup;
 
 	void Start () {
-		
+		thisXanaxPickup.owner = this;
 	}
 	
 	// Update is called once per frame

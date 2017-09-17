@@ -9,55 +9,72 @@ public class XanaxGirl : GirlController {
 	XanaxWaypoint currentXanWaypoint;
 	enum XanaxGirlState {normal, lookingforxanax, walkingtoxanax, taking_xanax, gotocomputer, turnoncomputer, dancing, dying};
 	XanaxGirlState thisState = XanaxGirlState.normal;
+	bool SwitchToComputerState;
+	public Transform computerWaypoint, laptop;	
+
+	float timerforturningoncomputer;
 
 	public void SwitchToXanaxSearch () {
 		thisState = XanaxGirlState.lookingforxanax;
 	}
 
 	void Start () {
-		GetComponent<Animator> ().SetTrigger ("walk");
+		xanaxWaypoints = FindObjectsOfType<XanaxWaypoint> ();
 	}
 
 	// Update is called once per frame
 	void Update () {
 		switch (thisState) {
 		case XanaxGirlState.normal:
-			thisNavMeshAgent.SetDestination (TestPlayerController.s_instance.transform.position);
+			base.Update ();
 			break;
 
 		case XanaxGirlState.lookingforxanax:
 			foreach (XanaxWaypoint x in xanaxWaypoints) {
 				if (x.hasBeenAccessed == false) {
-					thisNavMeshAgent.SetDestination (x.transform.position);
+					currentXanWaypoint = x;
 					thisState = XanaxGirlState.walkingtoxanax;
+					return;
 				}
 			}
-			thisState = XanaxGirlState.turnoncomputer;
+			thisState = XanaxGirlState.gotocomputer;
 			break;
 
 		case XanaxGirlState.walkingtoxanax:
-			if (Vector3.Distance (currentXanWaypoint.transform.position, transform.position) < 1) {
-				thisState = XanaxGirlState.taking_xanax;
+			thisNavMeshAgent.SetDestination (currentXanWaypoint.transform.position);
+			if (Vector3.Distance (currentXanWaypoint.transform.position, transform.position) < .1) {
+				if (currentXanWaypoint.hasBeenAccessed == false) {
+					thisState = XanaxGirlState.taking_xanax;
+					StartCoroutine ("switchbacktolookingforxanax");
+					currentXanWaypoint.thisXanaxPickup.transform.SetParent (holdObject);
+					currentXanWaypoint.thisXanaxPickup.transform.localPosition = Vector3.zero;
+					currentXanWaypoint.thisXanaxPickup.transform.localRotation = Quaternion.identity;
+					GetComponent<Animator> ().SetTrigger ("pill");
+					currentXanWaypoint.hasBeenAccessed = true;
+				}
 			}
 			break;
 
 		case XanaxGirlState.taking_xanax:
-			if (currentXanWaypoint.hasBeenAccessed == false) {
-				currentXanWaypoint.thisXanaxPickup.transform.SetParent (holdObject);
-				GetComponent<Animator> ().SetTrigger ("pill");
-				currentXanWaypoint.hasBeenAccessed = true;
-			}
+				
 			break;
 
 		case XanaxGirlState.gotocomputer:
 			//walk tocomputer
-
+			thisNavMeshAgent.SetDestination (computerWaypoint.transform.position);
+			if (Vector3.Distance (computerWaypoint.transform.position, transform.position) < .1) {
 			//check if reached
+				thisState = XanaxGirlState.turnoncomputer;
+				transform.LookAt (laptop.transform);
+				GetComponent<Animator> ().SetTrigger ("comp");
+			}
 			break;
 		
 		case XanaxGirlState.turnoncomputer:
 			//play anim of turning on computer and say some shit
-
+			timerforturningoncomputer += Time.deltaTime;
+			if (timerforturningoncomputer > 7)
+				thisState = XanaxGirlState.dancing;
 			//switch to dancing
 			break;
 
@@ -77,8 +94,12 @@ public class XanaxGirl : GirlController {
 
 	IEnumerator switchbacktolookingforxanax() {
 		yield return new WaitForSeconds (3f);
+		currentXanWaypoint.thisXanaxPickup.gameObject.AddComponent<Rigidbody> ();
+		currentXanWaypoint.thisXanaxPickup.gameObject.AddComponent<CapsuleCollider> ();
+
 		thisState = XanaxGirlState.lookingforxanax;
 		currentXanWaypoint.thisXanaxPickup.transform.parent = null;
+		GetComponent<Animator> ().SetTrigger ("walk");
 
 	}
 }
