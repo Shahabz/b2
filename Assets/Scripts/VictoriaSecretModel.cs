@@ -11,6 +11,7 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 	public Vector3 navMeshTarget;
 
 	bool bSwitchToWalking, bSwitchToStanding;
+	public bool dontLookAtOnInteract;
 
 	void Start () {
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
@@ -27,7 +28,8 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 	}
 
 	public void Interact() {
-		transform.LookAt (TestPlayerController.s_instance.transform);
+		if (!dontLookAtOnInteract)
+	 		transform.LookAt (TestPlayerController.s_instance.transform);
 		GetComponent<DialogueSystem> ().StartDialogue ();
 	}
 
