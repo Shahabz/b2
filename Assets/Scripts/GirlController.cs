@@ -8,7 +8,7 @@ public class GirlController : MonoBehaviour {
 	enum GirlState {Following, Idle};
 	GirlState thisGirlState = GirlState.Idle;
 
-	float distanceToTriggerFollow = 20f;
+	protected float distanceToTriggerFollow = 20f;
 	public float stoppingDistance = 2f;
 
 	[SerializeField]
