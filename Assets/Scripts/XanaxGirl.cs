@@ -13,6 +13,7 @@ public class XanaxGirl : GirlController {
 	public Transform computerWaypoint, laptop;	
 	public GenericTriggerEvent onDancePartyStart;
 	float timerforturningoncomputer, dancetimer;
+	public GenericTriggerEvent thisEvent;
 
 	public void SwitchToXanaxSearch () {
 		thisState = XanaxGirlState.gotocomputer;
