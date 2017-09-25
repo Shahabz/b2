@@ -17,13 +17,15 @@ public class GlobalFogWall : MonoBehaviour {
 	}
 	
 	void Update () {
-        if (Vector3.Distance(fogWall.position, player.position) < minDistance)
-        {
-            GetComponent<UnityStandardAssets.ImageEffects.GlobalFog>().height = Mathf.Lerp(minFog, maxFog, Vector3.Distance(fogWall.position, player.position) / minDistance);
+        if(fogWall) {
+            if (Vector3.Distance(fogWall.position, player.position) < minDistance)
+            {
+                GetComponent<UnityStandardAssets.ImageEffects.GlobalFog>().height = Mathf.Lerp(minFog, maxFog, Vector3.Distance(fogWall.position, player.position) / minDistance);
+            }
+    //        else
+    //        {
+    //            GetComponent<UnityStandardAssets.ImageEffects.GlobalFog>().height = minDistance;
+    //        }
         }
-//        else
-//        {
-//            GetComponent<UnityStandardAssets.ImageEffects.GlobalFog>().height = minDistance;
-//        }
 	}
 }

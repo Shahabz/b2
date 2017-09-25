@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System;
 
@@ -19,62 +19,14 @@ namespace Cinemachine.Editor
             ScriptableObjectUtility.Create<NoiseSettings>();
         }
 
-#if false
-        [MenuItem("Cinemachine/Enable Timeline integration in pre-2017.x Unity versions", false, 1)]
-        private static void EnablePostTimelineIntegration()
-        {
-            string msg = "Note: This feature is dependent on the presence of the Timeline feature in Unity.";
-            msg += "\n\nIf you are not using a timeline-enabled build of Unity, please press Cancel.  Otherwise, you can proceed.";
-            if (EditorUtility.DisplayDialog("Cinemachine Setup", msg, "Proceed", "Cancel"))
-            {
-                int numAdded = SetPlayerSettingDefineInAllBuildTargets("CINEMACHINE_TIMELINE");
-                if (numAdded == 0)
-                    msg = "CINEMACHINE_TIMELINE was already enabled for all build targets.";
-                else
-                    msg = "CINEMACHINE_TIMELINE has been added to the PlayerSettings/ScriptingDefineSymbols to " + numAdded + " build targets, wherever it was absent.";
-                msg += "\n\nNote: This feature is dependent on a Timeline-enabled build of Unity.";
-                msg += "\n\nIf you are getting console errors originating in the Cinemachine/Timeline cs files, it is most likely because you do not have an appropriate build of Unity.";
-                msg += "\n\nYou can correct this by upgrading Unity, or by removing the CINEMACHINE_TIMELINE define, or by simply deleting the Cinemachine/Timeline asset from your project.";
-                EditorUtility.DisplayDialog("Cinemachine Setup", msg, "Got it");
-            }
-        }
-
-        static int SetPlayerSettingDefineInAllBuildTargets(string d)
-        {
-            int numAdded = 0;
-            foreach (BuildTargetGroup t in Enum.GetValues(typeof(BuildTargetGroup)))
-            {
-                if (t == BuildTargetGroup.Unknown)
-                    continue;
-
-                // Skip the obsolete ones
-                System.Reflection.MemberInfo mi = typeof(BuildTargetGroup).GetMember(t.ToString())[0];
-                if (mi.GetCustomAttributes(typeof(ObsoleteAttribute), false).Length > 0)
-                    continue;
-
-                string all = PlayerSettings.GetScriptingDefineSymbolsForGroup(t);
-                string[] defs = all.Split(';');
-                bool foundIt = false;
-                foreach (string s in defs)
-                    if (s.Trim() == d)
-                        foundIt = true;
-                if (!foundIt)
-                {
-                    ++numAdded;
-                    if (all.Trim().Length > 0)
-                        all += ";";
-                    all += d;
-                    PlayerSettings.SetScriptingDefineSymbolsForGroup(t, all);
-                }
-            }
-            return numAdded;
-        }
-#endif
-
+        /// <summary>
+        /// Create a default Virtual Camera, with standard components
+        /// </summary>
         [MenuItem("Cinemachine/Create Virtual Camera", false, 1)]
-        private static void CreateDefaultNewVirtualCamera()
+        public static CinemachineVirtualCamera CreateDefaultVirtualCamera()
         {
-            CreateDefaultVirtualCamera();
+            return CreateVirtualCamera(
+                "CM vcam", typeof(CinemachineComposer), typeof(CinemachineTransposer));
         }
 
         [MenuItem("Cinemachine/Create FreeLook Camera", false, 1)]
@@ -82,49 +34,123 @@ namespace Cinemachine.Editor
         {
             CreateCameraBrainIfAbsent();
             GameObject go = new GameObject(
-                GenerateUniqueObjectName(typeof(CinemachineFreeLook), "FreeLook"));
+                    GenerateUniqueObjectName(typeof(CinemachineFreeLook), "CM FreeLook"));
             Undo.RegisterCreatedObjectUndo(go, "create FreeLook");
             Undo.AddComponent<CinemachineFreeLook>(go);
         }
 
-        [MenuItem("Cinemachine/Create State-driven Camera", false, 1)]
+        [MenuItem("Cinemachine/Create State-Driven Camera", false, 1)]
         private static void CreateStateDivenCamera()
         {
-            // Create a new virtual camera cloud
             CreateCameraBrainIfAbsent();
             GameObject go = new GameObject(
-                GenerateUniqueObjectName(typeof(CinemachineStateDrivenCamera), "StateDrivenCamera"));
+                    GenerateUniqueObjectName(typeof(CinemachineStateDrivenCamera), "CM StateDrivenCamera"));
             Undo.RegisterCreatedObjectUndo(go, "create state driven camera");
             Undo.AddComponent<CinemachineStateDrivenCamera>(go);
             // Give it a child
-            CreateDefaultVirtualCamera().gameObject.transform.parent = go.transform;
+            Undo.SetTransformParent(CreateVirtualCamera(
+                    "CM vcam", typeof(CinemachineComposer), typeof(CinemachineTransposer)).transform,
+                go.transform, "create state driven camera");
         }
 
-        [MenuItem("Cinemachine/Create Camera Cloud", false, 1)]
-        private static void CreateVirtualCameraCloud()
+        [MenuItem("Cinemachine/Create ClearShot Camera", false, 1)]
+        private static void CreateClearShotVirtualCamera()
         {
-            // Create a new virtual camera cloud
             CreateCameraBrainIfAbsent();
             GameObject go = new GameObject(
-                GenerateUniqueObjectName(typeof(CinemachineCloud), "VirtualCameraCloud"));
-            Undo.RegisterCreatedObjectUndo(go, "create camera cloud");
-            Undo.AddComponent<CinemachineCloud>(go);
+                    GenerateUniqueObjectName(typeof(CinemachineClearShot), "CM ClearShot"));
+            Undo.RegisterCreatedObjectUndo(go, "create ClearShot camera");
+            Undo.AddComponent<CinemachineClearShot>(go);
+            var collider = Undo.AddComponent<CinemachineCollider>(go);
+            collider.m_PreserveLineOfSight = false;
+            Undo.RecordObject(collider, "create ClearShot camera");
             // Give it a child
-            CreateDefaultVirtualCamera().gameObject.transform.parent = go.transform;
+            Undo.SetTransformParent(CreateVirtualCamera(
+                    "CM vcam", typeof(CinemachineComposer), typeof(CinemachineTransposer)).transform,
+                go.transform, "create ClearShot camera");
+        }
+
+        [MenuItem("Cinemachine/Create Dolly Camera with Track", false, 1)]
+        private static void CreateDollyCameraWithPath()
+        {
+            CinemachineVirtualCamera vcam = CreateVirtualCamera(
+                    "CM vcam", typeof(CinemachineComposer), typeof(CinemachineTrackedDolly));
+            GameObject go = new GameObject(
+                    GenerateUniqueObjectName(typeof(CinemachinePath), "DollyTrack"));
+            Undo.RegisterCreatedObjectUndo(go, "create track");
+            CinemachinePath path = Undo.AddComponent<CinemachinePath>(go);
+            var dolly = vcam.GetCinemachineComponent<CinemachineTrackedDolly>();
+            Undo.RecordObject(dolly, "create track");
+            dolly.m_Path = path;
+        }
+
+        [MenuItem("Cinemachine/Create Target Group Camera", false, 1)]
+        private static void CreateTargetGroupCamera()
+        {
+            CinemachineVirtualCamera vcam = CreateVirtualCamera(
+                    "CM vcam", typeof(CinemachineGroupComposer), typeof(CinemachineTransposer));
+            GameObject go = new GameObject(
+                    GenerateUniqueObjectName(typeof(CinemachineTargetGroup), "TargetGroup"),
+                    typeof(CinemachineTargetGroup));
+            Undo.RegisterCreatedObjectUndo(go, "create target group");
+            vcam.LookAt = go.transform;
+            vcam.Follow = go.transform;
+        }
+
+        [MenuItem("Cinemachine/Create Mixing Camera", false, 1)]
+        private static void CreateMixingCamera()
+        {
+            CreateCameraBrainIfAbsent();
+            GameObject go = new GameObject(
+                    GenerateUniqueObjectName(typeof(CinemachineMixingCamera), "CM MixingCamera"));
+            Undo.RegisterCreatedObjectUndo(go, "create MixingCamera camera");
+            Undo.AddComponent<CinemachineMixingCamera>(go);
+            // Give it a couple of children
+            Undo.SetTransformParent(CreateVirtualCamera(
+                    "CM vcam", typeof(CinemachineComposer), typeof(CinemachineTransposer)).transform,
+                go.transform, "create MixedCamera child");
+            Undo.SetTransformParent(CreateVirtualCamera(
+                    "CM vcam", typeof(CinemachineComposer), typeof(CinemachineTransposer)).transform,
+                go.transform, "create MixingCamera child");
+        }
+
+        [MenuItem("Cinemachine/Create 2D Camera", false, 1)]
+        private static void Create2DCamera()
+        {
+            CreateVirtualCamera("CM vcam", typeof(CinemachineFramingTransposer));
+        }
+
+        [MenuItem("Cinemachine/Create Dolly Track with Cart", false, 1)]
+        private static void CreateDollyTrackWithCart()
+        {
+            GameObject go = new GameObject(
+                    GenerateUniqueObjectName(typeof(CinemachinePath), "DollyTrack"));
+            Undo.RegisterCreatedObjectUndo(go, "create track");
+            CinemachinePath path = Undo.AddComponent<CinemachinePath>(go);
+
+            go = new GameObject(GenerateUniqueObjectName(typeof(CinemachineDollyCart), "DollyCart"));
+            Undo.RegisterCreatedObjectUndo(go, "create cart");
+            CinemachineDollyCart cart = Undo.AddComponent<CinemachineDollyCart>(go);
+            Undo.RecordObject(cart, "create track");
+            cart.m_Path = path;
         }
 
         /// <summary>
-        /// Create a default Virtual Camera, with standard components
+        /// Create a Virtual Camera, with components
         /// </summary>
-        public static CinemachineVirtualCameraBase CreateDefaultVirtualCamera()
+        public static CinemachineVirtualCamera CreateVirtualCamera(
+            string name, params Type[] components)
         {
             // Create a new virtual camera
             CreateCameraBrainIfAbsent();
             GameObject go = new GameObject(
-                GenerateUniqueObjectName(typeof(CinemachineVirtualCamera), "VirtualCamera"));
-            Undo.RegisterCreatedObjectUndo(go, "create virtual camera");
+                    GenerateUniqueObjectName(typeof(CinemachineVirtualCamera), name));
+            Undo.RegisterCreatedObjectUndo(go, "create " + name);
             CinemachineVirtualCamera vcam = Undo.AddComponent<CinemachineVirtualCamera>(go);
-            vcam.GetComponentOwner();  // force it to update its cache
+            GameObject componentOwner = vcam.GetComponentOwner().gameObject;
+            foreach (Type t in components)
+                Undo.AddComponent(componentOwner, t);
+            vcam.InvalidateComponentPipeline();
             return vcam;
         }
 
@@ -134,14 +160,14 @@ namespace Cinemachine.Editor
         public static void CreateCameraBrainIfAbsent()
         {
             CinemachineBrain[] brains = UnityEngine.Object.FindObjectsOfType(
-                typeof(CinemachineBrain)) as CinemachineBrain[];
+                    typeof(CinemachineBrain)) as CinemachineBrain[];
             if (brains == null || brains.Length == 0)
             {
                 Camera cam = Camera.main;
                 if (cam == null)
                 {
                     Camera[] cams = UnityEngine.Object.FindObjectsOfType(
-                        typeof(Camera)) as Camera[];
+                            typeof(Camera)) as Camera[];
                     if (cams != null && cams.Length > 0)
                         cam = cams[0];
                 }

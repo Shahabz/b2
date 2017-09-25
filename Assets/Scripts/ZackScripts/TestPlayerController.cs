@@ -234,12 +234,15 @@ public class TestPlayerController : MonoBehaviour {
 				Vector3 targetPos = transform.Find ("CameraTarget").localPosition;
 				targetPos.x = 0.5f;
 				transform.Find ("CameraTarget").localPosition = Vector3.Lerp (transform.Find ("CameraTarget").localPosition, targetPos, Time.deltaTime * 4f);
+                //TODO move camera in
+
 
 				Vector3 lookDir = Vector3.zero;
-				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign (input.moveDir.z);
-				lookDir += Vector3.Cross (transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign (input.moveDir.x);
-				lookDir.Normalize ();
-				lookDir.y = 0.0f;
+//				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign (input.moveDir.z);
+//				lookDir += Vector3.Cross (transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign (input.moveDir.x);
+//				lookDir.Normalize ();
+                lookDir = Camera.main.transform.forward;
+            lookDir.y = 0.0f;
 				transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.LookRotation (lookDir), 15f * Time.deltaTime);
 
 				//			RaycastHit hit = new RaycastHit(); 

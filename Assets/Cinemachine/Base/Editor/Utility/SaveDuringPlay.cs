@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
@@ -6,12 +6,13 @@ using UnityEngine;
 
 namespace SaveDuringPlay
 {
+    /// <summary>A collection of tools for finding objects</summary>
     public static class ObjectTreeUtil
     {
         /// <summary>
         /// Get the full name of an object, travelling up the transform parents to the root.
         /// </summary>
-        public static string GetFullName(GameObject current) 
+        public static string GetFullName(GameObject current)
         {
             if (current == null)
                 return "";
@@ -23,7 +24,7 @@ namespace SaveDuringPlay
         /// <summary>
         /// Will find the named object, active or inactive, from the full path.
         /// </summary>
-        public static GameObject FindObjectFromFullName(string fullName) 
+        public static GameObject FindObjectFromFullName(string fullName)
         {
             if (fullName == null || fullName.Length == 0)
                 return null;
@@ -35,7 +36,7 @@ namespace SaveDuringPlay
             GameObject[] roots = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
             if (roots == null)
                 return null;
-            
+
             Transform root = null;
             for (int i = 0; root == null && i < roots.Length; ++i)
                 if (roots[i].name == path[1])
@@ -47,7 +48,7 @@ namespace SaveDuringPlay
             for (int i = 2; i < path.Length; ++i)   // skip root
             {
                 bool found = false;
-                foreach (Transform child in root) 
+                foreach (Transform child in root)
                 {
                     if (child.name == path[i])
                     {
@@ -61,6 +62,24 @@ namespace SaveDuringPlay
             }
             return root.gameObject;
         }
+
+        /// <summary>
+        /// This finds all the behaviours in scene, active or inactive, excluding prefabs
+        /// </summary>
+        public static T[] FindAllBehavioursInScene<T>() where T : MonoBehaviour
+        {
+            List<T> objectsInScene = new List<T>();
+            foreach (T b in Resources.FindObjectsOfTypeAll<T>())
+            {
+                GameObject go = b.gameObject;
+                if (go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)
+                    continue;
+                if (EditorUtility.IsPersistent(go.transform.root.gameObject))
+                    continue;
+                objectsInScene.Add(b);
+            }
+            return objectsInScene.ToArray();
+        }
     }
 
     class GameObjectFieldScanner
@@ -73,7 +92,7 @@ namespace SaveDuringPlay
         public delegate bool OnLeafFieldDelegate(string fullName, Type type, ref object value);
 
         /// <summary>
-        /// Called for each field node, if and only if OnLeafField() for it or one 
+        /// Called for each field node, if and only if OnLeafField() for it or one
         /// of its leaves returned true.
         /// </summary>
         public OnFieldValueChangedDelegate OnFieldValueChanged;
@@ -98,7 +117,7 @@ namespace SaveDuringPlay
             // Check if it's a complex type
             bool isLeaf = true;
             if (obj != null
-                && !type.IsSubclassOf(typeof(Component)) 
+                && !type.IsSubclassOf(typeof(Component))
                 && !type.IsSubclassOf(typeof(GameObject)))
             {
                 // Is it an array?
@@ -108,15 +127,15 @@ namespace SaveDuringPlay
                     Array array = obj as Array;
                     object arrayLength = array.Length;
                     if (OnLeafField != null && OnLeafField(
-                        fullName + ".Length", arrayLength.GetType(), ref arrayLength))
+                            fullName + ".Length", arrayLength.GetType(), ref arrayLength))
                     {
                         Array newArray = Array.CreateInstance(
-                            array.GetType().GetElementType(), Convert.ToInt32(arrayLength));
+                                array.GetType().GetElementType(), Convert.ToInt32(arrayLength));
                         Array.Copy(array, 0, newArray, 0, Math.Min(array.Length, newArray.Length));
                         array = newArray;
                         doneSomething = true;
                     }
-                    for (int i = 0; i < array.Length; ++ i)
+                    for (int i = 0; i < array.Length; ++i)
                     {
                         object element = array.GetValue(i);
                         if (ScanFields(fullName + "[" + i + "]", array.GetType().GetElementType(), ref element))
@@ -128,7 +147,7 @@ namespace SaveDuringPlay
                     if (doneSomething)
                         obj = array;
                 }
-                else 
+                else
                 {
                     // Check if it's a complex type
                     FieldInfo[] fields = obj.GetType().GetFields(bindingFlags);
@@ -159,7 +178,7 @@ namespace SaveDuringPlay
 
             return doneSomething;
         }
-        
+
         public bool ScanFields(string fullName, MonoBehaviour b)
         {
             bool doneSomething = false;
@@ -178,7 +197,7 @@ namespace SaveDuringPlay
                         // If leaf action was taken, propagate it up to the parent node
                         if (doneSomething && OnFieldValueChanged != null)
                             OnFieldValueChanged(fullName, fields[i], b, fieldValue);
-                     }
+                    }
                 }
             }
             return doneSomething;
@@ -197,28 +216,27 @@ namespace SaveDuringPlay
                 prefix += ".";
 
             MonoBehaviour[] components = go.GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour c in components)
-                if (c != null && ScanFields(prefix + c.GetType().FullName, c))
+            for (int i = 0; i < components.Length; ++i)
+            {
+                MonoBehaviour c = components[i];
+                if (c != null && ScanFields(prefix + c.GetType().FullName + i, c))
                     doneSomething = true;
-
-            foreach (Transform child in go.transform) 
-                if (ScanFields(child.gameObject, prefix + child.gameObject.name))
-                    doneSomething = true;
-
+            }
             return doneSomething;
         }
     };
 
 
     /// <summary>
-    /// Using reflection, this class scans a GameObject and its children
+    /// Using reflection, this class scans a GameObject (and optionally its children)
     /// and records all the field settings.  This only works for "nice" field settings
-    /// within MonoBehaviours.  Changes to the behaviour stack made between saving 
+    /// within MonoBehaviours.  Changes to the behaviour stack made between saving
     /// and restoring will fool this class.
     /// </summary>
-    public class ObjectStateSaver
+    class ObjectStateSaver
     {
-        public string mObjectFullPath;
+        string mObjectFullPath;
+
         Dictionary<string, string> mValues = new Dictionary<string, string>();
 
         /// <summary>
@@ -232,14 +250,17 @@ namespace SaveDuringPlay
             GameObjectFieldScanner scanner = new GameObjectFieldScanner();
             scanner.FilterField = FilterField;
             scanner.OnLeafField = (string fullName, Type type, ref object value) =>
-            {
-                // Save the value in the dictionary
-                mValues[fullName] = StringFromLeafObject(value);
-                //Debug.Log(mObjectFullPath + "." + fullName + " = " + mValues[fullName]);
-                return false;
-            };
+                {
+                    // Save the value in the dictionary
+                    mValues[fullName] = StringFromLeafObject(value);
+                    //Debug.Log(mObjectFullPath + "." + fullName + " = " + mValues[fullName]);
+                    return false;
+                };
             scanner.ScanFields(go);
         }
+
+        public GameObject FindSavedGameObject() { return GameObject.Find(mObjectFullPath); }
+        public string ObjetFullPath { get { return mObjectFullPath; } }
 
         /// <summary>
         /// Recursively scan the MonoBehaviours of a GameObject and its children.
@@ -253,22 +274,23 @@ namespace SaveDuringPlay
             GameObjectFieldScanner scanner = new GameObjectFieldScanner();
             scanner.FilterField = FilterField;
             scanner.OnLeafField = (string fullName, Type type, ref object value) =>
-            {
-                // Lookup the value in the dictionary
-                string savedValue;
-                if (mValues.TryGetValue(fullName, out savedValue) 
-                    && StringFromLeafObject(value) != savedValue)
                 {
-                    value = LeafObjectFromString(type, mValues[fullName].Trim());
-                    return true; // changed
-                }
-                return false;
-            };
+                    // Lookup the value in the dictionary
+                    string savedValue;
+                    if (mValues.TryGetValue(fullName, out savedValue)
+                        && StringFromLeafObject(value) != savedValue)
+                    {
+                        //Debug.Log(mObjectFullPath + "." + fullName + " = " + mValues[fullName]);
+                        value = LeafObjectFromString(type, mValues[fullName].Trim());
+                        return true; // changed
+                    }
+                    return false;
+                };
             scanner.OnFieldValueChanged = (fullName, fieldInfo, fieldOwner, value) =>
-            {
-                fieldInfo.SetValue(fieldOwner, value);
-                return true;
-            };
+                {
+                    fieldInfo.SetValue(fieldOwner, value);
+                    return true;
+                };
             return scanner.ScanFields(go);
         }
 
@@ -283,9 +305,9 @@ namespace SaveDuringPlay
         }
 
         /// <summary>
-        /// Parse a string to generate an object.  
-        /// Only very limited primitive object types are supported. 
-        /// Enums, Vectors and most other structures are automatically supported, 
+        /// Parse a string to generate an object.
+        /// Only very limited primitive object types are supported.
+        /// Enums, Vectors and most other structures are automatically supported,
         /// because the reflection system breaks them down into their primitive components.
         /// You can add more support here, as needed.
         /// </summary>
@@ -325,14 +347,14 @@ namespace SaveDuringPlay
             if (obj.GetType().IsSubclassOf(typeof(Component)))
             {
                 Component c = (Component)obj;
-                if (c == null) // Component overrides the == operator, so we have to check 
+                if (c == null) // Component overrides the == operator, so we have to check
                     return string.Empty;
                 return ObjectTreeUtil.GetFullName(c.gameObject);
             }
             if (obj.GetType().IsSubclassOf(typeof(GameObject)))
             {
                 GameObject go = (GameObject)obj;
-                if (go == null) // GameObject overrides the == operator, so we have to check 
+                if (go == null) // GameObject overrides the == operator, so we have to check
                     return string.Empty;
                 return ObjectTreeUtil.GetFullName(go);
             }
@@ -343,55 +365,77 @@ namespace SaveDuringPlay
 
     /// <summary>
     /// For all registered object types, record their state when exiting Play Mode,
-    /// and restore that state to the objects in the scene.  This is a very limited 
+    /// and restore that state to the objects in the scene.  This is a very limited
     /// implementation which has not been rigorously tested with many objects types.
-    /// It's quite possible that not everything will be saved.  
-    /// 
-    /// This class is expected to become obsolete when Unity implements this functionality 
+    /// It's quite possible that not everything will be saved.
+    ///
+    /// This class is expected to become obsolete when Unity implements this functionality
     /// in a more general way.
-    /// 
+    ///
     /// To use this class,
-    /// drop this script into your project, and have a static initialize somewhere 
-    /// register the interesting types, like this:
-    /// <code>
-    /// [InitializeOnLoad]
-    /// class RegisterHotSave 
-    /// { 
-    ///     static RegisterHotSave() 
-    ///     { 
-    ///         SaveDuringPlay.RegisterBehaviourTypeForHotSaving(typeof(MyBehaviourClass)); 
-    ///     }
-    /// }
-    /// </code>
-    /// 
-    /// Note, if you want some specific field in your class NOT to be saved during play,
-    /// add an attribute whose class name contains the strinbg "NoSaveDuringPlay"
+    /// drop this script into your project, and add the [SaveDuringPlay] attribute to your class.
+    ///
+    /// Note: if you want some specific field in your class NOT to be saved during play,
+    /// add a property attribute whose class name contains the string "NoSaveDuringPlay"
     /// and the field will not be saved.
     /// </summary>
     [InitializeOnLoad]
     public class SaveDuringPlay
     {
+        public static string kEnabledKey = "SaveDuringPlay_Enabled";
+        public static bool Enabled
+        {
+            get { return EditorPrefs.GetBool(kEnabledKey, false); }
+            set
+            {
+                if (value != Enabled)
+                {
+                    EditorPrefs.SetBool(kEnabledKey, value);
+                }
+            }
+        }
+
         static SaveDuringPlay()
         {
             // Install our callbacks
+#if UNITY_2017_2_OR_NEWER
+            EditorApplication.playModeStateChanged += OnPlayStateChanged;
+#else
             EditorApplication.update += OnEditorUpdate;
             EditorApplication.playmodeStateChanged += OnPlayStateChanged;
+#endif
         }
 
+#if UNITY_2017_2_OR_NEWER
+        static void OnPlayStateChanged(PlayModeStateChange pmsc)
+        {
+            if (Enabled)
+            {
+                // If exiting playmode, collect the state of all interesting objects
+                if (pmsc == PlayModeStateChange.ExitingPlayMode)
+                    SaveAllInterestingStates();
+                else if (pmsc == PlayModeStateChange.EnteredEditMode && sSavedStates != null)
+                    RestoreAllInterestingStates();
+            }
+        }
+#else
         static void OnPlayStateChanged()
         {
             // If exiting playmode, collect the state of all interesting objects
-            if (!EditorApplication.isPlayingOrWillChangePlaymode && EditorApplication.isPlaying)
-                SaveAllInterestingStates();
+            if (Enabled)
+            {
+                if (!EditorApplication.isPlayingOrWillChangePlaymode && EditorApplication.isPlaying)
+                    SaveAllInterestingStates();
+            }
         }
-        
+
         static float sWaitStartTime = 0;
         static void OnEditorUpdate()
         {
-            if (sSavedStates != null && !Application.isPlaying)
+            if (Enabled && sSavedStates != null && !Application.isPlaying)
             {
                 // Wait a bit for things to settle before applying the saved state
-                const float WaitTime = 1f;
+                const float WaitTime = 1f; // GML todo: is there a better way to do this?
                 float time = Time.realtimeSinceStartup;
                 if (sWaitStartTime == 0)
                     sWaitStartTime = time;
@@ -402,48 +446,29 @@ namespace SaveDuringPlay
                 }
             }
         }
-        
-        /// <summary>
-        /// These are the object types we are interested in hot-saving
-        /// </summary>
-        static List<Type> sInterestingTypes;
-        
-        /// <summary>
-        /// Register an object type for Hot-Saving.  Type must derive from MonoBehaviour.
-        /// </summary>
-        public static void RegisterBehaviourTypeForHotSaving(Type type)
-        {
-            //Debug.Log("Registering " + type.Name + " for hot-saving");
-            if (sInterestingTypes == null)
-                sInterestingTypes = new List<Type>();
-            if (!sInterestingTypes.Contains(type))
-                sInterestingTypes.Add(type);
-        }
-   
+#endif
+
         /// <summary>
         /// If you need to get notified before state is collected for hotsave, this is the place
         /// </summary>
         public static OnHotSaveDelegate OnHotSave;
         public delegate void OnHotSaveDelegate();
-        
+
+        /// Collect all relevant objects, active or not
         static Transform[] FindInterestingObjects()
         {
-            if (sInterestingTypes == null)
-                return null;
             List<Transform> objects = new List<Transform>();
-            HashSet<Transform> alreadyAdded = new HashSet<Transform>();
-            foreach (Type type in sInterestingTypes)
+            MonoBehaviour[] everything = ObjectTreeUtil.FindAllBehavioursInScene<MonoBehaviour>();
+            foreach (var b in everything)
             {
-                MonoBehaviour[] stuff = UnityEngine.Object.FindObjectsOfType(type) as MonoBehaviour[];
-                if (stuff != null)
+                var attrs = b.GetType().GetCustomAttributes(true);
+                foreach (var attr in attrs)
                 {
-                    foreach (var obj in stuff)
+                    if (attr.GetType().Name.Contains("SaveDuringPlay"))
                     {
-                        if (obj != null && !alreadyAdded.Contains(obj.transform))
-                        {
-                            objects.Add(obj.transform);
-                            alreadyAdded.Add(obj.transform);
-                        }
+                        //Debug.Log("Found " + b.gameObject.name + " for hot-save");
+                        objects.Add(b.transform);
+                        break;
                     }
                 }
             }
@@ -457,19 +482,17 @@ namespace SaveDuringPlay
             //Debug.Log("Exiting play mode: Saving state for all interesting objects");
             if (OnHotSave != null)
                 OnHotSave();
-            sSavedStates = null;
+
+            sSavedStates = new List<ObjectStateSaver>();
             Transform[] objects = FindInterestingObjects();
-            if (objects != null)
+            foreach (Transform obj in objects)
             {
-                foreach (Transform obj in objects)
-                {
-                    ObjectStateSaver saver = new ObjectStateSaver();
-                    saver.CollectFieldValues(obj.gameObject);
-                    if (sSavedStates == null)
-                        sSavedStates = new List<ObjectStateSaver>();
-                    sSavedStates.Add(saver);
-                }
+                ObjectStateSaver saver = new ObjectStateSaver();
+                saver.CollectFieldValues(obj.gameObject);
+                sSavedStates.Add(saver);
             }
+            if (sSavedStates.Count == 0)
+                sSavedStates = null;
         }
 
         static void RestoreAllInterestingStates()
@@ -477,17 +500,17 @@ namespace SaveDuringPlay
             //Debug.Log("Updating state for all interesting objects");
             foreach (ObjectStateSaver saver in sSavedStates)
             {
-                GameObject go = GameObject.Find(saver.mObjectFullPath);
+                GameObject go = saver.FindSavedGameObject();
                 if (go != null)
                 {
                     // Doesn't work unless I use the obsolete API.
-                    // It still doesn't seem to play well with Undo. 
+                    // It still doesn't seem to play well with Undo.
                     // GML: How to fix this?  I'm out of ideas...
                     #pragma warning disable 0618
                     Undo.RegisterUndo(go, "SaveDuringPlay");
                     if (saver.PutFieldValues(go))
                     {
-                        //Debug.Log("SaveDuringPlay: updated settings of " + saver.mObjectFullPath);
+                        //Debug.Log("SaveDuringPlay: updated settings of " + saver.ObjetFullPath);
                         EditorUtility.SetDirty(go);
                     }
                 }

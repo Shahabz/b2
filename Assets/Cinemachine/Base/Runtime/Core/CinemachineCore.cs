@@ -1,34 +1,33 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 namespace Cinemachine
 {
-    /// <summary>A singleton that manages complete lists of <see cref="CinemachineBrain"/>a,
-    /// <see cref="ICinemachineCamera"/>s, and the piority queue.  Provides
-    /// services to keeping track of whether <see cref="ICinemachineCamera"/>s have
+    /// <summary>A singleton that manages complete lists of CinemachineBrain and,
+    /// Cinemachine Virtual Cameras, and the priority queue.  Provides
+    /// services to keeping track of whether Cinemachine Virtual Cameras have
     /// been updated each frame.</summary>
     public sealed class CinemachineCore
     {
+        public static readonly string kVersionString = "2.1";
+
         /// <summary>
-        /// Stages in the  <see cref="ICinemachineComponent"/> pipeline, used for
+        /// Stages in the Cinemachine Component pipeline, used for
         /// UI organization>.  This enum defines the pipeline order.
         /// </summary>
-        public enum Stage 
-        { 
-            /// <summary>First stage of the pipeline: adjust lens settings</summary>
-            Lens, 
-
+        public enum Stage
+        {
             /// <summary>Second stage: position the camera in space</summary>
-            Body, 
+            Body,
 
             /// <summary>Third stage: orient the camera to point at the target</summary>
-            Aim, 
+            Aim,
 
-            /// <summary>Final stage: apply noise (this is done separately, in the 
-            /// Correction channel of the <see cref="CameraState"/>)</summary>
-            Noise 
+            /// <summary>Final stage: apply noise (this is done separately, in the
+            /// Correction channel of the CameraState)</summary>
+            Noise
         };
-        
+
         private static CinemachineCore sInstance = null;
 
         /// <summary>Get the singleton instance</summary>
@@ -47,17 +46,31 @@ namespace Cinemachine
         /// </summary>
         public static bool sShowHiddenObjects = false;
 
-        /// <summary>
-        /// List of all active <see cref="CinemachineBrain"/>.
-        /// </summary>
-        private readonly List<CinemachineBrain> mActiveBrains = new List<CinemachineBrain>();
+        /// <summary>Delegate for overriding Unity's default input system.  Returns the value
+        /// of the named axis.</summary>
+        public delegate float AxisInputDelegate(string axisName);
 
-        /// <summary>Get the complete list of active <see cref="CinemachineBrain"/></summary>
-        public IEnumerable<CinemachineBrain> AllBrains { get { return mActiveBrains; } }
+        /// <summary>Delegate for overriding Unity's default input system.
+        /// If you set this, then your delegate will be called instead of
+        /// System.Input.GetAxis(axisName) whenever in-game user input is needed.</summary>
+        public static AxisInputDelegate GetInputAxis = UnityEngine.Input.GetAxis;
 
-        /// <summary>
-        /// Called when a <see cref="CinemachineBrain"/> is enabled.
-        /// </summary>
+        /// <summary>List of all active CinemachineBrains.</summary>
+        private List<CinemachineBrain> mActiveBrains = new List<CinemachineBrain>();
+
+        /// <summary>Access the array of active CinemachineBrains in the scene</summary>
+        public int BrainCount { get { return mActiveBrains.Count; } }
+
+        /// <summary>Access the array of active CinemachineBrains in the scene 
+        /// without gebnerating garbage</summary>
+        /// <param name="index">Index of the brain to access, range 0-BrainCount</param>
+        /// <returns>The brain at the specified index</returns>
+        public CinemachineBrain GetActiveBrain(int index)
+        {
+            return mActiveBrains[index];
+        }
+
+        /// <summary>Called when a CinemachineBrain is enabled.</summary>
         internal void AddActiveBrain(CinemachineBrain brain)
         {
             // First remove it, just in case it's being added twice
@@ -65,24 +78,31 @@ namespace Cinemachine
             mActiveBrains.Insert(0, brain);
         }
 
-        /// <summary>
-        /// Called when a <see cref="CinemachineBrain"/> is disabled.
-        /// </summary>
+        /// <summary>Called when a CinemachineBrain is disabled.</summary>
         internal void RemoveActiveBrain(CinemachineBrain brain)
         {
             mActiveBrains.Remove(brain);
         }
 
-        /// <summary>
-        /// List of all active <see cref="ICinemachineCamera"/>, for all brains.
-        /// This list is kept sorted by priority.
-        /// </summary>
-        public IEnumerable<ICinemachineCamera> AllCameras { get { return mActiveCameras; } }
-        private readonly List<ICinemachineCamera> mActiveCameras = new List<ICinemachineCamera>();
+        /// <summary>List of all active ICinemachineCameras.</summary>
+        private List<ICinemachineCamera> mActiveCameras = new List<ICinemachineCamera>();
 
         /// <summary>
-        /// Called when a <see cref="ICinemachineCamera"/> is enabled.
+        /// List of all active Cinemachine Virtual Cameras for all brains.
+        /// This list is kept sorted by priority.
         /// </summary>
+        public int VirtualCameraCount { get { return mActiveCameras.Count; } }
+
+        /// <summary>Access the array of active ICinemachineCamera in the scene 
+        /// without gebnerating garbage</summary>
+        /// <param name="index">Index of the camera to access, range 0-VirtualCameraCount</param>
+        /// <returns>The virtual camera at the specified index</returns>
+        public ICinemachineCamera GetVirtualCamera(int index)
+        {
+            return mActiveCameras[index];
+        }
+
+        /// <summary>Called when a Cinemachine Virtual Camera is enabled.</summary>
         internal void AddActiveCamera(ICinemachineCamera cam)
         {
             // Bring it to the top of the list
@@ -91,34 +111,33 @@ namespace Cinemachine
             // Keep list sorted by priority
             int insertIndex;
             for (insertIndex = 0; insertIndex < mActiveCameras.Count; ++insertIndex)
-            {
                 if (cam.Priority >= mActiveCameras[insertIndex].Priority)
                     break;
-            }
+
             mActiveCameras.Insert(insertIndex, cam);
         }
 
-        /// <summary>
-        /// Called when a <see cref="ICinemachineCamera"/> is disabled.
-        /// </summary>
+        /// <summary>Called when a Cinemachine Virtual Camera is disabled.</summary>
         internal void RemoveActiveCamera(ICinemachineCamera cam)
         {
             mActiveCameras.Remove(cam);
         }
 
         /// <summary>
-        /// Update a single <see cref="ICinemachineCamera"/> if and only if it
+        /// Update a single Cinemachine Virtual Camera if and only if it
         /// hasn't already been updated this frame.  Always update vcams via this method.
         /// Calling this more than once per frame for the same camera will have no effect.
         /// </summary>
         internal bool UpdateVirtualCamera(ICinemachineCamera vcam, Vector3 worldUp, float deltaTime)
         {
+            //UnityEngine.Profiling.Profiler.BeginSample("CinemachineCore.UpdateVirtualCamera");
             if (mUpdateStatus == null)
                 mUpdateStatus = new Dictionary<ICinemachineCamera, UpdateStatus>();
             if (vcam.VirtualCameraGameObject == null)
             {
                 if (mUpdateStatus.ContainsKey(vcam))
                     mUpdateStatus.Remove(vcam);
+                //UnityEngine.Profiling.Profiler.EndSample();
                 return false; // camera was deleted
             }
             UpdateStatus status = new UpdateStatus();
@@ -130,7 +149,6 @@ namespace Cinemachine
                 status.targetPos = Matrix4x4.zero;
                 mUpdateStatus.Add(vcam, status);
             }
-
             int subframes = (CurrentUpdateFilter == UpdateFilter.Late)
                 ? 1 : CinemachineBrain.GetSubframeCount();
             int now = Time.frameCount;
@@ -153,11 +171,14 @@ namespace Cinemachine
             }
 
             // If we haven't been updated in a couple of frames, better update now
-            if (CurrentUpdateFilter == UpdateFilter.Late && status.lastFixedUpdate < now-2)
+            if (CurrentUpdateFilter == UpdateFilter.Late && status.lastFixedUpdate < (now - 2))
                 updateNow = true;
-
             if (updateNow)
             {
+                if (Application.isPlaying)
+                    vcam.InconsistentTargetAnimation 
+                        = CurrentUpdateFilter == UpdateFilter.Late 
+                            && status.lastFixedUpdate > (now - 100);
                 while (status.subframe < subframes)
                 {
 //Debug.Log(vcam.Name + ": frame " + Time.frameCount + "." + status.subframe + ", " + CurrentUpdateFilter);
@@ -170,13 +191,14 @@ namespace Cinemachine
             }
 
             mUpdateStatus[vcam] = status;
+            //UnityEngine.Profiling.Profiler.EndSample();
             return true;
         }
 
-        struct UpdateStatus 
-        { 
-            public int frame; 
-            public int subframe; 
+        struct UpdateStatus
+        {
+            public int frame;
+            public int subframe;
             public int lastFixedUpdate;
             public Matrix4x4 targetPos;
         }
@@ -208,31 +230,37 @@ namespace Cinemachine
         }
 
         /// <summary>
-        /// Is this virtual camera currently actively controlling any <see cref="Camera"/>?
+        /// Is this virtual camera currently actively controlling any Camera?
         /// </summary>
         public bool IsLive(ICinemachineCamera vcam)
         {
             if (vcam != null)
             {
-                foreach (CinemachineBrain b in AllBrains)
+                for (int i = 0; i < BrainCount; ++i)
+                {
+                    CinemachineBrain b = GetActiveBrain(i);
                     if (b != null && b.IsLive(vcam))
                         return true;
+                }
             }
             return false;
         }
 
         /// <summary>
         /// Signal that the virtual has been activated.
-        /// If the camera is live, then all CinemachineBrains that are showing it will 
+        /// If the camera is live, then all CinemachineBrains that are showing it will
         /// send an activation event.
         /// </summary>
         public void GenerateCameraActivationEvent(ICinemachineCamera vcam)
         {
             if (vcam != null)
             {
-                foreach (CinemachineBrain b in AllBrains)
+                for (int i = 0; i < BrainCount; ++i)
+                {
+                    CinemachineBrain b = GetActiveBrain(i);
                     if (b != null && b.IsLive(vcam))
-                        b.m_CameraActivatedEvent.Invoke();
+                        b.m_CameraActivatedEvent.Invoke(vcam);
+                }
             }
         }
 
@@ -244,33 +272,43 @@ namespace Cinemachine
         {
             if (vcam != null)
             {
-                foreach (CinemachineBrain b in AllBrains)
+                for (int i = 0; i < BrainCount; ++i)
+                {
+                    CinemachineBrain b = GetActiveBrain(i);
                     if (b != null && b.IsLive(vcam))
-                        b.m_CameraCutEvent.Invoke();
+                        b.m_CameraCutEvent.Invoke(b);
+                }
             }
         }
 
         /// <summary>
-        /// Try to find a <see cref="CinemachineBrain"/> to associate with a 
-        /// <see cref="ICinemachineCamera"/>.  The first <see cref="CinemachineBrain"/> 
-        /// in which this <see cref="ICinemachineCamera"/> is live will be used.  
-        /// If none, then the first active <see cref="CinemachineBrain"/> will be used.  
+        /// Try to find a CinemachineBrain to associate with a
+        /// Cinemachine Virtual Camera.  The first CinemachineBrain
+        /// in which this Cinemachine Virtual Camera is live will be used.
+        /// If none, then the first active CinemachineBrain will be used.
         /// Final result may be null.
         /// </summary>
-        /// <param name="vcam">Virtual camer whose potential brain we need.</param>
-        /// <returns>First <see cref="CinemachineBrain"/> found that might be 
+        /// <param name="vcam">Virtual camera whose potential brain we need.</param>
+        /// <returns>First CinemachineBrain found that might be
         /// appropriate for this vcam, or null</returns>
         public CinemachineBrain FindPotentialTargetBrain(ICinemachineCamera vcam)
         {
-            if (vcam != null)
+            int numBrains = BrainCount;
+            if (vcam != null && numBrains > 1)
             {
-                foreach (CinemachineBrain b in AllBrains)
+                for (int i = 0; i < numBrains; ++i)
+                {
+                    CinemachineBrain b = GetActiveBrain(i);
                     if (b != null && b.OutputCamera != null && b.IsLive(vcam))
                         return b;
+                }
             }
-            foreach (CinemachineBrain b in AllBrains)
+            for (int i = 0; i < numBrains; ++i)
+            {
+                CinemachineBrain b = GetActiveBrain(i);
                 if (b != null && b.OutputCamera != null)
                     return b;
+            }
             return null;
         }
     }

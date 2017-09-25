@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 namespace Cinemachine.Editor
 {
@@ -7,19 +8,18 @@ namespace Cinemachine.Editor
     internal sealed class CinemachineBrainEditor : UnityEditor.Editor
     {
         private CinemachineBrain Target { get { return target as CinemachineBrain; } }
-        private static string[] m_excludeFields;
         EmbeddeAssetEditor<CinemachineBlenderSettings> m_SettingsEditor;
 
-        bool mEventsExpaned = false;
+        bool mEventsExpanded = false;
 
         private void OnEnable()
         {
             m_SettingsEditor = new EmbeddeAssetEditor<CinemachineBlenderSettings>(
-                SerializedPropertyHelper.PropertyName(()=>Target.m_CustomBlends), this);
-            m_SettingsEditor.OnChanged = (CinemachineBlenderSettings b) => 
-            {
-                UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
-            };
+                    SerializedPropertyHelper.PropertyName(() => Target.m_CustomBlends), this);
+            m_SettingsEditor.OnChanged = (CinemachineBlenderSettings b) =>
+                {
+                    UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+                };
         }
 
         private void OnDisable()
@@ -39,30 +39,29 @@ namespace Cinemachine.Editor
                 ? vcam.VirtualCameraGameObject.transform : null;
             EditorGUILayout.ObjectField("Live Camera", activeCam, typeof(Transform), true);
             EditorGUILayout.DelayedTextField(
-                "Live Blend", Target.ActiveBlend != null 
-                    ? Target.ActiveBlend.Description : string.Empty);
+                "Live Blend", Target.ActiveBlend != null
+                ? Target.ActiveBlend.Description : string.Empty);
             GUI.enabled = true;
 
             // Normal properties
-            if (m_excludeFields == null)
-                m_excludeFields = new string[] 
-                { 
-                    "m_Script",
-                    SerializedPropertyHelper.PropertyName(()=>Target.m_CameraCutEvent), 
-                    SerializedPropertyHelper.PropertyName(()=>Target.m_CameraActivatedEvent) 
-                };
-            DrawPropertiesExcluding(serializedObject, m_excludeFields);
+            List<string> excludeFields = new List<string>
+            {
+                "m_Script",
+                SerializedPropertyHelper.PropertyName(() => Target.m_CameraCutEvent),
+                SerializedPropertyHelper.PropertyName(() => Target.m_CameraActivatedEvent)
+            };
+            DrawPropertiesExcluding(serializedObject, excludeFields.ToArray());
 
             m_SettingsEditor.DrawEditorCombo(
-                "Create New Blender Asset", 
+                "Create New Blender Asset",
                 Target.gameObject.name + " Blends", "asset", string.Empty,
                 "Custom Blends", false);
 
-            mEventsExpaned = EditorGUILayout.Foldout(mEventsExpaned, "Events");
-            if (mEventsExpaned)
+            mEventsExpanded = EditorGUILayout.Foldout(mEventsExpanded, "Events");
+            if (mEventsExpanded)
             {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty(()=>Target.m_CameraCutEvent));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty(()=>Target.m_CameraActivatedEvent));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty(() => Target.m_CameraCutEvent));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty(() => Target.m_CameraActivatedEvent));
             }
             serializedObject.ApplyModifiedProperties();
         }
@@ -70,22 +69,48 @@ namespace Cinemachine.Editor
         [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected, typeof(CinemachineBrain))]
         private static void DrawBrainGizmos(CinemachineBrain brain, GizmoType drawType)
         {
-            if (brain.OutputCamera != null)
+            if (brain.OutputCamera != null && brain.m_ShowCameraFrustum)
             {
-                Color initialColour = Gizmos.color;
-                Matrix4x4 gizmoMatrix = Gizmos.matrix;
-
-                Camera cam = brain.OutputCamera;
-                Gizmos.color = Color.white; // GML why is this color hardcoded?
-
-                Gizmos.matrix = cam.transform.localToWorldMatrix;
-                Gizmos.DrawFrustum(
-                    Vector3.zero, cam.fieldOfView, cam.farClipPlane,
-                    cam.nearClipPlane, cam.aspect);
-
-                Gizmos.color = initialColour;
-                Gizmos.matrix = gizmoMatrix;
+                DrawCameraFrustumGizmo(
+                    brain, new LensSettings(brain.OutputCamera), 
+                    brain.OutputCamera.transform.localToWorldMatrix, 
+                    Color.white); // GML why is this color hardcoded?
             }
+        }
+
+        internal static void DrawCameraFrustumGizmo(
+            CinemachineBrain brain, LensSettings lens, 
+            Matrix4x4 transform, Color color)
+        {
+            float aspect = 1;
+            bool ortho = false;
+            if (brain != null)
+            {
+                aspect = brain.OutputCamera.aspect;
+                ortho = brain.OutputCamera.orthographic;
+            }
+
+            Matrix4x4 originalMatrix = Gizmos.matrix;
+            Color originalGizmoColour = Gizmos.color;
+            Gizmos.color = color;
+            Gizmos.matrix = transform;
+            if (ortho)
+            {
+                Vector3 size = new Vector3(
+                        aspect * lens.OrthographicSize * 2, 
+                        lens.OrthographicSize * 2, 
+                        lens.NearClipPlane + lens.FarClipPlane);
+                Gizmos.DrawWireCube(
+                    new Vector3(0, 0, (size.z / 2) + lens.NearClipPlane), size);
+            }
+            else
+            {
+                Gizmos.DrawFrustum(
+                        Vector3.zero, lens.FieldOfView,
+                        lens.FarClipPlane, lens.NearClipPlane, aspect);
+            }
+            Gizmos.matrix = originalMatrix;
+            Gizmos.color = originalGizmoColour;
         }
     }
 }

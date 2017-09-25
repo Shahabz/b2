@@ -1,18 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace Cinemachine.Utility
 {
-    /// <summary>An ad-hoc collection of helpers for reflection, used by Cinemachine 
+    /// <summary>An ad-hoc collection of helpers for reflection, used by Cinemachine
     /// or its editor tools in various places</summary>
+    [DocumentationSorting(0, DocumentationSortingAttribute.Level.Undoc)]
     public static class ReflectionHelpers
     {
         /// <summary>Copy the fields from one object to another</summary>
         /// <param name="src">The source object to copy from</param>
         /// <param name="dst">The destination object to copy to</param>
-        /// <param name="bindingAttr">The mask to filter the attributes.  
+        /// <param name="bindingAttr">The mask to filter the attributes.
         /// Only those fields that get caught in the filter will be copied</param>
         public static void CopyFields(
             Object src, Object dst,
@@ -22,12 +23,13 @@ namespace Cinemachine.Utility
             {
                 Type type = src.GetType();
                 FieldInfo[] fields = type.GetFields(bindingAttr);
-                foreach (FieldInfo field in fields)
-                    if (!field.IsStatic) 
-                        field.SetValue(dst, field.GetValue(src));
+                for (int i = 0; i < fields.Length; ++i)
+                    if (!fields[i].IsStatic)
+                        fields[i].SetValue(dst, fields[i].GetValue(src));
             }
         }
 
+#if UNITY_EDITOR
         /// <summary>Search the assembly for all types that match a predicate</summary>
         /// <param name="assembly">The assembly to search</param>
         /// <param name="predicate">The type to look for</param>
@@ -48,8 +50,8 @@ namespace Cinemachine.Utility
                 // Can't load the types in this assembly
             }
             types = (from t in types
-                        where t != null && predicate(t)
-                        select t).ToArray();
+                     where t != null && predicate(t)
+                     select t).ToArray();
             return types;
         }
 
@@ -85,8 +87,8 @@ namespace Cinemachine.Utility
             Predicate<Assembly> assemblyPredicate, Predicate<Type> predicate)
         {
             Assembly[] assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
-            assemblies = assemblies.Where((Assembly assembly) 
-                => { return assemblyPredicate(assembly); }).OrderBy((Assembly ass) 
+            assemblies = assemblies.Where((Assembly assembly)
+                    => { return assemblyPredicate(assembly); }).OrderBy((Assembly ass)
                     => { return ass.FullName; }).ToArray();
 
             List<Type> foundTypes = new List<Type>(100);
@@ -98,6 +100,7 @@ namespace Cinemachine.Utility
 
             return foundTypes;
         }
+#endif
 
         /// <summary>Cheater extension to access internal field of an object</summary>
         /// <param name="type">The type of the field</param>
@@ -134,7 +137,7 @@ namespace Cinemachine.Utility
                 return obj;
 
             var info = obj.GetType().GetField(
-                fields[0], BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    fields[0], BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             obj = info.GetValue(obj);
 
             return GetParentObject(string.Join(".", fields, 1, fields.Length - 1), obj);
