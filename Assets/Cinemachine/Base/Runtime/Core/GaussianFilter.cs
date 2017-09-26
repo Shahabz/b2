@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace Cinemachine.Utility
@@ -21,11 +21,11 @@ namespace Cinemachine.Utility
             mKernelSum = 0;
             for (int i = -kernelRadius; i <= kernelRadius; ++i)
             {
-                mKernel[i + kernelRadius] 
-                    = (float)(Math.Exp(-(i*i)/(2*sigma*sigma)) / Math.Sqrt(2.0 * Math.PI * sigma));
+                mKernel[i + kernelRadius]
+                    = (float)(Math.Exp(-(i * i) / (2 * sigma * sigma)) / Math.Sqrt(2.0 * Math.PI * sigma));
                 mKernelSum += mKernel[i + kernelRadius];
             }
-            Sigma = sigma;      
+            Sigma = sigma;
         }
 
         public GaussianWindow1d(float sigma, int maxKernelRadius = 10)
@@ -33,6 +33,8 @@ namespace Cinemachine.Utility
             GenerateKernel(sigma, maxKernelRadius);
             mCurrentPos = 0;
         }
+
+        public void Reset() { mData = null; }
 
         public T Filter(T v)
         {
@@ -57,7 +59,7 @@ namespace Cinemachine.Utility
 
     internal class GaussianWindow1D_Vector3 : GaussianWindow1d<Vector3>
     {
-        public GaussianWindow1D_Vector3(float sigma, int maxKernelRadius = 10) 
+        public GaussianWindow1D_Vector3(float sigma, int maxKernelRadius = 10)
             : base(sigma, maxKernelRadius) {}
 
         protected override Vector3 Compute(int windowPos)
@@ -72,10 +74,10 @@ namespace Cinemachine.Utility
             return sum / mKernelSum;
         }
     }
-    
+
     internal class GaussianWindow1D_Quaternion : GaussianWindow1d<Quaternion>
     {
-        public GaussianWindow1D_Quaternion(float sigma, int maxKernelRadius = 10) 
+        public GaussianWindow1D_Quaternion(float sigma, int maxKernelRadius = 10)
             : base(sigma, maxKernelRadius) {}
         protected override Quaternion Compute(int windowPos)
         {
@@ -103,7 +105,7 @@ namespace Cinemachine.Utility
 
     internal class GaussianWindow1D_CameraRotation : GaussianWindow1d<Vector2>
     {
-        public GaussianWindow1D_CameraRotation(float sigma, int maxKernelRadius = 10) 
+        public GaussianWindow1D_CameraRotation(float sigma, int maxKernelRadius = 10)
             : base(sigma, maxKernelRadius) {}
 
         protected override Vector2 Compute(int windowPos)

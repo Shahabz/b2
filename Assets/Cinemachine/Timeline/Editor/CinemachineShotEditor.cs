@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 using Cinemachine.Editor;
 
@@ -9,7 +9,7 @@ namespace Cinemachine.Timeline
     {
         private static readonly string[] m_excludeFields = new string[] { "m_Script" };
         private SerializedProperty mVirtualCameraProperty = null;
-        private static readonly GUIContent kVirtualCameraLabel 
+        private static readonly GUIContent kVirtualCameraLabel
             = new GUIContent("Virtual Camera", "The virtual camera to use for this shot");
 
         private void OnEnable()
@@ -27,10 +27,10 @@ namespace Cinemachine.Timeline
         {
             DestroyComponentEditors();
         }
-        
+
         public override void OnInspectorGUI()
         {
-            CinemachineVirtualCameraBase obj 
+            CinemachineVirtualCameraBase obj
                 = mVirtualCameraProperty.exposedReferenceValue as CinemachineVirtualCameraBase;
             if (obj == null)
             {
@@ -79,11 +79,10 @@ namespace Cinemachine.Timeline
                     m_editors = new UnityEditor.Editor[components.Length + 1];
                     CreateCachedEditor(obj.gameObject.GetComponent<Transform>(), null, ref m_editors[0]);
                     for (int i = 0; i < components.Length; ++i)
-                        CreateCachedEditor(components[i], null, ref m_editors[i+1]);
+                        CreateCachedEditor(components[i], null, ref m_editors[i + 1]);
                 }
             }
         }
-
 
         void DestroyComponentEditors()
         {

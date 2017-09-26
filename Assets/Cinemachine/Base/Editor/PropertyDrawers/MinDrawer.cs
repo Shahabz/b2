@@ -24,25 +24,25 @@ namespace Cinemachine.Editor
             {
                 Vector2 v = EditorGUI.Vector2Field(position, label, property.vector2Value);
                 property.vector2Value = new Vector2(
-                    Mathf.Max(v.x, attribute.min),
-                    Mathf.Max(v.y, attribute.min));
+                        Mathf.Max(v.x, attribute.min),
+                        Mathf.Max(v.y, attribute.min));
             }
             else if (property.propertyType == SerializedPropertyType.Vector3)
             {
                 Vector3 v = EditorGUI.Vector2Field(position, label, property.vector3Value);
                 property.vector3Value = new Vector3(
-                    Mathf.Max(v.x, attribute.min),
-                    Mathf.Max(v.y, attribute.min),
-                    Mathf.Max(v.z, attribute.min));
+                        Mathf.Max(v.x, attribute.min),
+                        Mathf.Max(v.y, attribute.min),
+                        Mathf.Max(v.z, attribute.min));
             }
             else if (property.propertyType == SerializedPropertyType.Vector4)
             {
                 Vector4 v = EditorGUI.Vector2Field(position, label, property.vector4Value);
                 property.vector4Value = new Vector4(
-                    Mathf.Max(v.x, attribute.min),
-                    Mathf.Max(v.y, attribute.min),
-                    Mathf.Max(v.z, attribute.min),
-                    Mathf.Max(v.w, attribute.min));
+                        Mathf.Max(v.x, attribute.min),
+                        Mathf.Max(v.y, attribute.min),
+                        Mathf.Max(v.z, attribute.min),
+                        Mathf.Max(v.w, attribute.min));
             }
             else
             {

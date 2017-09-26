@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Cinemachine.Utility
 {
@@ -17,15 +17,15 @@ namespace Cinemachine.Utility
         /// <returns>The interpolation parameter representing the point on the segment, with 0==s0, and 1==s1</returns>
         public static float ClosestPointOnSegment(this Vector3 p, Vector3 s0, Vector3 s1)
         {
-            Vector3 s = s1-s0;
+            Vector3 s = s1 - s0;
             float len2 = Vector3.SqrMagnitude(s);
             if (len2 < Epsilon)
                 return 0; // degenrate segment
-            return Mathf.Clamp01(Vector3.Dot(p-s0, s) / len2);
+            return Mathf.Clamp01(Vector3.Dot(p - s0, s) / len2);
         }
 
         /// <summary>
-        /// Returns a non-normalized projection of the supplied vector onto a plane 
+        /// Returns a non-normalized projection of the supplied vector onto a plane
         /// as described by its normal
         /// </summary>
         /// <param name="vector"></param>
@@ -47,21 +47,26 @@ namespace Cinemachine.Utility
         /// <summary>Get a signed angle between two vectors</summary>
         /// <param name="from">Start direction</param>
         /// <param name="to">End direction</param>
-        /// <param name="refNormal">This is needed in order to determine the sign.  
-        /// For example, if from an to lie on the XZ plane, then this would be the 
-        /// Y unit vector, or indeed any vector which, when dotted with Y unit vector, 
+        /// <param name="refNormal">This is needed in order to determine the sign.
+        /// For example, if from an to lie on the XZ plane, then this would be the
+        /// Y unit vector, or indeed any vector which, when dotted with Y unit vector,
         /// would give a positive result.</param>
         /// <returns>The signed angle between the vectors</returns>
         public static float SignedAngle(Vector3 from, Vector3 to, Vector3 refNormal)
         {
+            from.Normalize();
+            to.Normalize();
+            float dot = Vector3.Dot(Vector3.Cross(from, to), refNormal);
+            if (Mathf.Abs(dot) < -Epsilon)
+                return Vector3.Dot(from, to) < 0 ? 180 : 0;
             float angle = Vector3.Angle(from, to);
-            if (Vector3.Dot(Vector3.Cross(from, to), refNormal) < 0)
+            if (dot < 0)
                 return -angle;
             return angle;
         }
 
         /// <summary>This is a slerp that mimics a camera operator's movement in that
-        /// it chooses a path that avoids the lower hemisphere, as defined by 
+        /// it chooses a path that avoids the lower hemisphere, as defined by
         /// the up param</summary>
         /// <param name="vA">First direction</param>
         /// <param name="vB">Second direction</param>
@@ -89,7 +94,7 @@ namespace Cinemachine.Utility
     public static class UnityQuaternionExtensions
     {
         /// <summary>This is a slerp that mimics a camera operator's movement in that
-        /// it chooses a path that avoids the lower hemisphere, as defined by 
+        /// it chooses a path that avoids the lower hemisphere, as defined by
         /// the up param</summary>
         /// <param name="qA">First direction</param>
         /// <param name="qB">Second direction</param>
@@ -101,7 +106,7 @@ namespace Cinemachine.Utility
             Vector3 dirA = (qA * Vector3.forward).ProjectOntoPlane(up);
             Vector3 dirB = (qB * Vector3.forward).ProjectOntoPlane(up);
             if (dirA.AlmostZero() || dirB.AlmostZero())
-                return Quaternion.Slerp(qA, qB, t); 
+                return Quaternion.Slerp(qA, qB, t);
 
             // Work on the plane, in eulers
             Quaternion qBase = Quaternion.LookRotation(dirA, up);
@@ -125,15 +130,15 @@ namespace Cinemachine.Utility
         }
 
         /// <summary>
-        /// Get the rotations, first about world up, then about (travelling) local right, 
-        /// necessary to align the quaternion's forward with the target direction.  
+        /// Get the rotations, first about world up, then about (travelling) local right,
+        /// necessary to align the quaternion's forward with the target direction.
         /// This represents the tripod head movement needed to look at the target.
         /// This formulation makes it easy to interpolate without introducing spurious roll.
         /// </summary>
         /// <param name="orient"></param>
         /// <param name="lookAt">The target we want to look at</param>
         /// <param name="worldUp">Which way is up</param>
-        /// <returns>Vector2.y is rotation about worldUp, and Vector2.x is second rotation, 
+        /// <returns>Vector2.y is rotation about worldUp, and Vector2.x is second rotation,
         /// about local right.</returns>
         public static Vector2 GetCameraRotationToTarget(
             this Quaternion orient, Vector3 lookAt, Vector3 worldUp)
@@ -141,7 +146,7 @@ namespace Cinemachine.Utility
             if (lookAt.AlmostZero())
                 return Vector2.zero;  // degenerate
 
-            // Work in local space 
+            // Work in local space
             Quaternion toLocal = Quaternion.Inverse(orient);
             Vector3 up = toLocal * worldUp;
             lookAt = toLocal * lookAt;
@@ -168,7 +173,7 @@ namespace Cinemachine.Utility
 
             // Get local vertical angle
             float angleV = UnityVectorExtensions.SignedAngle(
-                q * Vector3.forward, lookAt, q * Vector3.right);
+                    q * Vector3.forward, lookAt, q * Vector3.right);
 
             return new Vector2(angleV, angleH);
         }
@@ -178,7 +183,7 @@ namespace Cinemachine.Utility
         /// rot.y is rotation about worldUp, and rot.x is second rotation, about local right.
         /// </summary>
         /// <param name="orient"></param>
-        /// <param name="rot">Vector2.y is rotation about worldUp, and Vector2.x is second rotation, 
+        /// <param name="rot">Vector2.y is rotation about worldUp, and Vector2.x is second rotation,
         /// about local right.</param>
         /// <param name="worldUp">Which way is up</param>
         public static Quaternion ApplyCameraRotation(
@@ -194,15 +199,14 @@ namespace Cinemachine.Utility
     {
         /// <summary>Inflate a rect</summary>
         /// <param name="r"></param>
-        /// <param name="delta">x and y are added/subtracted fto/from the edges of 
+        /// <param name="delta">x and y are added/subtracted fto/from the edges of
         /// the rect, inflating it in all directions</param>
         /// <returns>The inflated rect</returns>
         public static Rect Inflated(this Rect r, Vector2 delta)
         {
             return new Rect(
-                r.xMin-delta.x, r.yMin-delta.y, 
-                r.width+delta.x*2, r.height+delta.y*2);
+                r.xMin - delta.x, r.yMin - delta.y,
+                r.width + delta.x * 2, r.height + delta.y * 2);
         }
-        
     }
 }

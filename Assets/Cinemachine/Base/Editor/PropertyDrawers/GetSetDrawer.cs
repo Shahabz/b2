@@ -21,7 +21,7 @@ namespace Cinemachine.Editor
             else if (attribute.dirty)
             {
                 var parent = ReflectionHelpers.GetParentObject(
-                    property.propertyPath, property.serializedObject.targetObject);
+                        property.propertyPath, property.serializedObject.targetObject);
 
                 var type = parent.GetType();
                 var info = type.GetProperty(attribute.name);

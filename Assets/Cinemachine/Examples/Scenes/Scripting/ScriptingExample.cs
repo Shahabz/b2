@@ -1,14 +1,14 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class ScriptingExample : MonoBehaviour 
+public class ScriptingExample : MonoBehaviour
 {
     CinemachineVirtualCamera vcam;
     CinemachineFreeLook freelook;
 
-	void Start () 
+    void Start()
     {
         // Create a Cinemachine brain on the main camera
         var brain = GameObject.Find("Main Camera").AddComponent<CinemachineBrain>();
@@ -16,7 +16,7 @@ public class ScriptingExample : MonoBehaviour
         brain.m_DefaultBlend.m_Time = 1;
 
         // Create a virtual camera that looks at object "Cube", and set some settings
-		vcam = new GameObject("VirtualCamera").AddComponent<CinemachineVirtualCamera>();
+        vcam = new GameObject("VirtualCamera").AddComponent<CinemachineVirtualCamera>();
         vcam.m_LookAt = GameObject.Find("Cube").transform;
         vcam.m_Priority = 10;
         vcam.gameObject.transform.position = new Vector3(0, 1, 0);
@@ -42,16 +42,16 @@ public class ScriptingExample : MonoBehaviour
         topRig.GetCinemachineComponent<CinemachineComposer>().m_ScreenY = 0.35f;
         middleRig.GetCinemachineComponent<CinemachineComposer>().m_ScreenY = 0.25f;
         bottomRig.GetCinemachineComponent<CinemachineComposer>().m_ScreenY = 0.15f;
-	}
-	
+    }
+
     float lastSwapTime = 0;
-	void Update () 
+    void Update()
     {
-		// Switch cameras from time to time to show blending
+        // Switch cameras from time to time to show blending
         if (Time.realtimeSinceStartup - lastSwapTime > 10.0f)
         {
             freelook.enabled = !freelook.enabled;
             lastSwapTime = Time.realtimeSinceStartup;
         }
-	}
+    }
 }

@@ -1,31 +1,29 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 
 namespace Cinemachine
 {
     /// <summary>
-    /// Container for all blend data used by the <see cref="CinemachineBrain"/> 
-    /// to determine how two <see cref="ICinemachineCamera"/>s should blend.
+    /// Asset that defines the rules for blending between Virtual Cameras.
     /// </summary>
+    [DocumentationSorting(10, DocumentationSortingAttribute.Level.UserRef)]
     [Serializable]
     public sealed class CinemachineBlenderSettings : ScriptableObject
     {
         /// <summary>
-        /// Container specifying how two specific <see cref="ICinemachineCamera"/>s 
+        /// Container specifying how two specific Cinemachine Virtual Cameras
         /// blend together.
         /// </summary>
+        [DocumentationSorting(10.1f, DocumentationSortingAttribute.Level.UserRef)]
         [Serializable]
         public struct CustomBlend
         {
-            /// <summary>When blending from this camera</summary>
             [Tooltip("When blending from this camera")]
             public string m_From;
 
-            /// <summary>When blending to this camera</summary>
             [Tooltip("When blending to this camera")]
             public string m_To;
 
-            /// <summary>Blend curve definition</summary>
             [Tooltip("Blend curve definition")]
             public CinemachineBlendDefinition m_Blend;
         }
@@ -37,10 +35,10 @@ namespace Cinemachine
         public const string kBlendFromAnyCameraLabel = "**ANY CAMERA**";
 
         /// <summary>
-        /// Attempts to find a blend curve which matches the to and from cameras as specified. 
+        /// Attempts to find a blend curve which matches the to and from cameras as specified.
         /// If no match is found, the function returns either the
-        /// default blend for this Blender or NULL depending on the state 
-        /// of <b>returnDefaultOnNoMatch</b>. 
+        /// default blend for this Blender or NULL depending on the state
+        /// of <b>returnDefaultOnNoMatch</b>.
         /// </summary>
         /// <param name="fromCameraName">The game object name of the from camera</param>
         /// <param name="toCameraName">The game object name of the to camera</param>
@@ -57,7 +55,7 @@ namespace Cinemachine
                 {
                     // Attempt to find direct name first
                     CustomBlend blendParams = m_CustomBlends[i];
-                    if ((blendParams.m_From == fromCameraName) 
+                    if ((blendParams.m_From == fromCameraName)
                         && (blendParams.m_To == toCameraName))
                     {
                         return blendParams.m_Blend.BlendCurve;
@@ -65,7 +63,7 @@ namespace Cinemachine
                     // If we come across default applicable wildcards, remember them
                     if (blendParams.m_From == kBlendFromAnyCameraLabel)
                     {
-                        if (!string.IsNullOrEmpty(toCameraName) 
+                        if (!string.IsNullOrEmpty(toCameraName)
                             && blendParams.m_To == toCameraName)
                         {
                             anyToMe = blendParams.m_Blend.BlendCurve;
@@ -74,15 +72,15 @@ namespace Cinemachine
                             defaultCurve = blendParams.m_Blend.BlendCurve;
                     }
                     else if (blendParams.m_To == kBlendFromAnyCameraLabel
-                        && !string.IsNullOrEmpty(fromCameraName)
-                        && blendParams.m_From == fromCameraName)
+                             && !string.IsNullOrEmpty(fromCameraName)
+                             && blendParams.m_From == fromCameraName)
                     {
                         meToAny = blendParams.m_Blend.BlendCurve;
                     }
                 }
             }
 
-            // If nothing is found try to find wild card blends from any 
+            // If nothing is found try to find wild card blends from any
             // camera to our new one
             if (anyToMe != null)
                 return anyToMe;

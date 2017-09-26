@@ -1,26 +1,35 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using Cinemachine.Utility;
 
 namespace Cinemachine
 {
     /// <summary>
-    /// An add-on module for <see cref="CinemachineVirtualCameraBase"/> which post-processes 
+    /// An add-on module for Cinemachine Virtual Camera which post-processes
     /// the final position and  orientation of the virtual camera, as a kind of low-pass filter.
     /// </summary>
+    [DocumentationSorting(17, DocumentationSortingAttribute.Level.UserRef)]
     [ExecuteInEditMode]
-    [AddComponentMenu("Cinemachine/Smoother")]
+    [AddComponentMenu("Cinemachine/CinemachineSmoother")]
+    [SaveDuringPlay]
     public class CinemachineSmoother : MonoBehaviour
     {
         /// <summary>
-        /// For reducing jitter, we apply a simple filter to the effect of the collider
+        /// The strength of the smoothing for position.  This is applied after the vcam cas calculated its state.
         /// </summary>
         [Range(0f, 10f)]
         [Tooltip("The strength of the smoothing for position.  Higher numbers smooth more but reduce performance and introduce lag.")]
         public float m_PositionSmoothing = 1;
 
         /// <summary>
-        /// For reducing jitter, we apply a simple filter to the effect of the collider
+        /// The strength of the smoothing for the LookAt target.  This is applied after the vcam cas calculated its state.
+        /// </summary>
+        [Range(0f, 10f)]
+        [Tooltip("The strength of the smoothing for the LookAt target.  Higher numbers smooth more but reduce performance and introduce lag.")]
+        public float m_LookAtSmoothing = 1;
+
+        /// <summary>
+        /// The strength of the smoothing for rotation.  This is applied after the vcam cas calculated its state.
         /// </summary>
         [Range(0f, 10f)]
         [Tooltip("The strength of the smoothing for rotation.  Higher numbers smooth more but reduce performance and introduce lag.")]
@@ -36,7 +45,7 @@ namespace Cinemachine
             VirtualCamera = GetComponent<CinemachineVirtualCameraBase>();
             if (VirtualCamera == null)
             {
-                CinemachineDebugLogger.LogError("CinemachineSmoother requires a Cinemachine Virtual Camera component");
+                Debug.LogError("CinemachineSmoother requires a Cinemachine Virtual Camera component");
                 enabled = false;
             }
             else
@@ -48,31 +57,43 @@ namespace Cinemachine
             mSmoothingFilterRotation = null;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             if (VirtualCamera != null)
                 VirtualCamera.RemovePostPipelineStageHook(PostPipelineStageCallback);
         }
 
-        /// <summary>Get the associated <see cref="CinemachineVirtualCameraBase"/>.</summary>
+        /// <summary>Get the associated CinemachineVirtualCameraBase.</summary>
         public CinemachineVirtualCameraBase VirtualCamera { get; private set; }
 
         private void PostPipelineStageCallback(
             CinemachineVirtualCameraBase vcam,
-            CinemachineCore.Stage stage, ref CameraState state, CameraState previousState, float deltaTime)
+            CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
         {
             if (enabled)
             {
                 if (stage == CinemachineCore.Stage.Body)
                 {
                     if (m_PositionSmoothing > 0)
-                        state.PositionCorrection 
+                    {
+                        if (deltaTime <= 0)
+                            mSmoothingFilter = null; // reset the filter
+                        state.PositionCorrection
                             += ApplySmoothing(vcam, state.CorrectedPosition) - state.CorrectedPosition;
+                    }
+                    if (m_LookAtSmoothing > 0 && state.HasLookAt)
+                    {
+                        if (deltaTime <= 0)
+                            mSmoothingFilterLookAt = null; // reset the filter
+                        state.ReferenceLookAt = ApplySmoothingLookAt(vcam, state.ReferenceLookAt);
+                    }
                 }
                 if (stage == CinemachineCore.Stage.Aim)
                 {
                     if (m_RotationSmoothing > 0)
                     {
+                        if (deltaTime <= 0)
+                            mSmoothingFilterRotation = null; // reset the filter
                         Quaternion q = Quaternion.Inverse(state.CorrectedOrientation)
                             * ApplySmoothing(vcam, state.CorrectedOrientation, state.ReferenceUp);
                         state.OrientationCorrection = state.OrientationCorrection * q;
@@ -89,6 +110,17 @@ namespace Cinemachine
             GaussianWindow1D_Vector3 filter = null;
             if (!mSmoothingFilter.TryGetValue(vcam, out filter) || filter.Sigma != m_PositionSmoothing)
                 mSmoothingFilter[vcam] = filter = new GaussianWindow1D_Vector3(m_PositionSmoothing);
+            return filter.Filter(pos);
+        }
+
+        private Dictionary<CinemachineVirtualCameraBase, GaussianWindow1D_Vector3> mSmoothingFilterLookAt;
+        private Vector3 ApplySmoothingLookAt(CinemachineVirtualCameraBase vcam, Vector3 pos)
+        {
+            if (mSmoothingFilterLookAt == null)
+                mSmoothingFilterLookAt = new Dictionary<CinemachineVirtualCameraBase, GaussianWindow1D_Vector3>();
+            GaussianWindow1D_Vector3 filter = null;
+            if (!mSmoothingFilterLookAt.TryGetValue(vcam, out filter) || filter.Sigma != m_LookAtSmoothing)
+                mSmoothingFilterLookAt[vcam] = filter = new GaussianWindow1D_Vector3(m_LookAtSmoothing);
             return filter.Filter(pos);
         }
 
