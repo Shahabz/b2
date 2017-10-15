@@ -1,0 +1,175 @@
+fileFormatVersion: 2
+guid: f52b46451fcba98489c1d7aec5869132
+timeCreated: 1502170550
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Blonde_Elexis_nude_Blonde_Elexis_nude_body
+    100004: Blonde_Elexis_nude_Blonde_Elexis_nude_boots
+    100006: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_l
+    100008: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_r
+    100010: Blonde_Elexis_nude_Blonde_Elexis_nude_eyes_eyes.tga
+    100012: Blonde_Elexis_nude_Blonde_Elexis_nude_face
+    100014: Blonde_Elexis_nude_Blonde_Elexis_nude_hair
+    100016: Blonde_Elexis_nude_Blonde_Elexis_nude_mouth
+    400000: //RootNode
+    400002: Blonde_Elexis_nude_Blonde_Elexis_nude_body
+    400004: Blonde_Elexis_nude_Blonde_Elexis_nude_boots
+    400006: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_l
+    400008: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_r
+    400010: Blonde_Elexis_nude_Blonde_Elexis_nude_eyes_eyes.tga
+    400012: Blonde_Elexis_nude_Blonde_Elexis_nude_face
+    400014: Blonde_Elexis_nude_Blonde_Elexis_nude_hair
+    400016: Blonde_Elexis_nude_Blonde_Elexis_nude_mouth
+    2300000: Blonde_Elexis_nude_Blonde_Elexis_nude_body
+    2300002: Blonde_Elexis_nude_Blonde_Elexis_nude_boots
+    2300004: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_l
+    2300006: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_r
+    2300008: Blonde_Elexis_nude_Blonde_Elexis_nude_eyes_eyes.tga
+    2300010: Blonde_Elexis_nude_Blonde_Elexis_nude_face
+    2300012: Blonde_Elexis_nude_Blonde_Elexis_nude_hair
+    2300014: Blonde_Elexis_nude_Blonde_Elexis_nude_mouth
+    3300000: Blonde_Elexis_nude_Blonde_Elexis_nude_body
+    3300002: Blonde_Elexis_nude_Blonde_Elexis_nude_boots
+    3300004: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_l
+    3300006: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_r
+    3300008: Blonde_Elexis_nude_Blonde_Elexis_nude_eyes_eyes.tga
+    3300010: Blonde_Elexis_nude_Blonde_Elexis_nude_face
+    3300012: Blonde_Elexis_nude_Blonde_Elexis_nude_hair
+    3300014: Blonde_Elexis_nude_Blonde_Elexis_nude_mouth
+    4300000: Blonde_Elexis_nude_Blonde_Elexis_nude_body
+    4300002: Blonde_Elexis_nude_Blonde_Elexis_nude_boots
+    4300004: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_l
+    4300006: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_r
+    4300008: Blonde_Elexis_nude_Blonde_Elexis_nude_eyes_eyes.tga
+    4300010: Blonde_Elexis_nude_Blonde_Elexis_nude_face
+    4300012: Blonde_Elexis_nude_Blonde_Elexis_nude_hair
+    4300014: Blonde_Elexis_nude_Blonde_Elexis_nude_mouth
+    9500000: //RootNode
+    11100000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'Hips' not found\n"
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton:
+    - name: Blonde Elexis - nude(Clone)
+      parentName: 
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Blonde_Elexis_nude_Blonde_Elexis_nude_body
+      parentName: Blonde Elexis - nude(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Blonde_Elexis_nude_Blonde_Elexis_nude_boots
+      parentName: Blonde Elexis - nude(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_l
+      parentName: Blonde Elexis - nude(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Blonde_Elexis_nude_Blonde_Elexis_nude_eyeball_r
+      parentName: Blonde Elexis - nude(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Blonde_Elexis_nude_Blonde_Elexis_nude_eyes_eyes.tga
+      parentName: Blonde Elexis - nude(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Blonde_Elexis_nude_Blonde_Elexis_nude_face
+      parentName: Blonde Elexis - nude(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Blonde_Elexis_nude_Blonde_Elexis_nude_hair
+      parentName: Blonde Elexis - nude(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Blonde_Elexis_nude_Blonde_Elexis_nude_mouth
+      parentName: Blonde Elexis - nude(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 3
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
