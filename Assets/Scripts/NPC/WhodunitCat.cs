@@ -18,7 +18,6 @@ public class WhodunitCat : CatLogic, IInteractable {
 		myManagerRef = FindObjectOfType<CatWhoDunitManager> ();
 		GetComponent<DialogueSystem> ().onDialogueEnd.AddListener (OnDialogueEnd);
 		canCauseStress = false;
-
 	}
 	
 	void Update() {

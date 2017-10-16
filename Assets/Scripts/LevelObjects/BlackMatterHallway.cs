@@ -35,14 +35,14 @@ public class BlackMatterHallway : MonoBehaviour {
 
 	void Start () {
 		playerInputReference = TestPlayerController.s_instance.gameObject.GetComponent<PlayerInput> ();
-		fallingMatter = blackMatterObject.transform.Find("FallingMatter").GetComponent<ParticleSystem>();
-		fillMatter = blackMatterObject.transform.Find("FillMatter").GetComponent<ParticleSystem>();
+		//fallingMatter = blackMatterObject.transform.Find("FallingMatter").GetComponent<ParticleSystem>();
+		//fillMatter = blackMatterObject.transform.Find("FillMatter").GetComponent<ParticleSystem>();
 
-		ParticleSystem.EmissionModule emission = fallingMatter.emission;
-		emission.rateOverTime = 0f;
+//		ParticleSystem.EmissionModule emission = fallingMatter.emission;
+		//emission.rateOverTime = 0f;
 //		fallingMatter.Clear();
-		ParticleSystem.EmissionModule fillEmission = fillMatter.emission;
-		fillEmission.rateOverTime = 0f;
+		//ParticleSystem.EmissionModule fillEmission = fillMatter.emission;
+		//fillEmission.rateOverTime = 0f;
 //		fillMatter.Clear();
 	}
 	
