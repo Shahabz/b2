@@ -251,10 +251,11 @@ public class TestPlayerController : MonoBehaviour {
 //				Vector3 laserEnd;
 				RaycastHit hit;
 				if (Physics.Raycast (Camera.main.ScreenPointToRay (new Vector3 (Screen.width / 2f, Screen.height / 2f)), out hit, 100f, LayerMask.GetMask ("Default"))) {
-					laserEnd.position = Vector3.Lerp (laserEnd.position, hit.point, Time.deltaTime * 1f);
-				} else {
-					laserEnd.position = Vector3.Lerp (laserEnd.position, laserTarget.transform.position + (laserTarget.transform.up * 50f), Time.deltaTime * 1f);
+					laserEnd.position = Vector3.Lerp (laserEnd.position, hit.point, Time.deltaTime * 8f);
 				}
+//			else {
+//					laserEnd.position = Vector3.Lerp (laserEnd.position, laserTarget.transform.position + (laserTarget.transform.up * 50f), Time.deltaTime * 8f);
+//				}
 
 				laserTarget.SetPositions (new Vector3[] {
 					laserTarget.transform.position,

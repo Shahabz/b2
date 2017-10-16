@@ -120,8 +120,8 @@ public class CameraFollow : MonoBehaviour {
 			transform.rotation = rotation;
 			transform.position = position;	
 
-			Vector3 endPos = transform.Find("LaserEnd").localPosition;
-			transform.Find("LaserEnd").localPosition = Vector3.Lerp(endPos, new Vector3(0f, 0f, endPos.z), 8f*Time.deltaTime);
+//			Vector3 endPos = transform.Find("LaserEnd").localPosition;
+//			transform.Find("LaserEnd").localPosition = Vector3.Lerp(endPos, new Vector3(0f, 0f, endPos.z), 20f*Time.deltaTime);
 		}
 	}
 	
