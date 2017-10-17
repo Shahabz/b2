@@ -28,17 +28,20 @@ public class CatWhoDunitManager : MonoBehaviour {
 	public void DisplayPrompt(GameObject thisCatTriggeredIt) {
 		GetComponent<DialogueSystem> ().StartDialogue ();
 		thisCatTriggeredDisplayPrompt = thisCatTriggeredIt;
+		thisCatTriggeredDisplayPrompt.GetComponentInChildren<Cinemachine.CinemachineVirtualCamera> ().enabled = true;
 		hasDisplayedPuzzlePrompt = true;
 	}
 
 	public void OnFinishPrompt() {
 		thisCatTriggeredDisplayPrompt.GetComponent<WhodunitCat> ().SwitchToState (CatStates.Waypoints);
+		thisCatTriggeredDisplayPrompt.GetComponentInChildren<Cinemachine.CinemachineVirtualCamera> ().enabled = false;
+
 	}
 
 	public void QuestSucceeded() {
 		//pop up all of the models of women and kill the man
 		//the women just stand their, and if you walk into them, they turn into skeletons
-		TextManager.s_instance.SetPrompt ("You Saved the Models");
+		TextManager.s_instance.SetPrompt ("You Saved the Models", 6f);
 		foreach (WhodunitCat x in WhoDunitCats) {
 			x.WinState ();
 		}
@@ -52,7 +55,7 @@ public class CatWhoDunitManager : MonoBehaviour {
 		//state that the player failed
 		//make the cats stop and be uninteractable 
 		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (25);
-		TextManager.s_instance.SetPrompt ("You Killed the Wrong Cat");
+		TextManager.s_instance.SetNotification ("You Killed the Wrong Cat", 6f);
 		foreach (WhodunitCat x in WhoDunitCats) {
 			x.FailState ();
 		}
