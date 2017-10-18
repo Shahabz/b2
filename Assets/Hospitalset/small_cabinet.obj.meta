@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7f9190546feaaae4ea5d72f0d235ca8f
+guid: f193f504b22cd344cac845df4b058404
 timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
@@ -12,7 +12,12 @@ ModelImporter:
     3300000: small_cabinet
     4300000: small_cabinet
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: small_cabinetMat
+    second: {fileID: 2100000, guid: 4cc029185fc9f114f9d5e72bdaaa4de9, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

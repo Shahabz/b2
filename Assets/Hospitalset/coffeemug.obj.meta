@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6472d36b538205e44a3aa3f98562f4e4
+guid: 8b884435aed5ecf41a1f1f9bd7cd5014
 timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
@@ -12,7 +12,12 @@ ModelImporter:
     3300000: coffeemug
     4300000: coffeemug
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: coffeemugMat
+    second: {fileID: 2100000, guid: fae6059e780616c4d87e260db8484591, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

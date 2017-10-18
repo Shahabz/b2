@@ -1,23 +1,23 @@
 fileFormatVersion: 2
-guid: f45c368968bf4d744a3c31aff34ef7d8
-timeCreated: 18446744011573954816
+guid: 92e21c7cd6f869c46a6a903a0c67f0cf
+timeCreated: 1454235912
+licenseType: Store
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: curtain
+    100002: Lamp_4
     400000: //RootNode
-    400002: curtain
-    2300000: curtain
-    3300000: curtain
-    4300000: curtain
-    9500000: //RootNode
+    400002: Lamp_4
+    2300000: Lamp_4
+    3300000: Lamp_4
+    4300000: Lamp_4
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: curtainMat
-    second: {fileID: 2100000, guid: d07a9e0f27f9f7847ae2250cc599aba4, type: 2}
+      name: Lamp_4Mat
+    second: {fileID: 2100000, guid: f893f5e3ef9e08b4bb7e2ffae31af8dc, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -64,7 +64,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -89,9 +89,9 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
-  additionalBone: 1
+  additionalBone: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

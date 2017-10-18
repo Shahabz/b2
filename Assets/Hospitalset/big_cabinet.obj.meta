@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6f8552ce0e4b94948a33d114294ec005
+guid: f40f4e4ab313f24438c564d4f0ac9a71
 timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
@@ -12,7 +12,12 @@ ModelImporter:
     3300000: big_cabinet
     4300000: big_cabinet
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: big_cabinetMat
+    second: {fileID: 2100000, guid: 07c96a21a542bdb41be8abcd50829b67, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

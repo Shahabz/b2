@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: afe0dd44fb7ec134780f5f8d0d91dc84
+guid: cdc428c56f0a10447be983f1fe334ac5
 timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
@@ -12,7 +12,12 @@ ModelImporter:
     3300000: book
     4300000: book
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bookMat
+    second: {fileID: 2100000, guid: ac866ed89276e1c43a2698234d082454, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

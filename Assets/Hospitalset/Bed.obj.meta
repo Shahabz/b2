@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4f7a76a429db88340822637b3305d4fe
+guid: bf7a8c5260b020244831a111871c2ffa
 timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
@@ -12,7 +12,12 @@ ModelImporter:
     3300000: bed
     4300000: bed
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bedMat
+    second: {fileID: 2100000, guid: cdb93619b9d51f04998caebe48538725, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

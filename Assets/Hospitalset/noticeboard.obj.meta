@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 529cee64630ae1a41a50834ddeabba25
+guid: bce91e9b7c28fd74c8b05cbccbf83b50
 timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
@@ -12,7 +12,12 @@ ModelImporter:
     3300000: Noticeboard_Noticeboard_ControlPanel
     4300000: Noticeboard_Noticeboard_ControlPanel
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Noticeboard_Noticeboard_ControlPanelMat
+    second: {fileID: 2100000, guid: 59fba0b6a039b60489cf13fa0e7a9236, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
