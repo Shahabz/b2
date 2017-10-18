@@ -1,23 +1,18 @@
 fileFormatVersion: 2
-guid: 92e21c7cd6f869c46a6a903a0c67f0cf
-timeCreated: 1454235912
-licenseType: Store
+guid: 4f7a76a429db88340822637b3305d4fe
+timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Lamp_4
+    100002: bed
     400000: //RootNode
-    400002: Lamp_4
-    2300000: Lamp_4
-    3300000: Lamp_4
-    4300000: Lamp_4
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Lamp_4Mat
-    second: {fileID: 2100000, guid: f893f5e3ef9e08b4bb7e2ffae31af8dc, type: 2}
+    400002: bed
+    2300000: bed
+    3300000: bed
+    4300000: bed
+    9500000: //RootNode
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -64,7 +59,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -89,9 +84,9 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
-  additionalBone: 0
+  additionalBone: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
