@@ -1,23 +1,18 @@
 fileFormatVersion: 2
-guid: 2853d317fff82e44e8b54aea8ef715ca
-timeCreated: 1454240571
-licenseType: Store
+guid: 7f9190546feaaae4ea5d72f0d235ca8f
+timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: Lamp_5
-    400000: //RootNode
-    400002: Lamp_5
-    2300000: Lamp_5
-    3300000: Lamp_5
-    4300000: Lamp_5
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Lamp_5Mat
-    second: {fileID: 2100000, guid: d10edd740ce89804288420922ef50200, type: 2}
+    100000: small_cabinet
+    100002: //RootNode
+    400000: small_cabinet
+    400002: //RootNode
+    2300000: small_cabinet
+    3300000: small_cabinet
+    4300000: small_cabinet
+    9500000: //RootNode
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -64,7 +59,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -89,9 +84,9 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
-  additionalBone: 0
+  additionalBone: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 

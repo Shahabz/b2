@@ -1,23 +1,18 @@
 fileFormatVersion: 2
-guid: 34fed1c2cdb5bc2478e34c8ae87379aa
-timeCreated: 1457976657
-licenseType: Store
+guid: 529cee64630ae1a41a50834ddeabba25
+timeCreated: 18446744011573954816
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: default
-    100002: //RootNode
-    400000: default
-    400002: //RootNode
-    2300000: default
-    3300000: default
-    4300000: default
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: defaultMat
-    second: {fileID: 2100000, guid: 770f7890566e44c11a0e3fddfdb51fb9, type: 2}
+    100000: //RootNode
+    100002: Noticeboard_Noticeboard_ControlPanel
+    400000: //RootNode
+    400002: Noticeboard_Noticeboard_ControlPanel
+    2300000: Noticeboard_Noticeboard_ControlPanel
+    3300000: Noticeboard_Noticeboard_ControlPanel
+    4300000: Noticeboard_Noticeboard_ControlPanel
+    9500000: //RootNode
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -64,7 +59,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -89,9 +84,9 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
-  additionalBone: 0
+  additionalBone: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
