@@ -14,6 +14,12 @@ public class DialogueSystem : MonoBehaviour {
     public UnityEvent onDialogueStart;
     public UnityEvent onDialogueEnd;
 
+	public UnityEvent onTalkerOne;
+	public UnityEvent onTalkerTwo;
+	public UnityEvent onTalkerThree;
+	public UnityEvent onPlayer;
+
+
     int current = 0;
 	public bool isDialogueInfinitelyRepeatable = true;
 
@@ -51,19 +57,23 @@ public class DialogueSystem : MonoBehaviour {
         TextManager.s_instance.SetSubtitle(dialogueData.dialogue[current].text);
         switch (dialogueData.dialogue[current].talker)
         {
-            case DialogueData.Talker.Player:
-                TestPlayerController.s_instance.GetComponent<AudioSource>().clip = dialogueData.dialogue[current].sound;
-                TestPlayerController.s_instance.GetComponent<AudioSource>().Play();
+		case DialogueData.Talker.Player:
+			TestPlayerController.s_instance.GetComponent<AudioSource> ().clip = dialogueData.dialogue [current].sound;
+			TestPlayerController.s_instance.GetComponent<AudioSource> ().Play ();
+			onPlayer.Invoke ();
                 break;
-            case DialogueData.Talker.TalkerOne:
+		case DialogueData.Talker.TalkerOne:
+			talkerOne.clip = dialogueData.dialogue [current].sound;
+			talkerOne.Play ();
+			onTalkerOne.Invoke ();
+                break;
+		case DialogueData.Talker.TalkerTwo:
+			onTalkerTwo.Invoke ();
                 talkerOne.clip = dialogueData.dialogue[current].sound;
                 talkerOne.Play();
                 break;
-            case DialogueData.Talker.TalkerTwo:
-                talkerOne.clip = dialogueData.dialogue[current].sound;
-                talkerOne.Play();
-                break;
-            case DialogueData.Talker.TalkerThree:
+		case DialogueData.Talker.TalkerThree:
+			onTalkerThree.Invoke ();
                 talkerOne.clip = dialogueData.dialogue[current].sound;
                 talkerOne.Play();
                 break;
