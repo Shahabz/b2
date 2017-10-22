@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -229,7 +229,7 @@ public class Therapist : MultipleChoice {
 	void ShowAskingQuestionState(){
 		therapistSubtitle.gameObject.SetActive (true);
         //therapistThoughtText.gameObject.SetActive(false);
-        therapistSubtitle.text = currentTherapySession.therapySessionElements [questionIndex].questionString;
+		TextManager.s_instance.SetSubtitle(currentTherapySession.therapySessionElements [questionIndex].questionString);
 		currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements [questionIndex].questionAudioPath) as AudioClip;
 		GetComponent<AudioSource> ().clip = currentAudioClip;
 		GetComponent<AudioSource> ().Play ();

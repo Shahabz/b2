@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class MultipleChoice : MonoBehaviour {
 	
@@ -36,9 +37,9 @@ public class MultipleChoice : MonoBehaviour {
 	public void ShowSelection() {
 		for (int i = 0; i < currentSelectionIndicators.Length;i++) {
 			if (selection == i) {
-				currentSelectionIndicators [i].SetActive(true);
+				currentSelectionIndicators [i].GetComponent<Text>().enabled = true;
 			} else {
-				currentSelectionIndicators [i].SetActive(false);
+				currentSelectionIndicators [i].GetComponent<Text>().enabled = false;
 			}
 		}
 	}
