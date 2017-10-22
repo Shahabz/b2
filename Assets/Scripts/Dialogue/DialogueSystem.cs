@@ -95,6 +95,13 @@ public class DialogueSystem : MonoBehaviour {
 			current = 0;
     }
 
+	public void SetActiveState(bool newActive)
+	{
+		active = newActive;
+	}
+
+
+
     void Update() {
         if (active)
         {

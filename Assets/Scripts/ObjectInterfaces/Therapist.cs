@@ -79,6 +79,8 @@ public class Therapist : MultipleChoice {
 
     }
 
+
+
     void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
             StartTherapistSession();
@@ -108,12 +110,12 @@ public class Therapist : MultipleChoice {
 		case TherapistState.Idle:
 			//Welcome to therapy David
 
-			if (switchToIntroduction) {
+			/*if (switchToIntroduction) {
 				currentTherapySession = allTherapySessions [GameManager.s_instance.day];
 				switchToIntroduction = false;
 				thisTherapistState = TherapistState.Introduction;
 				welcomeToTherapyDavidLuna[GameManager.s_instance.day].Play ();
-			}
+			}*/
 			break;
 
 
@@ -127,12 +129,7 @@ public class Therapist : MultipleChoice {
 		case TherapistState.AskingQuestion:
 			if (GenericTimer.RunGenericTimer (askingQuestionTime + currentAudioClip.length, ref askingQuestionTimer)) {
 				therapistSubtitle.gameObject.SetActive (false);
-				answerPanel.SetActive (true);
-				choiceA.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [0];
-				choiceB.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [1];
-	//			choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
-		//		choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
-				thisTherapistState = TherapistState.DavidSelectAnswer;
+
 				CameraManager.s_instance.SetCamera (OTS_TtoD);
 			}
 
@@ -226,6 +223,7 @@ public class Therapist : MultipleChoice {
 		//then goto tolstoy response
 	}
 
+
 	void ShowAskingQuestionState(){
 		therapistSubtitle.gameObject.SetActive (true);
         //therapistThoughtText.gameObject.SetActive(false);
@@ -236,6 +234,26 @@ public class Therapist : MultipleChoice {
         CameraManager.s_instance.SetCamera (OTS_DtoT);
 	}
 
+	public void SwitchToAnswerState() {
+		answerPanel.SetActive (true);
+		choiceA.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [0];
+		choiceB.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [1];
+		//			choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
+		//		choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
+		thisTherapistState = TherapistState.DavidSelectAnswer;
+	}
+
+	public void SwitchToDialogueState() {
+		answerPanel.SetActive (false);
+		//			choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
+		//		choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
+		thisTherapistState = TherapistState.Idle;
+		if (GetComponent<DialogueSystem> () != null) {
+			GetComponent<DialogueSystem> ().SetActiveState (true);
+			GetComponent<DialogueSystem> ().PlayNext ();
+		}
+	}
+
     void ShowResponseState()
     {
         //therapistThoughtText.gameObject.SetActive(true);
@@ -243,6 +261,6 @@ public class Therapist : MultipleChoice {
         currentAudioClip = Resources.Load(therapyAudioDirectory + currentTherapySession.therapySessionElements[questionIndex].responsePath) as AudioClip;
         GetComponent<AudioSource>().clip = currentAudioClip;
         GetComponent<AudioSource>().Play();
-        CameraManager.s_instance.SetCamera(mainViewOfMultipleChoice);
+       // CameraManager.s_instance.SetCamera(mainViewOfMultipleChoice);
     }
 }
