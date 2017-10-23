@@ -41,7 +41,7 @@ public class CameraManager : MonoBehaviour {
     }
 
     void Start () {
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        //mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
     void Update () {
@@ -50,8 +50,8 @@ public class CameraManager : MonoBehaviour {
 
     public void ToggleGameplayCamera (bool isEnabled)
     {
-        TestPlayerController.s_instance.gameplayCamera.enabled = isEnabled;
-        mainCamera.enabled = !isEnabled;
+        //TestPlayerController.s_instance.gameplayCamera.enabled = isEnabled;
+        //mainCamera.enabled = !isEnabled;
     }
 
     public void SetMainViewOnScene(Camera thisCamera)
