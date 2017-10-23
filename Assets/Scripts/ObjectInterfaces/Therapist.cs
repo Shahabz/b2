@@ -45,6 +45,8 @@ public class Therapist : MultipleChoice {
 
 	public static Therapist s_instance;
 
+	public Cinemachine.CinemachineVirtualCamera cam1, cam2;
+
 //    NPInputManager thisNPInputManager;
 
 	// Use this for initialization
@@ -95,6 +97,7 @@ public class Therapist : MultipleChoice {
       //  CameraManager.s_instance.SetMainViewOnScene(mainViewOfMultipleChoice);
       //  CameraManager.s_instance.MultipleChoiceCameraOn();
         TestPlayerController.s_instance.EnterTherapy();
+		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Cutscene);
         TestPlayerController.s_instance.transform.position = davidTransform.position;
 		TestPlayerController.s_instance.transform.rotation = davidTransform.rotation;
         switchToIntroduction = true;
@@ -103,7 +106,7 @@ public class Therapist : MultipleChoice {
 	public void EndTherapistSession () {
       //  CameraManager.s_instance.ToggleGameplayCamera(true);
         TestPlayerController.s_instance.ExitTherapy();
-		thisTherapistState = TherapistState.DoneForTheDay;
+		//thisTherapistState = TherapistState.DoneForTheDay;
 		tolsoyAnimator.SetTrigger ("standup");
 
 	}
@@ -230,6 +233,8 @@ public class Therapist : MultipleChoice {
 
 	public void SwitchToAnswerState() {
 		answerPanel.SetActive (true);
+		cam1.enabled = false;
+		cam2.enabled = true;
 		choiceA.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [0];
 		choiceB.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [1];
 		//			choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
@@ -245,6 +250,8 @@ public class Therapist : MultipleChoice {
 			GetComponent<DialogueSystem> ().SetActiveState (true);
 			GetComponent<DialogueSystem> ().PlayNext ();
 		}
+		cam1.enabled = true;
+		cam2.enabled = false;
 	}
 
     void ShowResponseState()

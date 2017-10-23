@@ -191,6 +191,10 @@ public class TestPlayerController : MonoBehaviour {
 			footstepHandler.CallCeaseFootStep();
 		}
 	}
+	public void SetPlayerModeNormal(){
+		lockInput = InputLock.Unlocked;
+		thisPlayerMode = PlayerMode.Normal;
+	}
 
 	public void SetPlayerMode(PlayerMode switchToThisMode) {
 		switch (switchToThisMode) {
