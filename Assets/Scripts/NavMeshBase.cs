@@ -14,7 +14,7 @@ public class NavMeshBase : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected void Update () {
 		thisNavMeshAgent.SetDestination (TestPlayerController.s_instance.transform.position);
 
 	}

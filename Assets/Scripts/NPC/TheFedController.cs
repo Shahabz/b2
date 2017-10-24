@@ -5,9 +5,7 @@ using UnityEngine.AI;
 using UnityStandardAssets.ImageEffects;
 
 
-public class TheFedController : MonoBehaviour {
-
-	NavMeshAgent thisNavMeshAgent;
+public class TheFedController : NavMeshBase {
 
 
 	// Use this for initialization
@@ -17,11 +15,11 @@ public class TheFedController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		base.Update ();
 	}
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player") {
-			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (25);
+			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (10);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.Fed_AnxietyLightning);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.Player_HeartBeatFast);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit1);
@@ -32,7 +30,7 @@ public class TheFedController : MonoBehaviour {
 	void OnCollisionEnter(Collision other) {
 		if (other.gameObject.tag == "Player") {
 			StartCoroutine (ShowPSTDFX2 ());
-			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (100);
+			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (50);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit2);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.uruhit2);
 		}

@@ -32,6 +32,8 @@ public class Therapist : MultipleChoice {
 	[SerializeField] Transform davidTransform;
 
 	TherapistState thisTherapistState;
+	//so therapy cant happen twice
+	bool hasTriggered;
 
 	public AudioSource[] incorrectBark, correctBark, welcomeToTherapyDavidLuna;
 
@@ -86,8 +88,9 @@ public class Therapist : MultipleChoice {
 
 
     void OnTriggerEnter(Collider other) {
-		if (other.tag == "Player" && thisTherapistState == TherapistState.Idle) {
-            StartTherapistSession();
+		if (other.tag == "Player" && !hasTriggered) {
+			hasTriggered = true;
+			StartTherapistSession();
 		}
 	}
 
@@ -211,7 +214,7 @@ public class Therapist : MultipleChoice {
 			//wrong
 			//play wrong audio then play therapist repsonse
 			//play gain anxiety animation
-			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress(5);
+			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress(10);
 
 		}
 		answerPanel.SetActive (false);
