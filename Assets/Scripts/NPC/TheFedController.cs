@@ -33,6 +33,7 @@ public class TheFedController : NavMeshBase {
 			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (50);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit2);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.uruhit2);
+			Destroy (gameObject);
 		}
 	}
 
