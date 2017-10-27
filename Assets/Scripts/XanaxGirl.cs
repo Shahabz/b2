@@ -16,7 +16,7 @@ public class XanaxGirl : GirlController {
 	public GenericTriggerEvent thisEvent;
 
 	public void SwitchToXanaxSearch () {
-		thisState = XanaxGirlState.gotocomputer;
+		thisState = XanaxGirlState.lookingforxanax;
 		GetComponent<Animator> ().SetTrigger ("walk");
 
 	}
