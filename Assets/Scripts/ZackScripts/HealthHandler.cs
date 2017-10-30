@@ -77,16 +77,16 @@ public class HealthHandler : MonoBehaviour {
 		if (stress >= 100) {
 			Death ();
 		}
-		else if (stress >= 80) {
+		else if (stressAmount >= 40) {
 			OverlayManager.s_instance.ShowAnxietyFadeOut (.41f);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit3);
 
-		} else if (stress >= 50) { 
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.41f);
+		} else if (stressAmount >= 10) { 
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.21f);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit4);
 
-		} else if (stress >= 10) {
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.41f);
+		} else if (stressAmount >= 0) {
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.11f);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit5);
 		} 
 	}
