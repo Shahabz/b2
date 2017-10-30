@@ -7,6 +7,7 @@ public class TimedEventTrigger : UnityEventTrigger {
 	public float timeUntilTriggered;
 	float timer;
 	bool isBeingTimed;
+	public bool notTriggeredByCollider;
 	// Use this for initialization
 	void Start () {
 		
@@ -14,14 +15,14 @@ public class TimedEventTrigger : UnityEventTrigger {
 
 	protected override void OnTriggerEnter (Collider other)
 	{
-		if (other.tag == "Player" && !hasPlayed) 
+		if (other.tag == "Player" && !hasPlayed && !notTriggeredByCollider) 
 		{
 			isBeingTimed = true;
 		}
 	}
 
 	void OnTriggerExit (Collider other) {
-		if (other.tag == "Player" && !hasPlayed) {
+		if (other.tag == "Player" && !hasPlayed && !notTriggeredByCollider) {
 			isBeingTimed = false;
 		}
 	}
@@ -32,5 +33,9 @@ public class TimedEventTrigger : UnityEventTrigger {
 			timer += Time.deltaTime;
 		if (timer > timeUntilTriggered && !hasPlayed)
 			ExecuteEvent ();
+	}
+
+	public void ForceStart() {
+		isBeingTimed = true;
 	}
 }

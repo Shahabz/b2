@@ -28,7 +28,6 @@ public class XanaxGirl : GirlController {
 
 	// Update is called once per frame
 	void Update () {
-		print (thisState);
 		switch (thisState) {
 		case XanaxGirlState.normal:
 			base.Update ();
