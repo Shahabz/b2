@@ -7,13 +7,14 @@ public class XanaxGirl : GirlController {
 	public XanaxWaypoint[] xanaxWaypoints;
 	public Transform holdObject;
 	XanaxWaypoint currentXanWaypoint;
-	enum XanaxGirlState {normal, lookingforxanax, walkingtoxanax, taking_xanax, gotocomputer, turnoncomputer, dancing, walktowardplayer, dying};
-	XanaxGirlState thisState = XanaxGirlState.normal;
+	public enum XanaxGirlState {normal, lookingforxanax, walkingtoxanax, taking_xanax, gotocomputer, turnoncomputer, dancing, walktowardplayer, dying, lookatplayer};
+	public XanaxGirlState thisState = XanaxGirlState.normal;
 	bool SwitchToComputerState;
 	public Transform computerWaypoint, laptop;	
 	public GenericTriggerEvent onDancePartyStart;
 	float timerforturningoncomputer, dancetimer;
 	public GenericTriggerEvent thisEvent;
+	public bool turnBodyTowardPlayer;
 
 	public void SwitchToXanaxSearch () {
 		thisState = XanaxGirlState.lookingforxanax;
@@ -128,6 +129,10 @@ public class XanaxGirl : GirlController {
 
 		case XanaxGirlState.dying:
 			//death anim is playing, dont doanything except prepare for end of this sequence
+			break;
+
+		case XanaxGirlState.lookatplayer:
+			if(turnBodyTowardPlayer)transform.LookAt(TestPlayerController.s_instance.transform.position);
 			break;
 		}
 	}
