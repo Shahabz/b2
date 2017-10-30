@@ -95,29 +95,11 @@ public class TestPlayerController : MonoBehaviour {
 					if (lockInput == InputLock.Unlocked) {
 						HandleMovement ();
 						HandleAiming ();
-
+						HandleInteraction ();
 						if (input.reload) {
 							GetComponent<WeaponManager> ().Reload ();
 						}
-						if (NPInputManager.input.Interact.WasPressed) {
-							Vector3 center = transform.position + transform.forward + transform.up;
-							Collider[] cols = Physics.OverlapSphere (center, 1.5f, LayerMask.GetMask ("Interactable"));
-							List<GameObject> interactables = new List<GameObject> ();
-							for (int i = 0; i < cols.Length; i++) {
-								if (cols [i].GetComponent<IInteractable> () != null) {
-									interactables.Add (cols [i].gameObject);
-								}
-							}
-							if (interactables.Count > 0) {
-								GameObject closest = interactables [0];
-								for (int i = 1; i < interactables.Count; i++) {
-									if (Vector3.Distance (center, interactables [i].transform.position) < Vector3.Distance (center, closest.transform.position)) {
-										closest = interactables [i];
-									}
-								}
-								closest.GetComponent<IInteractable> ().Interact ();
-							}
-						}
+
 					}
 				}
 			break;
@@ -164,31 +146,17 @@ public class TestPlayerController : MonoBehaviour {
 	}
 
 	public void HandleMovement() {
-//		float speedMod = input.sprint ? sprintSpeedMod : 1.0f;
-//
-//		if (input.moveDir.magnitude > 0.0f) {
-//			rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
-//
-//			Vector3 lookDir = Vector3.zero;
-//			if (Mathf.Abs(input.moveDir.z) > 0.0f)
-//				lookDir += (transform.position - cameraObj.transform.position).normalized * Mathf.Sign(input.moveDir.z);
-//			if (Mathf.Abs(input.moveDir.x) > 0.0f)
-//				lookDir += Vector3.Cross(transform.up, (transform.position - cameraObj.transform.position).normalized) * Mathf.Sign(input.moveDir.x);
-//			lookDir.Normalize();
-//			lookDir.y = 0.0f;
-//
-//			if (lookDir != Vector3.zero)
-//				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(lookDir), turnSpeed * Time.deltaTime);
-//		}
 
 		//Wonky code because idle: 0, walk: 0.5, sprint: 1
-		anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 5f*Time.deltaTime) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
 		anim.SetFloat("Movement", Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime));
 
 		if (input.moveDir.magnitude > 0.0f) {
 			footstepHandler.PlayFootStep(Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime)); //this is always 1, I need to figure out how to differentiate between running and walking and pass it to this param
+			anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 5f*Time.deltaTime) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
 		} else {
 			footstepHandler.CallCeaseFootStep();
+			anim.SetFloat("Sprint", Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
+
 		}
 	}
 	public void SetPlayerModeNormal(){
@@ -227,6 +195,28 @@ public class TestPlayerController : MonoBehaviour {
 
 			break;
 
+		}
+	}
+
+	void HandleInteraction() {
+		if (NPInputManager.input.Interact.WasPressed) {
+			Vector3 center = transform.position + transform.forward + transform.up;
+			Collider[] cols = Physics.OverlapSphere (center, 1.5f, LayerMask.GetMask ("Interactable"));
+			List<GameObject> interactables = new List<GameObject> ();
+			for (int i = 0; i < cols.Length; i++) {
+				if (cols [i].GetComponent<IInteractable> () != null) {
+					interactables.Add (cols [i].gameObject);
+				}
+			}
+			if (interactables.Count > 0) {
+				GameObject closest = interactables [0];
+				for (int i = 1; i < interactables.Count; i++) {
+					if (Vector3.Distance (center, interactables [i].transform.position) < Vector3.Distance (center, closest.transform.position)) {
+						closest = interactables [i];
+					}
+				}
+				closest.GetComponent<IInteractable> ().Interact ();
+			}
 		}
 	}
 
