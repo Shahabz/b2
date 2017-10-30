@@ -16,6 +16,8 @@ public class TestPlayerController : MonoBehaviour {
 	public float sprintSpeedMod = 1.8f;
 	public float turnSpeed = 0.6f;
 
+	bool isApplyingSprintAnxiety;
+
 	Animator anim;
     //	public Animator topAnimator;
     //	public Animator bottomAnimator;
@@ -87,12 +89,12 @@ public class TestPlayerController : MonoBehaviour {
 		else {
 		switch (thisPlayerMode){
 			case PlayerMode.Normal:
-				
 				if (thisPlayerMode == PlayerMode.Normal) {
 					if (lockInput == InputLock.Locked)
 						return;
 
 					if (lockInput == InputLock.Unlocked) {
+
 						HandleMovement ();
 						HandleAiming ();
 						HandleInteraction ();
@@ -125,12 +127,7 @@ public class TestPlayerController : MonoBehaviour {
 			Vector3 targetVelocity = transform.forward * moveSpeed * speedMod;
 			Vector3 velocity = rigidbody.velocity;
 			Vector3 velocityChange = (targetVelocity - velocity);
-//			velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-//			velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-//			velocityChange.y = 0;
 			rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
-//			rigidbody.MovePosition(transform.position + transform.forward * moveSpeed * speedMod * Time.deltaTime);
-
 
 			Vector3 lookDir = Vector3.zero;
 			if (Mathf.Abs(input.moveDir.z) > 0.0f)
@@ -153,12 +150,24 @@ public class TestPlayerController : MonoBehaviour {
 		if (input.moveDir.magnitude > 0.0f) {
 			footstepHandler.PlayFootStep(Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime)); //this is always 1, I need to figure out how to differentiate between running and walking and pass it to this param
 			anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 5f*Time.deltaTime) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
+			HandleSprintAnxiety ();
 		} else {
 			footstepHandler.CallCeaseFootStep();
 			anim.SetFloat("Sprint", Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
 
 		}
 	}
+
+	void HandleSprintAnxiety() {
+		if (!isApplyingSprintAnxiety) {
+
+		}
+	}
+
+	IEnumerator ApplySprintAnxiety() {
+
+	}
+
 	public void SetPlayerModeNormal(){
 		lockInput = InputLock.Unlocked;
 		thisPlayerMode = PlayerMode.Normal;
