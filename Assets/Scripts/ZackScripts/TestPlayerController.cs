@@ -181,6 +181,10 @@ public class TestPlayerController : MonoBehaviour {
 		thisPlayerMode = PlayerMode.Normal;
 	}
 
+	public void SetPlayerModeCutscene(){
+		SetPlayerMode (PlayerMode.Cutscene);
+	}
+
 	public void SetPlayerMode(PlayerMode switchToThisMode) {
 		switch (switchToThisMode) {
 
