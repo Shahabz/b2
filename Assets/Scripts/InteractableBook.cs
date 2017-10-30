@@ -35,7 +35,7 @@ public class InteractableBook : MonoBehaviour, IInteractable {
 
 		if (lerpTimer / lerpTime >= 1) {
 			OnPageTurnComplete ();
-			lerpTimer = lerpTime;
+
 			return;
 		}
 		if (turningPagesForward) {
@@ -50,12 +50,14 @@ public class InteractableBook : MonoBehaviour, IInteractable {
 	void OnPageTurnComplete () {
 		isTurningPage = false;
 		if (turningPagesForward) {
+			pages [pageIterator].transform.localRotation = Quaternion.Euler (rotatePageAmount, 0, 0);// (transform.position, transform.right, angle);
 			if (pageIterator == pages.Length - 1) {
 				turningPagesForward = false;
 			} else {
 				pageIterator++;
 			}
 		} else {
+			pages [pageIterator].transform.localRotation = Quaternion.Euler (0, 0, 0);// (transform.position, transform.right, angle);
 			if (pageIterator == 0) {
 				turningPagesForward = true;
 			} else {
