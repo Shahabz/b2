@@ -42,6 +42,12 @@ public class TestPlayerController : MonoBehaviour {
 	GameObject currentWhoDunitHeldHostage;
 	GameObject heldObject;
 
+	float runAnxietyTime = 1f, runAnxietyTimer;
+	bool isBeingWatched;
+	public void SetIsBeingWatched(bool isTrue) {
+		isBeingWatched = isTrue;
+	}
+
 	bool bSwitch_InteractiveCutscene, bSwitch_Normal, bSwitch_Cutscene;
 
 
@@ -150,30 +156,25 @@ public class TestPlayerController : MonoBehaviour {
 		if (input.moveDir.magnitude > 0.0f) {
 			footstepHandler.PlayFootStep(Mathf.Lerp(anim.GetFloat("Movement"), input.moveDir.normalized.magnitude/2f + anim.GetFloat("Sprint")/2f, 14f*Time.deltaTime)); //this is always 1, I need to figure out how to differentiate between running and walking and pass it to this param
 			anim.SetFloat("Sprint", input.sprint ? Mathf.Lerp(anim.GetFloat("Sprint"), 1f, 5f*Time.deltaTime) :  Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
-			if (input.sprint) HandleSprintAnxiety ();
+			//handle sprint anxiety
+			if (input.sprint)
+				HandleSprintAnxiety ();
+			else
+				runAnxietyTimer = 0;
 		} else {
 			footstepHandler.CallCeaseFootStep();
 			anim.SetFloat("Sprint", Mathf.Lerp(anim.GetFloat("Sprint"), 0f, 5f*Time.deltaTime));
-			if (isApplyingSprintAnxiety) {
-				isApplyingSprintAnxiety = false;
-				StopCoroutine (ApplySprintAnxiety ());
-			}
-
 		}
 	}
 
 	void HandleSprintAnxiety() {
-		if (!isApplyingSprintAnxiety) {
-			StartCoroutine (ApplySprintAnxiety ());
+		if (isBeingWatched) {
+			runAnxietyTimer += Time.deltaTime;
+			if (runAnxietyTimer > runAnxietyTime) {
+				GetComponent<HealthHandler> ().TakeStress (1);
+				runAnxietyTimer = 0;
+			}
 		}
-	}
-
-	IEnumerator ApplySprintAnxiety() {
-		isApplyingSprintAnxiety = true;
-		yield return new WaitForSeconds (2f);
-		isApplyingSprintAnxiety = false;
-		GetComponent<HealthHandler> ().TakeStress (1);
-
 	}
 
 	public void SetPlayerModeNormal(){
