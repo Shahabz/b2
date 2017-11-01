@@ -52,13 +52,7 @@ public class Therapist : MultipleChoice {
 //    NPInputManager thisNPInputManager;
 
 	// Use this for initialization
-	void Awake () {
-		if (s_instance == null) {
-			s_instance = this;
-		} else {
-			Destroy (this);
-		}
-	}
+
 
     private void Start()
     {
@@ -95,15 +89,17 @@ public class Therapist : MultipleChoice {
 	}
 
 	public void StartTherapistSession () {
-        tolsoyAnimator.SetTrigger("sitdown");
+		if(tolsoyAnimator!=null) tolsoyAnimator.SetTrigger("sitdown");
        // CameraManager.s_instance.ToggleGameplayCamera(false);
       //  CameraManager.s_instance.SetMainViewOnScene(mainViewOfMultipleChoice);
       //  CameraManager.s_instance.MultipleChoiceCameraOn();
         TestPlayerController.s_instance.EnterTherapy();
 		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Cutscene);
-        TestPlayerController.s_instance.transform.position = davidTransform.position;
-		TestPlayerController.s_instance.transform.rotation = davidTransform.rotation;
-        switchToIntroduction = true;
+		if (davidTransform) {
+			TestPlayerController.s_instance.transform.position = davidTransform.position;
+			TestPlayerController.s_instance.transform.rotation = davidTransform.rotation;
+		}
+		switchToIntroduction = true;
 	}
 
 	public void EndTherapistSession () {
