@@ -141,6 +141,7 @@ public class Therapist : MultipleChoice {
 
 		
 		case TherapistState.DavidSelectAnswer:
+			print ("DAVID SELECT");
 			if (input.shoot || input.melee || input.interact) {
 				SelectItem ();
 			}
@@ -238,7 +239,13 @@ public class Therapist : MultipleChoice {
 		choiceB.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [1];
 		//			choiceC.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [2];
 		//		choiceD.text = currentTherapySession.therapySessionElements [questionIndex].answerChoices [3];
+		StartCoroutine(ShittyHackaround());
+	}
+
+	IEnumerator ShittyHackaround() {
+		yield return new WaitForSeconds (.03f);
 		thisTherapistState = TherapistState.DavidSelectAnswer;
+
 	}
 
 	public void SwitchToDialogueState() {
