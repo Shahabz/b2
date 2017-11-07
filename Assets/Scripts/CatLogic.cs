@@ -3,13 +3,13 @@ using System.Collections;
 using UnityEngine.AI;
 
 
-public enum CatStates {Idle, Talking, Following, Waypoints, Runaway};
+public enum CatStates {Idle, Talking, Following, Waypoints, Runaway, AttackPlayer};
 
 public class CatLogic : MonoBehaviour {
 
     public Animator thisCatAnimator;
 	protected NavMeshAgent thisNavMeshAgent;
-    protected CatStates thisCatState;
+	protected CatStates thisCatState;
     float catRunSpeed = .02f;
     float triggerFollowDistance = 15f;
     float catLookAngle = 50;
@@ -29,7 +29,7 @@ public class CatLogic : MonoBehaviour {
     // Use this for initialization
 
 	[SerializeField]
-    bool switchToFollowing, switchToIdle, switchToWaypoints, switchToRunaway;
+    bool switchToFollowing, switchToIdle, switchToWaypoints, switchToRunaway, switchToAttackPlayer;
 	protected void Start () {
 
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
@@ -37,8 +37,13 @@ public class CatLogic : MonoBehaviour {
 		if (switchToFollowing) {
 			SwitchToState (CatStates.Following);
 			switchToFollowing = false;
+		}
+		else if (switchToAttackPlayer) {
+			SwitchToState(CatStates.AttackPlayer);
+			switchToAttackPlayer = false;
+		}
 
-		} else {
+		else {
 			SwitchToState (CatStates.Waypoints);
 		}
 	}
@@ -94,6 +99,9 @@ public class CatLogic : MonoBehaviour {
 				}
 			}
 				
+			break;
+		case CatStates.AttackPlayer:
+			FollowPlayer ();
 			break;
         }
 
@@ -205,6 +213,11 @@ public class CatLogic : MonoBehaviour {
 		case CatStates.Runaway:
 			thisCatState = CatStates.Runaway;
 			//thisCatAnimator.SetTrigger ("run");
+			break;
+		case CatStates.AttackPlayer:
+			thisCatState = CatStates.AttackPlayer;
+			thisCatAnimator.SetTrigger ("run");
+
 			break;
 		}
 	}
