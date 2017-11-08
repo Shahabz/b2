@@ -165,7 +165,7 @@ public class NPInputManager : MonoBehaviour {
 	}
 
 	bool showInputBindings = false;
-	void OnGUI() {
+	/*void OnGUI() {
 		if(!showInputBindings) {
 			if(GUILayout.Button("Bindings")) {
 				showInputBindings = !showInputBindings;
@@ -235,5 +235,5 @@ public class NPInputManager : MonoBehaviour {
 				playerActions.Reset();
 			}
 		}
-	}
+	}*/
 }

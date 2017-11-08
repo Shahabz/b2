@@ -91,10 +91,10 @@ public class HealthHandler : MonoBehaviour {
 		} 
 	}
 
-	void OnGUI() {
+	/*void OnGUI() {
 		GUI.Label(new Rect(Screen.width/2f - 50f, 0f, 100f, 30f), "Health: " + (int)health + "/" + maxHealth);
 		GUI.Label(new Rect(Screen.width/2f - 50f, 30f, 100f, 30f), "Stress: " + (int)stress + "/" + maxStress);
-	}
+	}*/
 
 	public void Death() {
 		//Do game over BS
