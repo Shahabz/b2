@@ -5,6 +5,7 @@ using UnityEngine;
 public class Teleport : MonoBehaviour {
 	public Transform teleportEnd;
 	Vector3 offset;
+	public bool alterRotation;
 	// Use this for initialization
 	void Start () {
 		
@@ -19,6 +20,7 @@ public class Teleport : MonoBehaviour {
 		if (other.gameObject.tag == "Player") {
 			offset = TestPlayerController.s_instance.transform.position - transform.position;
 			TestPlayerController.s_instance.transform.position = teleportEnd.transform.position + offset;
+			if (alterRotation)  TestPlayerController.s_instance.transform.rotation = teleportEnd.transform.rotation;
 		}
 	}
 }
