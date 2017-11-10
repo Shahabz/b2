@@ -9,12 +9,15 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 
 	NavMeshAgent thisNavMeshAgent;
 	public Vector3 navMeshTarget;
+	public Transform target;
 
 	bool bSwitchToWalking, bSwitchToStanding;
 	public bool dontLookAtOnInteract;
 
 	void Start () {
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
+		if (target)
+			navMeshTarget = target.position;
 	}
 	
 	// Update is called once per frame
