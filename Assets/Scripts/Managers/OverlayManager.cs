@@ -18,7 +18,8 @@ public class OverlayManager : MonoBehaviour {
 	public Slider anxietySlider;
 	public Text anxietyText, deathText;
 	bool isHealing;
-
+	public GameObject GradeBG, LOGO;
+	public Text rating;
 
 	// Use this for initialization
 
@@ -53,6 +54,10 @@ public class OverlayManager : MonoBehaviour {
 		//textShownOnScreen = GetWords(fullText, timeElapsed * wordsPerSecond);
 
 
+	}
+
+	public void ShowRating() {
+		GradeBG.SetActive (true);
 	}
 		
 	public void ShowDeathOverlay() {

@@ -18,7 +18,7 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 	bool bSwitchToWalking, bSwitchToStanding, bSwitchToFiring;
 	public bool dontLookAtOnInteract;
 	public ParticleSystem MuzzleFlash;
-	float ft = 8, ftr = -1;
+	float ft = 4, ftr = -1;
 
 	void Start () {
 		clif = GameObject.FindGameObjectWithTag ("CLIFFORD");

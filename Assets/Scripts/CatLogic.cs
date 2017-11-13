@@ -172,10 +172,20 @@ public class CatLogic : MonoBehaviour {
         if (other.tag == "Player" && canCauseStress)
         {
 			//if (thisCatState != CatStates.Waypoints&&thisCatState != CatStates.Talking) {
+			if (thisCatState == CatStates.AttackPlayer) {
+				TestPlayerController.s_instance.SetPlayerModeCutscene ();
+				GetComponent<CinemachineHardCut> ().HardCut ();
+				GameObject.Find ("HELLCAM").GetComponent<Cinemachine.CinemachineVirtualCamera> ().enabled = true;
+				GameObject.Find ("NaughtyP_Bettter").GetComponent<Animator>().enabled = (true);
+				GameObject.Find ("NaughtyP_Bettter").GetComponent<TimedEventTrigger>().enabled = (true);
+
+			}
+			else {
 				isOverlappingPlayer = true;
 				TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
 				switchToRunaway = true;
 			//}
+			}
         }
     }
 

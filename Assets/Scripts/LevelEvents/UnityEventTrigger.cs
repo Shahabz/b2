@@ -20,7 +20,7 @@ public class UnityEventTrigger : MonoBehaviour {
 			GetComponent<MeshRenderer> ().enabled = false;
 	}
 
-	protected void ExecuteEvent () {
+	public void ExecuteEvent () {
 		hasPlayed = true;
 		if (myUnityEvent.GetPersistentTarget (0) != null) {
 			myUnityEvent.Invoke ();

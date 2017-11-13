@@ -141,7 +141,6 @@ public class Therapist : MultipleChoice {
 
 		
 		case TherapistState.DavidSelectAnswer:
-			print ("DAVID SELECT");
 			if (input.shoot || input.melee || input.interact) {
 				SelectItem ();
 			}

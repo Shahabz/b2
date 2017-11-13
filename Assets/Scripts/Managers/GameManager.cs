@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
 	Transform IntroTransform, ComputerTransform, TolstoyTransform, HighwayTransform;
 
 	public bool completeTherapy, saveWomen;
-	public GameObject enableIfCompleteTherapy, enableIfSaveWomen;
+	public GameObject enableIfCompleteTherapy, enableIfSaveWomen, enableIfSaveWomen2;
 	public void SetCompleteTherapy(bool isTrue) {
 		completeTherapy = true;
 		enableIfCompleteTherapy.SetActive (true);
@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour {
 	public void SetSaveWomen(bool istrue) {
 		saveWomen = true;
 		enableIfSaveWomen.SetActive (true);
+		enableIfSaveWomen2.SetActive (true);
 	}
 
 	public delegate void NextDay();
