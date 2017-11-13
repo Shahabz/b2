@@ -15,6 +15,18 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	Transform IntroTransform, ComputerTransform, TolstoyTransform, HighwayTransform;
 
+	public bool completeTherapy, saveWomen;
+	public GameObject enableIfCompleteTherapy, enableIfSaveWomen;
+	public void SetCompleteTherapy(bool isTrue) {
+		completeTherapy = true;
+		enableIfCompleteTherapy.SetActive (true);
+	}
+
+	public void SetSaveWomen(bool istrue) {
+		saveWomen = true;
+		enableIfSaveWomen.SetActive (true);
+	}
+
 	public delegate void NextDay();
 	public NextDay OnNextDay;
 

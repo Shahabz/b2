@@ -5,8 +5,8 @@ using UnityEngine;
 public class TimedEventTrigger : UnityEventTrigger {
 
 	public float timeUntilTriggered;
-	float timer;
-	bool isBeingTimed;
+	protected float timer;
+	protected bool isBeingTimed;
 	public bool notTriggeredByCollider;
 	// Use this for initialization
 	void Start () {
@@ -21,14 +21,14 @@ public class TimedEventTrigger : UnityEventTrigger {
 		}
 	}
 
-	void OnTriggerExit (Collider other) {
+	protected void OnTriggerExit (Collider other) {
 		if (other.tag == "Player" && !hasPlayed && !notTriggeredByCollider) {
 			isBeingTimed = false;
 		}
 	}
 
 	// Update is called once per frame
-	void Update () {
+	protected void Update () {
 		if (isBeingTimed)
 			timer += Time.deltaTime;
 		if (timer > timeUntilTriggered && !hasPlayed)

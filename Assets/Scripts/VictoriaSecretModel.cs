@@ -6,40 +6,64 @@ using UnityEngine.AI;
 
 public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 
-
+	enum ModelState {Regular, Combat};
+	ModelState thisModelState = ModelState.Regular;
 	NavMeshAgent thisNavMeshAgent;
 	public Vector3 navMeshTarget;
 	public Transform target;
+	GameObject clif;
 
 	Vector3 cliffordPosition;
 
 	bool bSwitchToWalking, bSwitchToStanding, bSwitchToFiring;
 	public bool dontLookAtOnInteract;
+	public ParticleSystem MuzzleFlash;
+	float ft = 8, ftr = -1;
 
 	void Start () {
+		clif = GameObject.FindGameObjectWithTag ("CLIFFORD");
+
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
+		MuzzleFlash = GetComponentInChildren<ParticleSystem> (true);
+		MuzzleFlash.gameObject.SetActive (false);
 		if (target) {
-			print ("HIT");
 			navMeshTarget = target.position;
-			bSwitchToWalking = true;
-			SwitchToWalking ();
+			thisNavMeshAgent.SetDestination (target.position);
+
 		}
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (bSwitchToWalking) {
-			bSwitchToWalking = false;
-		}
-		if (bSwitchToStanding) {
-			bSwitchToStanding = false;
-		}
-		if (bSwitchToFiring) {
-			SwitchToFiring ();
-			bSwitchToFiring = false;
-		}
-		if (Vector3.Distance (transform.position, target.position) < 3f) {
-			bSwitchToFiring = true;
+		switch (thisModelState) {
+		case ModelState.Combat:
+			if (clif) transform.LookAt (clif.transform.position);
+			if (ftr >= 0) {
+				ftr += Time.deltaTime;
+				if (ftr > ft) {
+					ftr = -1;
+					SwitchToStanding ();
+				}
+			}
+			break;
+		
+		case ModelState.Regular:
+			if (bSwitchToWalking) {
+				bSwitchToWalking = false;
+			}
+			if (bSwitchToStanding) {
+				SwitchToStanding ();
+				bSwitchToStanding = false;
+			}
+			if (bSwitchToFiring) {
+				SwitchToFiring ();
+				bSwitchToFiring = false;
+			}
+			if (Vector3.Distance (transform.position, target.position) < 5f) {
+				bSwitchToFiring = true;
+			}
+			break;
 		}
 	}
 
@@ -52,13 +76,16 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 	public void SwitchToFiring() {
 		thisNavMeshAgent.isStopped = true;
 		GetComponent<Animator> ().SetTrigger ("fire");
-		cliffordPosition = GameObject.FindGameObjectWithTag ("CLIFFORD").transform.position;
-		transform.LookAt (cliffordPosition);
+		MuzzleFlash.gameObject.SetActive(true);
+		ftr = 0;
+		thisModelState = ModelState.Combat;
 	}
 
 	public void SwitchToStanding() {
 		thisNavMeshAgent.isStopped = true;
 		GetComponent<Animator> ().SetTrigger ("idle");
+		MuzzleFlash.gameObject.SetActive (false);
+
 
 	}
 
