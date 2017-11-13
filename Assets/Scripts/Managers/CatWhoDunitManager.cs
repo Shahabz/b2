@@ -41,7 +41,8 @@ public class CatWhoDunitManager : MonoBehaviour {
 	public void QuestSucceeded() {
 		//pop up all of the models of women and kill the man
 		//the women just stand their, and if you walk into them, they turn into skeletons
-		TextManager.s_instance.SetPrompt ("You Saved the Models", 6f);
+		TextManager.s_instance.SetNotification ("You Saved the Models", 6f);
+		GameManager.s_instance.SetSaveWomen (true);
 		foreach (WhodunitCat x in WhoDunitCats) {
 			x.WinState ();
 		}
