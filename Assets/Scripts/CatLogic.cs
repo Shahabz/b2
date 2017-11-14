@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
-
+using UnityEngine.UI;
 
 public enum CatStates {Idle, Talking, Following, Waypoints, Runaway, AttackPlayer};
 
@@ -172,12 +172,14 @@ public class CatLogic : MonoBehaviour {
         if (other.tag == "Player" && canCauseStress)
         {
 			//if (thisCatState != CatStates.Waypoints&&thisCatState != CatStates.Talking) {
-			if (thisCatState == CatStates.AttackPlayer) {
+			if (thisCatState == CatStates.AttackPlayer) { //only used for clifford super HACK	
 				TestPlayerController.s_instance.SetPlayerModeCutscene ();
 				GetComponent<CinemachineHardCut> ().HardCut ();
 				GameObject.Find ("HELLCAM").GetComponent<Cinemachine.CinemachineVirtualCamera> ().enabled = true;
 				GameObject.Find ("NaughtyP_Bettter").GetComponent<Animator>().enabled = (true);
 				GameObject.Find ("NaughtyP_Bettter").GetComponent<TimedEventTrigger>().enabled = (true);
+				OverlayManager.s_instance.blackout.SetActive (true);
+				gameObject.SetActive (false);
 
 			}
 			else {

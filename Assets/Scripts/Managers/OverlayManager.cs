@@ -20,6 +20,7 @@ public class OverlayManager : MonoBehaviour {
 	bool isHealing;
 	public GameObject GradeBG, LOGO;
 	public Text rating;
+	public GameObject blackout;
 
 	// Use this for initialization
 
@@ -58,6 +59,20 @@ public class OverlayManager : MonoBehaviour {
 
 	public void ShowRating() {
 		GradeBG.SetActive (true);
+		string ending = "Episode Complete\nGrade: ";
+		int score = 0;
+		if (GameManager.s_instance.saveWomen)
+			score++;
+		if (GameManager.s_instance.completeTherapy)
+			score++;
+		if (score == 0) {
+			ending += "C";
+		} else if (score == 1) {
+			ending += "B";
+		} else {
+			ending += "A";
+		}
+		rating.text = ending;
 	}
 		
 	public void ShowDeathOverlay() {
