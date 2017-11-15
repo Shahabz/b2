@@ -5,11 +5,13 @@ using UnityEngine.AI;
 
 
 public class ManAtComputerv1 : MonoBehaviour {
+	enum DavidState {waiting, running};
 	NavMeshAgent thisNavMeshAgent;
 	public Transform escapePoint, dodgePoint;
 	bool isEscapeAround, isEscapeDirect;
 	public bool hasReaction = true;
 	float distanceToToggleNextWaypoint = 4f;
+	bool whichDirection;
 	// Use this for initialization
 	void Start () {
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
@@ -24,6 +26,18 @@ public class ManAtComputerv1 : MonoBehaviour {
 		if (isEscapeDirect) {
 			CheckDistToEscapePoint ();
 		}
+	}
+
+	public void React(bool goDirect) {
+		whichDirection = goDirect;
+		GetComponent<DialogueSystem> ().StartDialogue ();
+	}
+
+	public void RunAway() {
+		if (whichDirection)
+			EscapeDirect ();
+		else
+			EscapeAround ();
 	}
 
 	public void EscapeDirect(){
