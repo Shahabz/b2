@@ -30,6 +30,11 @@ public class ManAtComputerv1 : MonoBehaviour {
 
 	public void React(bool goDirect) {
 		whichDirection = goDirect;
+		transform.LookAt (TestPlayerController.s_instance.transform);
+
+		if (GetComponent<Animator>()!=null)
+			GetComponent<Animator> ().SetTrigger ("alert");
+		
 		GetComponent<DialogueSystem> ().StartDialogue ();
 	}
 
@@ -43,8 +48,7 @@ public class ManAtComputerv1 : MonoBehaviour {
 	public void EscapeDirect(){
 		isEscapeDirect = true;
 		if (hasReaction) {
-			if (GetComponent<Animator>()!=null)
-				GetComponent<Animator> ().SetTrigger ("alert");
+
 			StartCoroutine (ReactThenEscapeDirect ());
 		} else {
 			thisNavMeshAgent.SetDestination (escapePoint.position);
@@ -53,13 +57,11 @@ public class ManAtComputerv1 : MonoBehaviour {
 
 	public void EscapeAround() {
 		isEscapeAround = true;
-		if (GetComponent<Animator>()!=null)
-			GetComponent<Animator> ().SetTrigger ("alert");
+
 		StartCoroutine (ReactThenDodge ());
 	}
 
 	IEnumerator ReactThenEscapeDirect() {
-		transform.LookAt (TestPlayerController.s_instance.transform);
 		yield return new WaitForSeconds (.5f);
 		thisNavMeshAgent.SetDestination (escapePoint.position);
 		if (GetComponent<Animator>()!=null)
