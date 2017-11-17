@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class DialogueSystem : MonoBehaviour {
 
@@ -19,6 +20,7 @@ public class DialogueSystem : MonoBehaviour {
 	public UnityEvent onTalkerThree;
 	public UnityEvent onPlayer;
 
+	GameObject subtitlePanel;
 
     int current = 0;
 	public bool isDialogueInfinitelyRepeatable = true;
@@ -30,6 +32,7 @@ public class DialogueSystem : MonoBehaviour {
         PlayNext();
 		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Cutscene);
 		StartCoroutine ("InputLoopHackFix");
+		subtitlePanel.GetComponent<Image> ().enabled = true;
     }
 
 	IEnumerator InputLoopHackFix(){
@@ -38,8 +41,11 @@ public class DialogueSystem : MonoBehaviour {
 	}
 
 	void Start () {
+		if (!GetComponent<AudioSource> ())
+			gameObject.AddComponent<AudioSource> ();
 		if (GetComponent<AudioSource>() || talkerOne==null)
 			talkerOne = GetComponent<AudioSource> ();
+		subtitlePanel = GameObject.FindGameObjectWithTag ("SubtitlePanel");
 	}
 
     //TODO call from player input or some shit?
@@ -89,6 +95,7 @@ public class DialogueSystem : MonoBehaviour {
     void EndDialogue() {
 		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Normal);
 		active = false;
+		subtitlePanel.GetComponent<Image> ().enabled = false;
         onDialogueEnd.Invoke();
 		TextManager.s_instance.subtitle.text = "";
 		if (isDialogueInfinitelyRepeatable)

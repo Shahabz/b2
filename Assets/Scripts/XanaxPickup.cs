@@ -9,6 +9,7 @@ public class XanaxPickup : MonoBehaviour, IInteractable {
 
 	public void Interact () {
 		if (!hasBeenPickedUp) {
+			GetComponent<BoxCollider> ().enabled = false;
 			TestPlayerController.s_instance.GrabAndSwallowPills (gameObject);
 			hasBeenPickedUp = true;
 			if (owner) {

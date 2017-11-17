@@ -27,6 +27,8 @@ public class TestPlayerController : MonoBehaviour {
     public Camera gameplayCamera;
 	LineRenderer laserTarget;
 
+	public GameObject NPCam;
+
 	public Transform holdItemTransform;
 
 	public UnityEvent InteractiveCutscene_Interact, InteractiveCutscene_Fire;
