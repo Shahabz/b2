@@ -7,7 +7,7 @@ public class XanaxGirl : GirlController {
 	public XanaxWaypoint[] xanaxWaypoints;
 	public Transform holdObject;
 	XanaxWaypoint currentXanWaypoint;
-	public enum XanaxGirlState {normal, lookingforxanax, walkingtoxanax, taking_xanax, gotocomputer, turnoncomputer, dancing, walktowardplayer, dying, lookatplayer};
+	public enum XanaxGirlState {normal, lookingforxanax, walkingtoxanax, taking_xanax, gotocomputer, turnoncomputer, dancing, walktowardplayer, dying, lookatplayer, ghost};
 	public XanaxGirlState thisState = XanaxGirlState.normal;
 	bool SwitchToComputerState;
 	public Transform computerWaypoint, laptop;	
