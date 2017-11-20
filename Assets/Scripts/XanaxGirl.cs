@@ -15,15 +15,20 @@ public class XanaxGirl : GirlController {
 	float timerforturningoncomputer, dancetimer;
 	public GenericTriggerEvent thisEvent;
 	public bool turnBodyTowardPlayer;
+	public Transform ghostTransform;
 
 	public void SwitchToXanaxSearch () {
 		thisState = XanaxGirlState.lookingforxanax;
 		GetComponent<Animator> ().SetTrigger ("walk");
 
+
+
 	}
 
 	void Start () {
 		//xanaxWaypoints = FindObjectsOfType<XanaxWaypoint> ();
+		if (ghostTransform!=null)
+			GetComponent<Animator> ().SetTrigger ("walk");
 	}
 
 	// Update is called once per frame
@@ -132,6 +137,13 @@ public class XanaxGirl : GirlController {
 
 		case XanaxGirlState.lookatplayer:
 			if(turnBodyTowardPlayer)transform.LookAt(TestPlayerController.s_instance.transform.position);
+			break;
+
+		case XanaxGirlState.ghost:
+			thisNavMeshAgent.SetDestination (ghostTransform.position);
+			if (Vector3.Distance (transform.position, ghostTransform.position)< 3f) {
+				Destroy (gameObject);
+			}
 			break;
 		}
 	}
