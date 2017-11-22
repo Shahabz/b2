@@ -52,7 +52,6 @@ public class TestPlayerController : MonoBehaviour {
 
 	bool bSwitch_InteractiveCutscene, bSwitch_Normal, bSwitch_Cutscene;
 
-
     void Awake()
     {
         if (s_instance == null)
@@ -186,6 +185,10 @@ public class TestPlayerController : MonoBehaviour {
 
 	public void SetPlayerModeCutscene(){
 		SetPlayerMode (PlayerMode.Cutscene);
+	}
+
+	public void SetLookAtIKTarget(Transform thisTarget) {
+		GetComponent<RootMotion.FinalIK.LookAtIK> ().solver.target = thisTarget;
 	}
 
 	public void SetPlayerMode(PlayerMode switchToThisMode) {

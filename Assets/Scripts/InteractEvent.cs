@@ -6,8 +6,13 @@ using UnityEngine.Events;
 public class InteractEvent : MonoBehaviour, IInteractable {
 
 	public UnityEvent OnInteractEvents;
-
+	bool hasPlayed;
+	public bool infinitelyTriggerable;
 	public void Interact() {
-		OnInteractEvents.Invoke ();
+		if (!hasPlayed)
+			OnInteractEvents.Invoke ();
+		if (!infinitelyTriggerable)
+			hasPlayed = true;
+		
 	}
 }

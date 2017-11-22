@@ -42,7 +42,10 @@ public class CatLogic : MonoBehaviour {
 			SwitchToState(CatStates.AttackPlayer);
 			switchToAttackPlayer = false;
 		}
-
+		else if (switchToIdle) {
+			thisCatState = (CatStates.Idle);
+			switchToIdle = false;
+		}
 		else {
 			SwitchToState (CatStates.Waypoints);
 		}

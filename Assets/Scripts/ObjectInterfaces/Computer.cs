@@ -29,16 +29,21 @@ public class Computer : MultipleChoice {
     void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && !isDestroyed) {
 			computerLight.intensity = 2f;
-			PlayerController.s_instance.isNearComputer = true;
-			PlayerController.s_instance.currentComputer = this;
+			if (PlayerController.s_instance) {
+				PlayerController.s_instance.isNearComputer = true;
+				PlayerController.s_instance.currentComputer = this;
+			}
 		}
 	}
 
 	void OnTriggerExit (Collider other) {
 		if (other.tag == "Player" && !isDestroyed) {
 			computerLight.intensity = 1f;
-			PlayerController.s_instance.isNearComputer = false;
-			PlayerController.s_instance.currentComputer = null;
+			if (PlayerController.s_instance) {
+				
+				PlayerController.s_instance.isNearComputer = false;
+				PlayerController.s_instance.currentComputer = null;
+			}
 		}
 
 	}

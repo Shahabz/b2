@@ -24,6 +24,7 @@ public class LethalObject : MonoBehaviour {
 	public void RetractObject () {
 		retract.Play ();
 		ascending = true;
+		descending = false;
 	}
 
 	void HandleDescent() {
