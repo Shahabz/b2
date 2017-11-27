@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using InControl;
 
-public class Computer : MultipleChoice {
+public class Computer : MultipleChoice, IInteractable {
 
 	[SerializeField]
 	GameObject projectedScreen;
@@ -21,6 +21,8 @@ public class Computer : MultipleChoice {
 	public bool appliedOnThisComputerToday;
 	bool isComputerBeingUsed;
 
+	public Cinemachine.CinemachineVirtualCamera thisVirtualCamera;
+
     // Use this for initialization
 
     //The computer has a state machine and so does the player - this may be bad practice.
@@ -29,23 +31,18 @@ public class Computer : MultipleChoice {
     void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && !isDestroyed) {
 			computerLight.intensity = 2f;
-			if (PlayerController.s_instance) {
-				PlayerController.s_instance.isNearComputer = true;
-				PlayerController.s_instance.currentComputer = this;
-			}
 		}
 	}
 
 	void OnTriggerExit (Collider other) {
 		if (other.tag == "Player" && !isDestroyed) {
 			computerLight.intensity = 1f;
-			if (PlayerController.s_instance) {
-				
-				PlayerController.s_instance.isNearComputer = false;
-				PlayerController.s_instance.currentComputer = null;
-			}
 		}
 
+	}
+
+	public void Interact() {
+		TurnOn ();
 	}
 
 	public override void SelectItem () {
@@ -72,15 +69,17 @@ public class Computer : MultipleChoice {
 
 	public void TurnOn () {
 		projectedScreen.SetActive (true);
-        CameraManager.s_instance.SetMainViewOnScene(mainViewOfMultipleChoice);
-		CameraManager.s_instance.MultipleChoiceCameraOn ();
+        //CameraManager.s_instance.SetMainViewOnScene(mainViewOfMultipleChoice);
+		//CameraManager.s_instance.MultipleChoiceCameraOn ();
+		thisVirtualCamera.enabled=true;
 		isActive = true;
 	}
 
 	public void TurnOff () {
 		projectedScreen.SetActive (false);
-        CameraManager.s_instance.MultipleChoiceCameraOff ();
 		isActive = false;
+
+		thisVirtualCamera.enabled = false;
 	}
 		
    
@@ -88,7 +87,7 @@ public class Computer : MultipleChoice {
     public void PunchComputer() {
         isDestroyed = true;
         TurnOff();
-        PlayerController.s_instance.switchToWalking = true;
+        //PlayerController.s_instance.switchToWalking = true;
         //play vfx
         StartCoroutine("ExplodeComputer");
 
@@ -99,8 +98,8 @@ public class Computer : MultipleChoice {
         yield return new WaitForSeconds(1f);
         Instantiate(computerExplosion, transform.position, Quaternion.identity);
         computerLight.intensity = 0f;
-        PlayerController.s_instance.isNearComputer = false;
-        PlayerController.s_instance.currentComputer = null;
+       // PlayerController.s_instance.isNearComputer = false;
+       // PlayerController.s_instance.currentComputer = null;
         computerScreen.material.color = Color.black;
 
     }
