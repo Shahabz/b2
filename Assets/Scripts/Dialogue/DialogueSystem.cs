@@ -21,6 +21,7 @@ public class DialogueSystem : MonoBehaviour {
 	public UnityEvent onPlayer;
 
 	GameObject subtitlePanel;
+	public bool showSubtitlePanel = true;
 
     int current = 0;
 	public bool isDialogueInfinitelyRepeatable = true;
@@ -32,7 +33,7 @@ public class DialogueSystem : MonoBehaviour {
         PlayNext();
 		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Cutscene);
 		StartCoroutine ("InputLoopHackFix");
-		subtitlePanel.GetComponent<Image> ().enabled = true;
+		if (showSubtitlePanel)subtitlePanel.GetComponent<Image> ().enabled = true;
     }
 
 	IEnumerator InputLoopHackFix(){

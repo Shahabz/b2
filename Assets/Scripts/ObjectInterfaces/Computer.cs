@@ -20,6 +20,7 @@ public class Computer : MultipleChoice, IInteractable {
     bool isDestroyed;
 	public bool appliedOnThisComputerToday;
 	bool isComputerBeingUsed;
+	public bool isInteractable = true;
 
 	public Cinemachine.CinemachineVirtualCamera thisVirtualCamera;
 
@@ -42,6 +43,7 @@ public class Computer : MultipleChoice, IInteractable {
 	}
 
 	public void Interact() {
+		if (isInteractable)
 		TurnOn ();
 	}
 
@@ -72,12 +74,14 @@ public class Computer : MultipleChoice, IInteractable {
         //CameraManager.s_instance.SetMainViewOnScene(mainViewOfMultipleChoice);
 		//CameraManager.s_instance.MultipleChoiceCameraOn ();
 		thisVirtualCamera.enabled=true;
+		TestPlayerController.s_instance.SetPlayerModeCutscene ();
 		isActive = true;
 	}
 
 	public void TurnOff () {
 		projectedScreen.SetActive (false);
 		isActive = false;
+		TestPlayerController.s_instance.SetPlayerModeNormal  ();
 
 		thisVirtualCamera.enabled = false;
 	}
