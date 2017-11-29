@@ -10,12 +10,11 @@ public class CodeThoughts : MonoBehaviour {
 	List<string> myCodeThoughts;
 	CSVParser thisParser;
 	bool isSpawning;
-	float spawnTime = .1f, spawnTimer;
+	float spawnTime = .03f, spawnTimer;
 	float spawnRangeX = 1.2f;
-	float spawnRangeY = .6f;
-	float spawnRangeZ = .4f;
+	float spawnRangeY = .9f;
+	float spawnRangeZ = 0f;
     bool isPsychoMode;
-
 	void Start () {
 		thisParser = GetComponent<CSVParser> ();
 }
@@ -58,7 +57,7 @@ public class CodeThoughts : MonoBehaviour {
 		float z = Random.Range (-spawnRangeZ, spawnRangeZ);
 
 		Vector3 spawnPos = new Vector3 (transform.position.x + x, transform.position.y + y, transform.position.z + spawnRangeZ);
-		GameObject thoughtText = (GameObject)Instantiate (ThoughtText, spawnPos, transform.parent.rotation) as GameObject;
+		GameObject thoughtText = (GameObject)Instantiate (ThoughtText, spawnPos, transform.rotation) as GameObject;
 		thoughtText.GetComponentInChildren<Text> ().text = myCodeThoughts [Random.Range (0, myCodeThoughts.Count - 1)];
 
         if (isPsychoMode)

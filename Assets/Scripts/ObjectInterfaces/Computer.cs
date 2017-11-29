@@ -22,6 +22,8 @@ public class Computer : MultipleChoice, IInteractable {
 	bool isComputerBeingUsed;
 	public bool isInteractable = true;
 
+	public Transform spawnhere;
+
 	public Cinemachine.CinemachineVirtualCamera thisVirtualCamera;
 
     // Use this for initialization
@@ -40,6 +42,23 @@ public class Computer : MultipleChoice, IInteractable {
 			computerLight.intensity = 1f;
 		}
 
+	}
+
+	void Start() {
+		inputDevice = InputManager.ActiveDevice;
+	}
+
+	void Update() {
+		if (isActive) {
+			if (inputDevice.LeftStickUp.WasPressed)
+				ArrowUp ();
+			if (inputDevice.LeftStickDown.WasPressed)
+				ArrowDown ();
+			if (inputDevice.Action1.WasPressed)
+				SelectItem ();
+		}
+				
+			
 	}
 
 	public void Interact() {
