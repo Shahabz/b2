@@ -11,7 +11,7 @@ public class CatLogic : MonoBehaviour {
 	protected NavMeshAgent thisNavMeshAgent;
 	protected CatStates thisCatState;
     float catRunSpeed = .02f;
-    float triggerFollowDistance = 15f;
+    public float triggerFollowDistance = 15f;
     float catLookAngle = 50;
     float waypointToggleDistance = 3f;
 	//cat runs back to this point after it attacks player

@@ -50,7 +50,7 @@ public class ProgramPractice : MonoBehaviour {
 
 	void DestroyComputer ()
 	{
-		Instantiate (Explosion,spawnhere);
+		Instantiate (Explosion,transform.parent);
 
 		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (10);
 		TestPlayerController.s_instance.GetComponent<Animator> ().SetTrigger ("punch");
