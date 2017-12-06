@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StrobeLight : MonoBehaviour {
 
-	float flashTime = .5f, flashTimer;
+	float flashTime = .34f, flashTimer;
 	// Use this for initialization
 	Light thisLight;
 	void Start () {

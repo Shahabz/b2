@@ -16,7 +16,9 @@ public class XanaxGirl : GirlController {
 	public GenericTriggerEvent thisEvent;
 	public bool turnBodyTowardPlayer;
 	public Transform ghostTransform;
-
+	public GameObject Strobe;
+	public AudioSource eerie; 
+	public GameObject[] Lights;
 	public void SwitchToXanaxSearch () {
 		thisState = XanaxGirlState.lookingforxanax;
 		GetComponent<Animator> ().SetTrigger ("walk");
@@ -48,6 +50,7 @@ public class XanaxGirl : GirlController {
 				}
 			}
 			thisState = XanaxGirlState.gotocomputer;
+			TextManager.s_instance.SetNotification ("Let's dance, Naughty P.", 4f);
 			break;
 
 		case XanaxGirlState.walkingtoxanax:
@@ -93,7 +96,11 @@ public class XanaxGirl : GirlController {
 			if (timerforturningoncomputer > 7) {
 				thisState = XanaxGirlState.walktowardplayer;
 				GetComponent<Animator> ().SetTrigger ("walk");
-
+				FindObjectOfType<StrobeLight> ().enabled = true;
+				FindObjectOfType<StrobeLight> ().gameObject.GetComponent<AudioSource> ().Play ();
+				Strobe.SetActive (true);
+				foreach (GameObject x in Lights)
+					x.SetActive (false);
 			}
 			//switch to dancing
 			break;
@@ -104,6 +111,7 @@ public class XanaxGirl : GirlController {
 			if (dancetimer > 30) {
 				GetComponent<Animator> ().SetTrigger ("die");
 				thisState = XanaxGirlState.dying;
+				eerie.Play ();
 			}
 			//approach player until close and then turn around and switch to dancing mode
 			if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > 5f) {
