@@ -50,7 +50,7 @@ public class XanaxGirl : GirlController {
 				}
 			}
 			thisState = XanaxGirlState.gotocomputer;
-			TextManager.s_instance.SetNotification ("Let's dance, Naughty P.", 4f);
+			TextManager.s_instance.SetNotification ("Stacy took too much Xanax", 4f);
 			break;
 
 		case XanaxGirlState.walkingtoxanax:

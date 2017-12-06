@@ -17,7 +17,7 @@ namespace Cinemachine
     [AddComponentMenu("")] // Don't display in add component menu
     [RequireComponent(typeof(CinemachinePipeline))]
     [SaveDuringPlay]
-    public class CinemachineBasicMultiChannelPerlin : MonoBehaviour, ICinemachineComponent
+    public class CinemachineBasicMultiChannelPerlin : CinemachineComponentBase
     {
         /// <summary>
         /// Serialized property for referencing a NoiseSettings asset
@@ -40,43 +40,37 @@ namespace Cinemachine
         public float m_FrequencyGain = 1f;
 
         /// <summary>True if the component is valid, i.e. it has a noise definition and is enabled.</summary>
-        public bool IsValid
-        { get { return enabled && m_NoiseProfile != null; } }
-
-        /// <summary>Get the Cinemachine Virtual Camera affected by this component</summary>
-        public ICinemachineCamera VirtualCamera
-        { get { return gameObject.transform.parent.gameObject.GetComponent<ICinemachineCamera>(); } }
+        public override bool IsValid { get { return enabled && m_NoiseProfile != null; } }
 
         /// <summary>Get the Cinemachine Pipeline stage that this component implements.
         /// Always returns the Noise stage</summary>
-        public CinemachineCore.Stage Stage { get { return CinemachineCore.Stage.Noise; } }
+        public override CinemachineCore.Stage Stage { get { return CinemachineCore.Stage.Noise; } }
 
         /// <summary>Applies noise to the Correction channel of the CameraState if the
         /// delta time is greater than 0.  Otherwise, does nothing.</summary>
         /// <param name="curState">The current camera state</param>
         /// <param name="deltaTime">How much to advance the perlin noise generator.
-        /// Noise is only applied if this value is greater than 0</param>
-        public void MutateCameraState(ref CameraState curState, float deltaTime)
+        /// Noise is only applied if this value is greater than or equal to 0</param>
+        public override void MutateCameraState(ref CameraState curState, float deltaTime)
         {
-            if (!IsValid || deltaTime <= 0)
+            if (!IsValid || deltaTime < 0)
                 return;
 
             //UnityEngine.Profiling.Profiler.BeginSample("CinemachineBasicMultiChannelPerlin.MutateCameraState");
             if (!mInitialized)
                 Initialize();
 
-            ++mNoiseTime;
-            float time = mNoiseTime * deltaTime * m_FrequencyGain;
+            mNoiseTime += deltaTime * m_FrequencyGain;
             curState.PositionCorrection += curState.CorrectedOrientation * GetCombinedFilterResults(
-                    m_NoiseProfile.PositionNoise, time, mNoiseOffsets) * m_AmplitudeGain;
+                    m_NoiseProfile.PositionNoise, mNoiseTime, mNoiseOffsets) * m_AmplitudeGain;
             Quaternion rotNoise = Quaternion.Euler(GetCombinedFilterResults(
-                        m_NoiseProfile.OrientationNoise, time, mNoiseOffsets) * m_AmplitudeGain);
+                        m_NoiseProfile.OrientationNoise, mNoiseTime, mNoiseOffsets) * m_AmplitudeGain);
             curState.OrientationCorrection = curState.OrientationCorrection * rotNoise;
             //UnityEngine.Profiling.Profiler.EndSample();
         }
 
         private bool mInitialized = false;
-        private int mNoiseTime = 0;
+        private float mNoiseTime = 0;
         private Vector3 mNoiseOffsets = Vector3.zero;
 
         void Initialize()
@@ -84,9 +78,9 @@ namespace Cinemachine
             mInitialized = true;
             mNoiseTime = 0;
             mNoiseOffsets = new Vector3(
-                    UnityEngine.Random.Range(-Time.time, 10000f),
-                    UnityEngine.Random.Range(-Time.time, 10000f),
-                    UnityEngine.Random.Range(-Time.time, 10000f));
+                    UnityEngine.Random.Range(-10000f, 10000f),
+                    UnityEngine.Random.Range(-10000f, 10000f),
+                    UnityEngine.Random.Range(-10000f, 10000f));
         }
 
         static Vector3 GetCombinedFilterResults(
@@ -100,16 +94,13 @@ namespace Cinemachine
                 for (int i = 0; i < noiseParams.Length; ++i)
                 {
                     NoiseSettings.TransformNoiseParams param = noiseParams[i];
-                    Vector3 timeVal = new Vector3(
-                            param.X.Frequency, param.Y.Frequency, param.Z.Frequency);
-                    timeVal.Scale(time * Vector3.one + noiseOffsets);
+                    Vector3 timeVal = new Vector3(param.X.Frequency, param.Y.Frequency, param.Z.Frequency) * time;
+                    timeVal += noiseOffsets;
 
                     Vector3 noise = new Vector3(
-                            Mathf.PerlinNoise(timeVal.x, 0f),
-                            Mathf.PerlinNoise(timeVal.y, 0f),
-                            Mathf.PerlinNoise(timeVal.z, 0f));
-
-                    noise -= Vector3.one * 0.5f;
+                            Mathf.PerlinNoise(timeVal.x, 0f) - 0.5f,
+                            Mathf.PerlinNoise(timeVal.y, 0f) - 0.5f,
+                            Mathf.PerlinNoise(timeVal.z, 0f) - 0.5f);
 
                     xPos += noise.x * param.X.Amplitude;
                     yPos += noise.y * param.Y.Amplitude;

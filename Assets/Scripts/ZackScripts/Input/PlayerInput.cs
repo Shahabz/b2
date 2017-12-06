@@ -17,7 +17,7 @@ public class PlayerInput : BaseInput {
 	void Update () {
 		if (!isCinematicMode) {
 			shoot = NPInputManager.input.Fire.WasPressed;
-			aim = NPInputManager.input.Aim.IsPressed;
+			//aim = NPInputManager.input.Aim.IsPressed;
 			reload = NPInputManager.input.Reload.WasPressed;
 		}
 		lookDir = NPInputManager.input.Look;

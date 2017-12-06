@@ -54,10 +54,10 @@ public class NPInputManager : MonoBehaviour {
 			playerActions.Reload.AddDefaultBinding( InputControlType.Action3 );
 			playerActions.Reload.AddDefaultBinding( Key.R );
 
-			playerActions.Melee.AddDefaultBinding( Key.F );
+			playerActions.Melee.AddDefaultBinding( Key.E );
 			playerActions.Melee.AddDefaultBinding( InputControlType.Action2 );
 
-            playerActions.Interact.AddDefaultBinding( Key.E );
+            playerActions.Interact.AddDefaultBinding( Key.F );
             playerActions.Interact.AddDefaultBinding( InputControlType.Action1 );
 
 			playerActions.Aim.AddDefaultBinding( Mouse.RightButton );
