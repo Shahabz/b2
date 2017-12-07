@@ -40,10 +40,13 @@ public class CodeThoughts : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
-		if (isSpawning) {
+	void Update ()
+	{
+		if (isSpawning)
+		{
 			spawnTimer += Time.deltaTime;
-			if (spawnTimer > spawnTime) {
+			if (spawnTimer > spawnTime)
+			{
 				spawnTimer = 0;
 				SpawnRandomCodeThought();
 			}
