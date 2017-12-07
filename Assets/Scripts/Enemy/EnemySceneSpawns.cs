@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 
 public class EnemySceneSpawns : ScriptableObject {
 
@@ -56,3 +56,4 @@ public class EnemySceneSpawns : ScriptableObject {
         Debug.LogError("error");
     }
 }
+#endif

@@ -11,7 +11,6 @@ public class MultipleChoice : MonoBehaviour {
     [SerializeField]
     protected Camera mainViewOfMultipleChoice;
 
-
     public void ArrowDown() {
 		if (isActive) {
 			if (selection >= currentSelectionIndicators.Length - 1) {

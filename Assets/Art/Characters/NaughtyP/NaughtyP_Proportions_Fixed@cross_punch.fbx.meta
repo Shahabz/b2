@@ -3,7 +3,7 @@ guid: 215f4396fe120484ab0cf61232714e08
 timeCreated: 1499546052
 licenseType: Free
 ModelImporter:
-  serializedVersion: 21
+  serializedVersion: 22
   fileIDToRecycleName:
     100000: mixamorig:Head
     100002: mixamorig:HeadTop_End
@@ -143,10 +143,12 @@ ModelImporter:
     400134: //RootNode
     7400000: cross_punch
     9500000: //RootNode
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -159,6 +161,7 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -170,8 +173,8 @@ ModelImporter:
     - serializedVersion: 16
       name: cross_punch
       takeName: mixamo.com
-      firstFrame: 6
-      lastFrame: 22
+      firstFrame: 0
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

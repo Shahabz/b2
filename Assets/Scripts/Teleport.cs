@@ -18,8 +18,12 @@ public class Teleport : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Player") {
+			Vector3 camoffset = Camera.main.transform.position - TestPlayerController.s_instance.transform.position;
+
+			GetComponent<CinemachineHardCut> ().tempDisable ();
 			offset = TestPlayerController.s_instance.transform.position - transform.position;
 			TestPlayerController.s_instance.transform.position = teleportEnd.transform.position + offset;
+			Camera.main.transform.position = TestPlayerController.s_instance.transform.position + camoffset;
 			if (alterRotation)  TestPlayerController.s_instance.transform.rotation = teleportEnd.transform.rotation;
 		}
 	}

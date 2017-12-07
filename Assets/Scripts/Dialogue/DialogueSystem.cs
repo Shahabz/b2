@@ -106,6 +106,7 @@ public class DialogueSystem : MonoBehaviour {
 	public void SetActiveState(bool newActive)
 	{
 		active = newActive;
+		subtitlePanel.SetActive(newActive);
 	}
 
 

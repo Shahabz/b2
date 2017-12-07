@@ -96,8 +96,6 @@ namespace Cinemachine
         [Tooltip("If adjusting Orthographic Size, will not set it higher than this.")]
         public float m_MaximumOrthoSize = 100;
 
-        const float Epsilon = UnityVectorExtensions.Epsilon;
-
         private void OnValidate()
         {
             m_GroupFramingSize = Mathf.Max(Epsilon, m_GroupFramingSize);
@@ -116,9 +114,9 @@ namespace Cinemachine
         { 
             get
             {
-                ICinemachineCamera vcam = VirtualCamera;
-                if (vcam != null && vcam.LookAt != null)
-                    return vcam.LookAt.GetComponent<CinemachineTargetGroup>();
+                Transform lookAt = LookAtTarget;
+                if (lookAt != null)
+                    return lookAt.GetComponent<CinemachineTargetGroup>();
                 return null;
             }
         }
@@ -126,7 +124,7 @@ namespace Cinemachine
         /// <summary>Applies the composer rules and orients the camera accordingly</summary>
         /// <param name="state">The current camera state</param>
         /// <param name="deltaTime">Used for calculating damping.  If less than
-        /// or equal to zero, then target will snap to the center of the dead zone.</param>
+        /// zero, then target will snap to the center of the dead zone.</param>
         public override void MutateCameraState(ref CameraState curState, float deltaTime)
         {
             // Can't do anything without a group to look at
@@ -143,14 +141,8 @@ namespace Cinemachine
                 return;
             }
 
-            // The following line shouldn't be necessary.  You can try enabling it as a 
-            // last resort if you're getting inexplicable jitter.  That can sometimes come 
-            // about because the group's target members are not animated in a consistent way.
-            //group.LateUpdate(); // Make sure the group's position is fully updated. 
-
-            curState.ReferenceLookAt = group.transform.position;
-            Vector3 lookAtPosition = GetTrackedPoint(curState.ReferenceLookAt);
-            Vector3 currentOffset = lookAtPosition - curState.RawPosition;
+            curState.ReferenceLookAt = GetLookAtPointAndSetTrackedPoint(group.transform.position);
+            Vector3 currentOffset = TrackedPoint - curState.RawPosition;
             float currentDistance = currentOffset.magnitude;
             if (currentDistance < Epsilon)
                 return;  // navel-gazing, get outa here
@@ -170,11 +162,10 @@ namespace Cinemachine
             Vector3 targetPos = m_lastBoundsMatrix.MultiplyPoint3x4(m_LastBounds.center);
 
             // Apply damping
-            if (deltaTime > 0 && m_FrameDamping > 0)
+            if (deltaTime >= 0)
             {
                 float delta = targetHeight - m_prevTargetHeight;
-                if (Mathf.Abs(delta) > Epsilon)
-                    delta *= deltaTime / Mathf.Max(m_FrameDamping * kDampingScale, deltaTime);
+                delta = Damper.Damp(delta, m_FrameDamping, deltaTime);
                 targetHeight = m_prevTargetHeight + delta;
             }
             m_prevTargetHeight = targetHeight;
@@ -201,7 +192,7 @@ namespace Cinemachine
             // Apply zoom
             if (curState.Lens.Orthographic || m_AdjustmentMode != AdjustmentMode.DollyOnly)
             {
-                float nearBoundsDistance = (lookAtPosition - curState.CorrectedPosition).magnitude
+                float nearBoundsDistance = (TrackedPoint - curState.CorrectedPosition).magnitude
                     - m_LastBounds.extents.z;
                 float currentFOV = 179;
                 if (nearBoundsDistance > Epsilon)
@@ -232,13 +223,13 @@ namespace Cinemachine
             switch (m_FramingMode)
             {
                 case FramingMode.Horizontal:
-                    return Mathf.Max(Epsilon, b.size.x )/ (framingSize * VirtualCamera.State.Lens.Aspect);
+                    return Mathf.Max(Epsilon, b.size.x )/ (framingSize * VcamState.Lens.Aspect);
                 case FramingMode.Vertical:
                     return Mathf.Max(Epsilon, b.size.y) / framingSize;
                 default:
                 case FramingMode.HorizontalAndVertical:
                     return Mathf.Max(
-                        Mathf.Max(Epsilon, b.size.x) / (framingSize * VirtualCamera.State.Lens.Aspect), 
+                        Mathf.Max(Epsilon, b.size.x) / (framingSize * VcamState.Lens.Aspect), 
                         Mathf.Max(Epsilon, b.size.y) / framingSize);
             }
         }
