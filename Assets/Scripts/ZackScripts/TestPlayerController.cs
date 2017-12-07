@@ -344,7 +344,7 @@ public class TestPlayerController : MonoBehaviour {
 		currentWhoDunitHeldHostage = thisCat;
 		hostageCatChildObj.SetActive (true);
 		anim.SetTrigger ("hostage");
-		TextManager.s_instance.SetPrompt ("Press E to Release Cat\n Click to Kill It", 6f);
+		TextManager.s_instance.SetPrompt ("Press F to Release Cat\n Click to Kill It", 6f);
 		bSwitch_InteractiveCutscene = true;
 		
 	}

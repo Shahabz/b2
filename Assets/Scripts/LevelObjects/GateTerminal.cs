@@ -9,6 +9,7 @@ public class GateTerminal : MonoBehaviour, IInteractable {
 	int terminalsDestroyed;
 	bool hasEnabledGate;
 	public Material greenSelectedMaterial;
+	public GameObject TheFedIsComing;
 	// Use this for initialization
 	void Start () {
 		
@@ -31,6 +32,9 @@ public class GateTerminal : MonoBehaviour, IInteractable {
 		terminalIndicators [terminalsDestroyed].GetComponent<MeshRenderer> ().material = greenSelectedMaterial;
 		terminalsDestroyed++;
 		TextManager.s_instance.SetNotification(terminalsDestroyed.ToString() + "/" + terminalIndicators.Length.ToString() + " Terminals Destroyed", 2f);
+		if (terminalsDestroyed == terminalIndicators.Length) {
+			TheFedIsComing.SetActive (true);
+		}
 	}
 
 	void EnableGate () {
