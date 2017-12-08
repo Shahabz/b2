@@ -50,6 +50,13 @@ public class TextManager : MonoBehaviour {
 		showNotification = true;
 	}
 
+	public void SetNotification (string inString)
+	{
+		notification.text = inString;
+		notificationTime = 5;
+		showNotification = true;
+	}
+
 	public void SetPrompt(string inString, float timeUntilDisable = 2f) {
 		prompt.text = inString;
 		promptTime = timeUntilDisable;

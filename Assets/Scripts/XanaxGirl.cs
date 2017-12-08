@@ -50,7 +50,7 @@ public class XanaxGirl : GirlController {
 				}
 			}
 			thisState = XanaxGirlState.gotocomputer;
-			TextManager.s_instance.SetNotification ("Stacy took too much Xanax", 4f);
+			TextManager.s_instance.SetNotification ("*Sally took too much Xanax*", 4f);
 			break;
 
 		case XanaxGirlState.walkingtoxanax:
@@ -165,5 +165,11 @@ public class XanaxGirl : GirlController {
 		currentXanWaypoint.thisXanaxPickup.transform.parent = null;
 		GetComponent<Animator> ().SetTrigger ("walk");
 
+	}
+
+	public void ForceDie(){
+		GetComponent<Animator> ().SetTrigger ("die");
+		thisState = XanaxGirlState.dying;
+		eerie.Play ();
 	}
 }

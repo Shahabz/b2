@@ -181,6 +181,7 @@ public class CatLogic : MonoBehaviour {
 				GameObject.Find ("HELLCAM").GetComponent<Cinemachine.CinemachineVirtualCamera> ().enabled = true;
 				GameObject.Find ("NaughtyP_Bettter").GetComponent<Animator>().enabled = (true);
 				GameObject.Find ("NaughtyP_Bettter").GetComponent<TimedEventTrigger>().enabled = (true);
+				TestPlayerController.s_instance.gameObject.SetActive (false);
 				OverlayManager.s_instance.blackout.SetActive (true);
 				gameObject.SetActive (false);
 
