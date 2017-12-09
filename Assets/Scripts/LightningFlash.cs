@@ -11,7 +11,9 @@ public class LightningFlash : MonoBehaviour {
 	void OnEnable () {
 		StartCoroutine ("FlashLightning");
 	}
-	
+
+	public bool bFlashTwoTimes = true;
+
 	// Update is called once per frame
 	void Update () {
 		
@@ -21,12 +23,13 @@ public class LightningFlash : MonoBehaviour {
 		thisLight.enabled = true;
 		yield return new WaitForSeconds (.1f);
 		thisLight.enabled = false;
+		if (bFlashTwoTimes) {
+			yield return new WaitForSeconds (.1f);
+			thisLight.enabled = true;
 
-		yield return new WaitForSeconds (.1f);
-		thisLight.enabled = true;
-
-		yield return new WaitForSeconds (.1f);
-		thisLight.enabled = false;
+			yield return new WaitForSeconds (.1f);
+			thisLight.enabled = false;
+		}
 
 	}
 }
