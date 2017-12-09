@@ -7,7 +7,7 @@ using UnityStandardAssets.ImageEffects;
 
 public class TheFedController : NavMeshBase {
 
-
+	public bool bFollowPlayer = true;
 	// Use this for initialization
 	void Start () {
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
@@ -15,7 +15,9 @@ public class TheFedController : NavMeshBase {
 	
 	// Update is called once per frame
 	void Update () {
-		base.Update ();
+		if (bFollowPlayer) {
+			base.Update ();
+		}
 	}
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player") {

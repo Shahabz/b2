@@ -37,4 +37,8 @@ public class CinemachineHardCut : MonoBehaviour {
 	public void HardCut() {
 		thisBrain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
 	}
+
+	public void LongTransition() {
+		thisBrain.m_DefaultBlend.m_Time = 50f;
+	}
 }
