@@ -6,14 +6,16 @@ using UnityEngine.AI;
 
 public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 
-	enum ModelState {Regular, Combat};
-	ModelState thisModelState = ModelState.Regular;
+	public enum ModelState {Regular, Combat, Idle};
+	public ModelState thisModelState = ModelState.Regular;
 	NavMeshAgent thisNavMeshAgent;
 	public Vector3 navMeshTarget;
 	public Transform target;
 	GameObject clif;
 
 	Vector3 cliffordPosition;
+
+	bool hasTalked;
 
 	bool bSwitchToWalking, bSwitchToStanding, bSwitchToFiring;
 	public bool dontLookAtOnInteract;
@@ -25,7 +27,7 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 
 		thisNavMeshAgent = GetComponent<NavMeshAgent> ();
 		MuzzleFlash = GetComponentInChildren<ParticleSystem> (true);
-		MuzzleFlash.gameObject.SetActive (false);
+		if (MuzzleFlash)MuzzleFlash.gameObject.SetActive (false);
 		if (target) {
 			navMeshTarget = target.position;
 			thisNavMeshAgent.SetDestination (target.position);
@@ -69,8 +71,11 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 
 	public void Interact() {
 		if (!dontLookAtOnInteract)
-	 		transform.LookAt (TestPlayerController.s_instance.transform);
-		GetComponent<DialogueSystem> ().StartDialogue ();
+			transform.LookAt (TestPlayerController.s_instance.transform);
+		if (!hasTalked) {
+			GetComponent<DialogueSystem> ().StartDialogue ();
+			hasTalked = true;
+		}
 	}
 
 	public void SwitchToFiring() {

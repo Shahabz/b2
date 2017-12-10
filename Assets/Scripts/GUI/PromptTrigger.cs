@@ -12,7 +12,7 @@ public class PromptTrigger : MonoBehaviour {
 		if (other.tag == "Player") {
 			if (!hasMessagePlayed) {
 				if (displayPrompt) {
-					TextManager.s_instance.SetPrompt (thisMessage);
+					TextManager.s_instance.SetPrompt (thisMessage, 2.5f);
 				}
 				if (importance > 0) {
 					//TextManager.s_instance.AddNoteToSelf (new NoteToSelf (thisMessage));
