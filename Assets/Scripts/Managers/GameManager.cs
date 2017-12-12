@@ -45,6 +45,12 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+		if (saveWomen) {
+			SetSaveWomen (true);
+		}
+		if (completeTherapy) {
+			SetCompleteTherapy (true);
+		}
 		TestPlayerController.s_instance.gameObject.SetActive (true);
 		switch (thisDebugStartPosition) {
 		case DebugStartPosition.Computer:

@@ -76,6 +76,12 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 			GetComponent<DialogueSystem> ().StartDialogue ();
 			hasTalked = true;
 		}
+		if (dontLookAtOnInteract) {
+			GetComponent<InteractEvent> ().Interact ();
+			CatLogic[] temp = FindObjectsOfType<CatLogic> ();
+			foreach (CatLogic x in temp)
+				Destroy (x.gameObject);
+		}
 	}
 
 	public void SwitchToFiring() {
