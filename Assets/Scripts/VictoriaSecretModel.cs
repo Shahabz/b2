@@ -87,7 +87,7 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 	public void SwitchToFiring() {
 		thisNavMeshAgent.isStopped = true;
 		GetComponent<Animator> ().SetTrigger ("fire");
-		MuzzleFlash.gameObject.SetActive(true);
+		if (MuzzleFlash)MuzzleFlash.gameObject.SetActive(true);
 		ftr = 0;
 		thisModelState = ModelState.Combat;
 	}
@@ -95,7 +95,7 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 	public void SwitchToStanding() {
 		thisNavMeshAgent.isStopped = true;
 		GetComponent<Animator> ().SetTrigger ("idle");
-		MuzzleFlash.gameObject.SetActive (false);
+		if (MuzzleFlash)MuzzleFlash.gameObject.SetActive (false);
 
 
 	}
