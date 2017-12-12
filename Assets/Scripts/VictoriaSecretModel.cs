@@ -72,7 +72,7 @@ public class VictoriaSecretModel : MonoBehaviour, IInteractable {
 	public void Interact() {
 		if (!dontLookAtOnInteract)
 			transform.LookAt (TestPlayerController.s_instance.transform);
-		if (!hasTalked) {
+		if (!hasTalked && !dontLookAtOnInteract) {
 			GetComponent<DialogueSystem> ().StartDialogue ();
 			hasTalked = true;
 		}
