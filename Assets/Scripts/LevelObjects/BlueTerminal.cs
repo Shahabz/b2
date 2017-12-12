@@ -7,6 +7,7 @@ public class BlueTerminal : MonoBehaviour, IInteractable {
 	public GameObject deathFX;
 	// Use this for initialization
 	bool isDestroyed;
+
 	void Start () {
 		
 	}
@@ -21,6 +22,8 @@ public class BlueTerminal : MonoBehaviour, IInteractable {
 	public void Interact () {
 		if (!isDestroyed) {
 			TestPlayerController.s_instance.gameObject.GetComponent<Animator> ().SetTrigger ("punch");
+			TestPlayerController.s_instance.SetPlayerModeCutscene ();
+			StartCoroutine ("SmashPause");
 			GetComponentInChildren<Light> ().enabled = false;
 			Instantiate (deathFX, transform.position, Quaternion.identity);
 			GameObject.FindObjectOfType<GateTerminal> ().BlueTerminalDestroyed ();
@@ -28,5 +31,11 @@ public class BlueTerminal : MonoBehaviour, IInteractable {
 			Destroy (gameObject, 5f);
 			isDestroyed = true;
 		}
+	}
+
+	IEnumerator SmashPause() {
+		yield return new WaitForSeconds (1.2f);
+		TestPlayerController.s_instance.SetPlayerModeNormal ();
+
 	}
 }

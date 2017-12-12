@@ -164,7 +164,8 @@ public class CatLogic : MonoBehaviour {
         else { return false; }
     }
 
-    float GetAngleBetweenPlayerForwardAndCat() {
+    float GetAngleBetweenPlayerForwardAndCat()
+	{
 		Vector3 playerForward = TestPlayerController.s_instance.transform.forward;
 		Vector3 towardCat = -TestPlayerController.s_instance.transform.position + transform.position;
         return Vector3.Angle(playerForward, towardCat);
@@ -188,7 +189,7 @@ public class CatLogic : MonoBehaviour {
 			}
 			else {
 				isOverlappingPlayer = true;
-				TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
+				TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (1);
 				switchToRunaway = true;
 			//}
 			}
@@ -200,7 +201,6 @@ public class CatLogic : MonoBehaviour {
 		if (other.tag == "Player")
 		{
 			isOverlappingPlayer = false;
-
 		}
 	}
 
@@ -228,12 +228,10 @@ public class CatLogic : MonoBehaviour {
 			break;
 		case CatStates.Runaway:
 			thisCatState = CatStates.Runaway;
-			//thisCatAnimator.SetTrigger ("run");
 			break;
 		case CatStates.AttackPlayer:
 			thisCatState = CatStates.AttackPlayer;
 			thisCatAnimator.SetTrigger ("run");
-
 			break;
 		}
 	}
@@ -241,7 +239,7 @@ public class CatLogic : MonoBehaviour {
 
     protected void DestroyCat()
     {
-		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (10);
+		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
         Destroy(gameObject);
     }
 
