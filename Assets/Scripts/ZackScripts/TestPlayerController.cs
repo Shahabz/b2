@@ -44,7 +44,7 @@ public class TestPlayerController : MonoBehaviour {
 	GameObject currentWhoDunitHeldHostage;
 	GameObject heldObject;
 
-	float runAnxietyTime = 4f, runAnxietyTimer;
+	float runAnxietyTime = 2f, runAnxietyTimer;
 	bool isBeingWatched;
 	public void SetIsBeingWatched(bool isTrue) {
 		isBeingWatched = isTrue;

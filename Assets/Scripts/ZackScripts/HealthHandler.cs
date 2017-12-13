@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class HealthHandler : MonoBehaviour {
 
@@ -105,5 +106,12 @@ public class HealthHandler : MonoBehaviour {
 		TestPlayerController.s_instance.lockInput= TestPlayerController.InputLock.Locked;
 		TestPlayerController.s_instance.GetComponent<Animator> ().SetTrigger ("death");
 		TestUIManager.instance.SetState (TestUIManager.UIState.Cutscene);
+		StartCoroutine ("Restart");
+	}
+
+	IEnumerator Restart()
+	{
+		yield return new WaitForSeconds (10f);
+		SceneManager.LoadScene (SceneManager.GetActiveScene().name); 
 	}
 }

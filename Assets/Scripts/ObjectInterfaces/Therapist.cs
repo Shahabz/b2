@@ -210,7 +210,7 @@ public class Therapist : MultipleChoice {
 			//wrong
 			//play wrong audio then play therapist repsonse
 			//play gain anxiety animation
-			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress(10);
+			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress(1);
 
 		}
 		answerPanel.SetActive (false);
