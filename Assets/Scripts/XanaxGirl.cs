@@ -50,7 +50,8 @@ public class XanaxGirl : GirlController {
 				}
 			}
 			thisState = XanaxGirlState.gotocomputer;
-			TextManager.s_instance.SetNotification ("*Sally took too much Xanax*", 4f);
+			TextManager.s_instance.SetNotification ("* Sally took too much Xanax *", 4f);
+			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
 			break;
 
 		case XanaxGirlState.walkingtoxanax:

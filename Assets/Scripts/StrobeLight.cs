@@ -13,10 +13,12 @@ public class StrobeLight : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		
 		if (GenericTimer.RunGenericTimer (flashTime, ref flashTimer)) {
 			thisLight.enabled = !thisLight.isActiveAndEnabled;
 			StartCoroutine ("Off");
 		}
+
 	}
 	IEnumerator Off(){
 		yield return new WaitForSeconds (.05f);
