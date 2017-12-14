@@ -56,10 +56,10 @@ public class DialogueSystem : MonoBehaviour {
 			EndDialogue();
 			return;
 		}
-        TestPlayerController.s_instance.GetComponent<AudioSource>().Stop();
-		if (talkerOne) talkerOne.Stop();
-		if (talkerTwo) talkerTwo.Stop();
-		if (talkerThree) talkerThree.Stop();
+       // TestPlayerController.s_instance.GetComponent<AudioSource>().Stop();
+	//	if (talkerOne) talkerOne.Stop();
+	//	if (talkerTwo) talkerTwo.Stop();
+	//	if (talkerThree) talkerThree.Stop();
 
         TextManager.s_instance.SetSubtitle(dialogueData.dialogue[current].text);
         switch (dialogueData.dialogue[current].talker)
