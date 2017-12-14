@@ -42,10 +42,10 @@ public class DialogueSystem : MonoBehaviour {
 	}
 
 	void Start () {
-		if (!GetComponent<AudioSource> ())
+		/*if (!GetComponent<AudioSource> ())
 			gameObject.AddComponent<AudioSource> ();
 		if (GetComponent<AudioSource>() || talkerOne==null)
-			talkerOne = GetComponent<AudioSource> ();
+			talkerOne = GetComponent<AudioSource> ();*/
 		subtitlePanel = GameObject.FindGameObjectWithTag ("SubtitlePanel");
 	}
 
@@ -65,24 +65,24 @@ public class DialogueSystem : MonoBehaviour {
         switch (dialogueData.dialogue[current].talker)
         {
 		case DialogueData.Talker.Player:
-			TestPlayerController.s_instance.GetComponent<AudioSource> ().clip = dialogueData.dialogue [current].sound;
-			TestPlayerController.s_instance.GetComponent<AudioSource> ().Play ();
+			//TestPlayerController.s_instance.GetComponent<AudioSource> ().clip = dialogueData.dialogue [current].sound;
+			//TestPlayerController.s_instance.GetComponent<AudioSource> ().Play ();
 			onPlayer.Invoke ();
                 break;
 		case DialogueData.Talker.TalkerOne:
-			talkerOne.clip = dialogueData.dialogue [current].sound;
-			talkerOne.Play ();
+			//talkerOne.clip = dialogueData.dialogue [current].sound;
+			//talkerOne.Play ();
 			onTalkerOne.Invoke ();
                 break;
 		case DialogueData.Talker.TalkerTwo:
 			onTalkerTwo.Invoke ();
-                talkerOne.clip = dialogueData.dialogue[current].sound;
-                talkerOne.Play();
+                //talkerOne.clip = dialogueData.dialogue[current].sound;
+                //talkerOne.Play();
                 break;
 		case DialogueData.Talker.TalkerThree:
 			onTalkerThree.Invoke ();
-                talkerOne.clip = dialogueData.dialogue[current].sound;
-                talkerOne.Play();
+                //talkerOne.clip = dialogueData.dialogue[current].sound;
+                //talkerOne.Play();
                 break;
             default:
                 Debug.Log("No case");

@@ -14,7 +14,8 @@ public class SoundtrackManager : MonoBehaviour {
 	Player_HeartBeatSlow,
 	uruhit2,
 	deathguillo,
-	deathscream
+	deathscream,
+	gunshot
 
 
 	; //soundtrack files
