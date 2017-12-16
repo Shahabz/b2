@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class HealthHandler : MonoBehaviour {
 
@@ -111,7 +110,9 @@ public class HealthHandler : MonoBehaviour {
 
 	IEnumerator Restart()
 	{
-		yield return new WaitForSeconds (10f);
-		SceneManager.LoadScene (SceneManager.GetActiveScene().name); 
+		yield return new WaitForSeconds (4f);
+		TextManager.s_instance.SetPrompt ("Press 'F' to restart level");
+		TestPlayerController.s_instance.SetPlayerMode (PlayerMode.Death);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.songoflord);
 	}
 }

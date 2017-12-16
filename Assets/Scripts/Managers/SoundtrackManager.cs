@@ -15,7 +15,8 @@ public class SoundtrackManager : MonoBehaviour {
 	uruhit2,
 	deathguillo,
 	deathscream,
-	gunshot
+	gunshot,
+	songoflord
 
 
 	; //soundtrack files

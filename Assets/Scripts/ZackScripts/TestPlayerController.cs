@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
-public enum PlayerMode {Normal, WalkLookOnly, LookOnly, Cutscene, InteractiveCutscene};
+using UnityEngine.SceneManagement;
+
+public enum PlayerMode {Normal, WalkLookOnly, LookOnly, Cutscene, InteractiveCutscene, Death};
 
 
 
@@ -44,7 +46,7 @@ public class TestPlayerController : MonoBehaviour {
 	GameObject currentWhoDunitHeldHostage;
 	GameObject heldObject;
 
-	float runAnxietyTime = 2f, runAnxietyTimer;
+	float runAnxietyTime = 10f, runAnxietyTimer;
 	bool isBeingWatched;
 	public void SetIsBeingWatched(bool isTrue) {
 		isBeingWatched = isTrue;
@@ -119,6 +121,11 @@ public class TestPlayerController : MonoBehaviour {
 			}
 			if (NPInputManager.input.Interact.WasPressed) {
 				ReleaseCatHostage (false);
+			}
+			break;
+		case PlayerMode.Death:
+			if (NPInputManager.input.Interact.WasPressed) {
+				SceneManager.LoadScene (SceneManager.GetActiveScene().name); 
 			}
 			break;
 		}
