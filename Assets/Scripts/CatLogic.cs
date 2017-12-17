@@ -124,6 +124,8 @@ public class CatLogic : MonoBehaviour {
 
 	IEnumerator StompCat() {
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill2);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill4);
+
 		yield return new WaitForSeconds (.2f);
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill1);
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill3);

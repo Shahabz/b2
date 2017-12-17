@@ -24,7 +24,8 @@ public class SoundtrackManager : MonoBehaviour {
 	xanax5,
 	catkill1,
 	catkill2,
-	catkill3
+	catkill3,
+	catkill4
 
 	; //soundtrack files
 

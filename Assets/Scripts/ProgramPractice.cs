@@ -53,6 +53,9 @@ public class ProgramPractice : MonoBehaviour {
 	void DestroyComputer ()
 	{
 		Instantiate (Explosion,transform.parent);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill1);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill2);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill3);
 
 		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (10);
 		TestPlayerController.s_instance.GetComponent<Animator> ().SetTrigger ("punch");
