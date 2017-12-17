@@ -23,6 +23,8 @@ public class DialogueSystem : MonoBehaviour {
 	GameObject subtitlePanel;
 	public bool showSubtitlePanel = true;
 
+	public bool ignoreAudioLogic;
+
     int current = 0;
 	public bool isDialogueInfinitelyRepeatable = true;
 
@@ -42,10 +44,12 @@ public class DialogueSystem : MonoBehaviour {
 	}
 
 	void Start () {
-		/*if (!GetComponent<AudioSource> ())
-			gameObject.AddComponent<AudioSource> ();
-		if (GetComponent<AudioSource>() || talkerOne==null)
-			talkerOne = GetComponent<AudioSource> ();*/
+		if (!ignoreAudioLogic) {
+			if (!GetComponent<AudioSource> ())
+				gameObject.AddComponent<AudioSource> ();
+			if (GetComponent<AudioSource> () || talkerOne == null)
+				talkerOne = GetComponent<AudioSource> ();
+		}
 		subtitlePanel = GameObject.FindGameObjectWithTag ("SubtitlePanel");
 	}
 
@@ -56,33 +60,49 @@ public class DialogueSystem : MonoBehaviour {
 			EndDialogue();
 			return;
 		}
-       // TestPlayerController.s_instance.GetComponent<AudioSource>().Stop();
-	//	if (talkerOne) talkerOne.Stop();
-	//	if (talkerTwo) talkerTwo.Stop();
-	//	if (talkerThree) talkerThree.Stop();
-
+		if (!ignoreAudioLogic) {
+			
+			TestPlayerController.s_instance.GetComponent<AudioSource> ().Stop ();
+			if (talkerOne)
+				talkerOne.Stop ();
+			if (talkerTwo)
+				talkerTwo.Stop ();
+			if (talkerThree)
+				talkerThree.Stop ();
+		}
         TextManager.s_instance.SetSubtitle(dialogueData.dialogue[current].text);
         switch (dialogueData.dialogue[current].talker)
         {
 		case DialogueData.Talker.Player:
-			//TestPlayerController.s_instance.GetComponent<AudioSource> ().clip = dialogueData.dialogue [current].sound;
-			//TestPlayerController.s_instance.GetComponent<AudioSource> ().Play ();
+			if (!ignoreAudioLogic) {
+				
+				TestPlayerController.s_instance.GetComponent<AudioSource> ().clip = dialogueData.dialogue [current].sound;
+				TestPlayerController.s_instance.GetComponent<AudioSource> ().Play ();
+			}
 			onPlayer.Invoke ();
                 break;
 		case DialogueData.Talker.TalkerOne:
-			//talkerOne.clip = dialogueData.dialogue [current].sound;
-			//talkerOne.Play ();
+			if (!ignoreAudioLogic) {
+				talkerOne.clip = dialogueData.dialogue [current].sound;
+				talkerOne.Play ();
+			}
 			onTalkerOne.Invoke ();
                 break;
 		case DialogueData.Talker.TalkerTwo:
 			onTalkerTwo.Invoke ();
-                //talkerOne.clip = dialogueData.dialogue[current].sound;
-                //talkerOne.Play();
+			if (!ignoreAudioLogic) {
+				
+				talkerOne.clip = dialogueData.dialogue [current].sound;
+				talkerOne.Play ();
+			}
                 break;
 		case DialogueData.Talker.TalkerThree:
 			onTalkerThree.Invoke ();
-                //talkerOne.clip = dialogueData.dialogue[current].sound;
-                //talkerOne.Play();
+			if (!ignoreAudioLogic) {
+				
+				talkerOne.clip = dialogueData.dialogue [current].sound;
+				talkerOne.Play ();
+			}
                 break;
             default:
                 Debug.Log("No case");
