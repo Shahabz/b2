@@ -7,7 +7,7 @@ public class ProgramPractice : MonoBehaviour {
 	float timer, time = 5f;
 	int counter;
 	public Transform spawnhere;
-
+	public AudioSource regularProgramming, sexProgramming;
 	public GameObject Explosion;
 	public GameObject[] DestroyThese;
 	public Cinemachine.CinemachineVirtualCamera thisCamera;
@@ -19,13 +19,15 @@ public class ProgramPractice : MonoBehaviour {
 				isProgramming = true;
 				GetComponent<CodeThoughts> ().StartSpawning (false);
 				thisCamera.enabled = true;
+				regularProgramming.Play ();
 				counter++;
 			} else {
+				regularProgramming.Play ();
+				sexProgramming.Play ();
 				isProgramming = true;
 				GetComponent<CodeThoughts> ().StartSpawning (true);
 				thisCamera.enabled = true;
 				counter++;
-
 			}
 		}
 	}

@@ -68,6 +68,10 @@ public class WhodunitCat : CatLogic, IInteractable {
 
 	public void KillCat() {
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.gunshot);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill1);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill3);
+
+
 		if (isEvilCat) {
 			myManagerRef.QuestSucceeded ();
 		} else {

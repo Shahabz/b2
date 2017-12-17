@@ -16,10 +16,19 @@ public class SoundtrackManager : MonoBehaviour {
 	deathguillo,
 	deathscream,
 	gunshot,
-	songoflord
-
+	songoflord,
+	xanax,
+	xanax2,
+	xanax3,
+	xanax4,
+	xanax5,
+	catkill1,
+	catkill2,
+	catkill3
 
 	; //soundtrack files
+
+
 	public static SoundtrackManager s_instance;
 
 	void Awake () {

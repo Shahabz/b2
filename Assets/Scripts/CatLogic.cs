@@ -123,7 +123,11 @@ public class CatLogic : MonoBehaviour {
 	}
 
 	IEnumerator StompCat() {
-		yield return new WaitForSeconds (.5f);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill2);
+		yield return new WaitForSeconds (.2f);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill1);
+		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill3);
+
 		Instantiate (deadCat, transform.position, transform.rotation);
 		DestroyCat ();
 	}
