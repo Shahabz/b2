@@ -11,6 +11,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 	bool inHostageMode;
 	[SerializeField]
 	bool isEvilCat;
+	public AudioSource diebitch;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +19,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 		myManagerRef = FindObjectOfType<CatWhoDunitManager> ();
 		GetComponent<DialogueSystem> ().onDialogueEnd.AddListener (OnDialogueEnd);
 		canCauseStress = false;
+		diebitch = GameObject.Find ("diebitch").GetComponent<AudioSource> ();
 	}
 	
 	void Update() {
@@ -70,7 +72,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.gunshot);
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill1);
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.catkill3);
-
+		diebitch.PlayDelayed (1f);
 
 		if (isEvilCat) {
 			myManagerRef.QuestSucceeded ();

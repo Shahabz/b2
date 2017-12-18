@@ -71,6 +71,7 @@ public class HealthHandler : MonoBehaviour {
 
 	public void TakeStress(int stressAmount) {
 		lastStressor = Time.time;
+		TestPlayerController.s_instance.PlayBark ();
 		stress += stressAmount;
 		OverlayManager.s_instance.anxietySlider.value = stress / 100;
 		OverlayManager.s_instance.anxietyText.text = "Anxiety: " + stress +"%";

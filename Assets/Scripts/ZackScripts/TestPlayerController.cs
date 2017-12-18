@@ -29,6 +29,18 @@ public class TestPlayerController : MonoBehaviour {
     public Camera gameplayCamera;
 	LineRenderer laserTarget;
 
+	public AudioClip[] allBarks;
+	public AudioSource barkSource;
+	int lastbark;
+	public void PlayBark() {
+		int temp = Random.Range (0, allBarks.Length);
+		while (temp == lastbark)
+			temp = Random.Range (0, allBarks.Length);
+		barkSource.clip = allBarks[temp];
+		barkSource.Play ();
+		lastbark = temp; 
+	}
+
 	public GameObject NPCam;
 
 	public Transform holdItemTransform;
@@ -67,6 +79,7 @@ public class TestPlayerController : MonoBehaviour {
     }
 
     void Start () {
+		barkSource = GetComponent<AudioSource> ();
 		GetComponentInChildren<Camera>().transform.parent = null;
         footstepHandler = GetComponent<FootstepHandler>();
 		input = GetComponent<BaseInput>();

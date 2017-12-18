@@ -196,7 +196,7 @@ public class CatLogic : MonoBehaviour {
 			}
 			else {
 				isOverlappingPlayer = true;
-				TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (1);
+				TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
 				switchToRunaway = true;
 			//}
 			}
