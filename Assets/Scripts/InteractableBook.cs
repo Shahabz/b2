@@ -10,6 +10,7 @@ public class InteractableBook : MonoBehaviour, IInteractable {
 	bool turningPagesForward = true;
 	float lerpTimer, lerpTime = 2f;
 	float rotatePageAmount = 160f;
+	public AudioSource paper;
 
 	// Use this for initialization
 	void Start () {
@@ -27,6 +28,7 @@ public class InteractableBook : MonoBehaviour, IInteractable {
 		if (!isTurningPage) {
 			lerpTimer = 0;
 			isTurningPage = true;
+			paper.Play();
 		}
 	}
 
