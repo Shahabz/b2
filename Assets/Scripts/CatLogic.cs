@@ -186,6 +186,8 @@ public class CatLogic : MonoBehaviour {
 				TestPlayerController.s_instance.SetPlayerModeCutscene ();
 				GetComponent<CinemachineHardCut> ().HardCut ();
 				GameObject.Find ("HELLCAM").GetComponent<Cinemachine.CinemachineVirtualCamera> ().enabled = true;
+				GameObject.Find ("HELLCAM").GetComponent<AudioSource> ().enabled = true;
+
 				GameObject.Find ("NaughtyP_Bettter").GetComponent<Animator>().enabled = (true);
 				GameObject.Find ("NaughtyP_Bettter").GetComponent<TimedEventTrigger>().enabled = (true);
 				TestPlayerController.s_instance.gameObject.SetActive (false);
