@@ -51,7 +51,7 @@ public class TheFedController : NavMeshBase {
 		Camera.main.GetComponent<Blur> ().enabled = true;
 		Camera.main.GetComponent<Fisheye> ().enabled = true;
 		Camera.main.GetComponent<ColorCorrectionCurves> ().enabled = true;
-		yield return new WaitForSeconds (3f);
+		yield return new WaitForSeconds (10f);
 		Camera.main.GetComponent<Blur> ().enabled = false;
 		Camera.main.GetComponent<Fisheye> ().enabled = false;
 		Camera.main.GetComponent<ColorCorrectionCurves> ().enabled = false;
