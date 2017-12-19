@@ -25,13 +25,19 @@ public class TheFedController : NavMeshBase {
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.Fed_AnxietyLightning);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.Player_HeartBeatFast);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit1);
+			StopCoroutine (ShowPSTDFX ());
+
 			StartCoroutine (ShowPSTDFX ());
 		}
 	}
 
 	void OnCollisionEnter(Collision other) {
 		if (other.gameObject.tag == "Player") {
-			StartCoroutine (ShowPSTDFX2 ());
+			Camera.main.GetComponent<Blur> ().enabled = false;
+			Camera.main.GetComponent<Fisheye> ().enabled = false;
+			Camera.main.GetComponent<ColorCorrectionCurves> ().enabled = false;
+			SoundtrackManager.s_instance.Fed_AnxietyLightning.Stop ();
+			Destroy (gameObject);      
 			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (50);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit2);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.uruhit2);
@@ -41,22 +47,14 @@ public class TheFedController : NavMeshBase {
 	IEnumerator ShowPSTDFX () {
 		Camera.main.GetComponent<Blur> ().enabled = true;
 		Camera.main.GetComponent<Fisheye> ().enabled = true;
-		yield return new WaitForSeconds (5f);
-		Camera.main.GetComponent<Blur> ().enabled = false;
-		Camera.main.GetComponent<Fisheye> ().enabled = false;
-		SoundtrackManager.s_instance.Fed_AnxietyLightning.Stop ();
-
-	}
-	IEnumerator ShowPSTDFX2 () {
-		Camera.main.GetComponent<Blur> ().enabled = true;
-		Camera.main.GetComponent<Fisheye> ().enabled = true;
 		Camera.main.GetComponent<ColorCorrectionCurves> ().enabled = true;
-		yield return new WaitForSeconds (10f);
+
+		yield return new WaitForSeconds (5f);
+		Camera.main.GetComponent<ColorCorrectionCurves> ().enabled = false;
+
 		Camera.main.GetComponent<Blur> ().enabled = false;
 		Camera.main.GetComponent<Fisheye> ().enabled = false;
-		Camera.main.GetComponent<ColorCorrectionCurves> ().enabled = false;
 		SoundtrackManager.s_instance.Fed_AnxietyLightning.Stop ();
-		Destroy (gameObject);      
 
 	}
 }
