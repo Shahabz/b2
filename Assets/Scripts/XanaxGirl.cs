@@ -23,6 +23,7 @@ public class XanaxGirl : GirlController {
 	public AudioSource gag;
 	public AudioSource Luigi;
 	public GameObject[] Lights;
+	bool hasDied;
 	public void SwitchToXanaxSearch () {
 		thisState = XanaxGirlState.lookingforxanax;
 		GetComponent<Animator> ().SetTrigger ("walk");
@@ -121,6 +122,7 @@ public class XanaxGirl : GirlController {
 			dancetimer += Time.deltaTime;
 			if (dancetimer > 30) {
 				GetComponent<Animator> ().SetTrigger ("die");
+				hasDied = true;
 				thisState = XanaxGirlState.dying;
 				SoundtrackManager.s_instance.FadeOut(Luigi);
 				GetComponent<AudioSource> ().Stop ();//walking
@@ -185,11 +187,13 @@ public class XanaxGirl : GirlController {
 	}
 
 	public void ForceDie(){
-		GetComponent<Animator> ().SetTrigger ("die");
-		SoundtrackManager.s_instance.FadeOut(Luigi);
-		thisState = XanaxGirlState.dying;
-		GetComponent<AudioSource> ().Stop ();//walking
-		collapse.Play();
-		eerie.Play ();
+		if (!hasDied) {
+			GetComponent<Animator> ().SetTrigger ("die");
+			SoundtrackManager.s_instance.FadeOut (Luigi);
+			thisState = XanaxGirlState.dying;
+			GetComponent<AudioSource> ().Stop ();//walking
+			collapse.Play ();
+			eerie.Play ();
+		}
 	}
 }
