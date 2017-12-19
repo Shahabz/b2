@@ -42,6 +42,8 @@ public class GirlController : MonoBehaviour {
 			&& Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > stoppingDistance) {
 			GetComponent<Animator> ().SetTrigger ("walk");
 			thisGirlState = GirlState.Following;
+			if (GetComponent<AudioSource>())GetComponent<AudioSource> ().Play ();//walking
+
 		}
 	}
 
@@ -49,9 +51,13 @@ public class GirlController : MonoBehaviour {
 		if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) > distanceToTriggerFollow) {
 			GetComponent<Animator> ().SetTrigger ("idle");
 			thisGirlState = GirlState.Idle;
+			if (GetComponent<AudioSource>())GetComponent<AudioSource> ().Stop ();//walking
+
 		} else if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) < stoppingDistance){
 			GetComponent<Animator> ().SetTrigger ("idle");
 			thisGirlState = GirlState.Idle;
+			if (GetComponent<AudioSource>())GetComponent<AudioSource> ().Stop ();//walking
+
 		}
 	}
 

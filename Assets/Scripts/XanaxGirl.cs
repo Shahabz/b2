@@ -18,10 +18,15 @@ public class XanaxGirl : GirlController {
 	public Transform ghostTransform;
 	public GameObject Strobe;
 	public AudioSource eerie; 
+	public AudioSource collapse;
+	public AudioSource drink;
+	public AudioSource gag;
+	public AudioSource Luigi;
 	public GameObject[] Lights;
 	public void SwitchToXanaxSearch () {
 		thisState = XanaxGirlState.lookingforxanax;
 		GetComponent<Animator> ().SetTrigger ("walk");
+		GetComponent<AudioSource> ().Play ();//walking
 
 
 
@@ -59,6 +64,9 @@ public class XanaxGirl : GirlController {
 			if (Vector3.Distance (currentXanWaypoint.transform.position, transform.position) < .1) {
 				if (currentXanWaypoint.hasBeenAccessed == false) {
 					thisState = XanaxGirlState.taking_xanax;
+					GetComponent<AudioSource> ().Stop ();//walking
+					drink.Play();
+					gag.Play ();
 					GetComponent<Animator> ().ResetTrigger ("walk");
 					StartCoroutine ("switchbacktolookingforxanax");
 					currentXanWaypoint.thisXanaxPickup.transform.SetParent (holdObject);
@@ -86,6 +94,8 @@ public class XanaxGirl : GirlController {
 			//check if reached
 				thisState = XanaxGirlState.turnoncomputer;
 				transform.LookAt (laptop.transform);
+				GetComponent<AudioSource> ().Stop ();//walking
+
 				transform.rotation = Quaternion.Euler (0, transform.rotation.eulerAngles.y, 0);
 				GetComponent<Animator> ().SetTrigger ("comp");
 			}
@@ -112,6 +122,9 @@ public class XanaxGirl : GirlController {
 			if (dancetimer > 30) {
 				GetComponent<Animator> ().SetTrigger ("die");
 				thisState = XanaxGirlState.dying;
+				SoundtrackManager.s_instance.FadeOut(Luigi);
+				GetComponent<AudioSource> ().Stop ();//walking
+				collapse.Play();
 				eerie.Play ();
 			}
 			//approach player until close and then turn around and switch to dancing mode
@@ -119,6 +132,7 @@ public class XanaxGirl : GirlController {
 				GetComponent<Animator> ().SetTrigger ("walk");
 				thisState = XanaxGirlState.walktowardplayer;
 				thisNavMeshAgent.isStopped = false;
+				GetComponent<AudioSource> ().Play ();//walking
 
 			}
 			//do this for a bout 30 sec, if player ever walks away approach him again
@@ -131,6 +145,7 @@ public class XanaxGirl : GirlController {
 			if (Vector3.Distance (TestPlayerController.s_instance.transform.position, transform.position) < 2f){
 				GetComponent<Animator> ().SetTrigger ("dance");
 				GetComponent<Animator> ().ResetTrigger ("walk");
+				GetComponent<AudioSource> ().Stop ();//walking
 
 				thisState = XanaxGirlState.dancing;
 		
@@ -165,12 +180,16 @@ public class XanaxGirl : GirlController {
 		thisState = XanaxGirlState.lookingforxanax;
 		currentXanWaypoint.thisXanaxPickup.transform.parent = null;
 		GetComponent<Animator> ().SetTrigger ("walk");
+		GetComponent<AudioSource> ().Play ();//walking
 
 	}
 
 	public void ForceDie(){
 		GetComponent<Animator> ().SetTrigger ("die");
+		SoundtrackManager.s_instance.FadeOut(Luigi);
 		thisState = XanaxGirlState.dying;
+		GetComponent<AudioSource> ().Stop ();//walking
+		collapse.Play();
 		eerie.Play ();
 	}
 }

@@ -39,6 +39,11 @@ public class SoundtrackManager : MonoBehaviour {
 		DontDestroyOnLoad (gameObject); //persist through scenes
 	}
 
+	public void FadeOut(AudioSource y)
+	{
+		StartCoroutine (FadeOutAudioSource (y));
+	}
+
 	IEnumerator FadeOutAudioSource(AudioSource x) { //call from elsewhere
 		while (x.volume > 0.0f) {					//where x is sound track file
 			x.volume -= 0.01f;
