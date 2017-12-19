@@ -36,7 +36,7 @@ public class SoundtrackManager : MonoBehaviour {
 
 	void Awake () {
 		s_instance = this; 
-		DontDestroyOnLoad (gameObject); //persist through scenes
+		//DontDestroyOnLoad (gameObject); //persist through scenes
 	}
 
 	public void FadeOut(AudioSource y)

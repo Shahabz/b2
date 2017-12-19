@@ -132,7 +132,7 @@ public class TestPlayerController : MonoBehaviour {
 			if (NPInputManager.input.Fire.WasPressed) {
 				ReleaseCatHostage (true);
 			}
-			if (NPInputManager.input.Interact.WasPressed) {
+			else if (NPInputManager.input.Interact.WasPressed) {
 				ReleaseCatHostage (false);
 			}
 			break;
@@ -242,6 +242,9 @@ public class TestPlayerController : MonoBehaviour {
 
 			break;
 
+		case PlayerMode.Death:
+			thisPlayerMode = PlayerMode.Death;
+			break;
 		}
 	}
 

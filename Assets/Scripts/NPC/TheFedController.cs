@@ -35,7 +35,6 @@ public class TheFedController : NavMeshBase {
 			TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (50);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit2);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.uruhit2);
-			Destroy (gameObject);      
 		}
 	}
 
@@ -57,6 +56,7 @@ public class TheFedController : NavMeshBase {
 		Camera.main.GetComponent<Fisheye> ().enabled = false;
 		Camera.main.GetComponent<ColorCorrectionCurves> ().enabled = false;
 		SoundtrackManager.s_instance.Fed_AnxietyLightning.Stop ();
+		Destroy (gameObject);      
 
 	}
 }

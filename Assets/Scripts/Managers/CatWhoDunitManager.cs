@@ -11,6 +11,7 @@ public class CatWhoDunitManager : MonoBehaviour {
 	public GameObject[] VictoriaSecretModels;
 	public Cinemachine.CinemachineVirtualCamera thisCineCamera;
 	public AudioSource success;
+	public AudioSource diebitch;
 
 	// Use this for initialization
 	void Start () {
@@ -42,6 +43,8 @@ public class CatWhoDunitManager : MonoBehaviour {
 	public void QuestSucceeded() {
 		//pop up all of the models of women and kill the man
 		//the women just stand their, and if you walk into them, they turn into skeletons
+		diebitch.PlayDelayed (1f);
+
 		TextManager.s_instance.SetNotification ("You Saved the Models", 6f);
 		success.Play ();
 		GameManager.s_instance.SetSaveWomen (true);

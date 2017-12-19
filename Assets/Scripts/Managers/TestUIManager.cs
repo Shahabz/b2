@@ -63,7 +63,7 @@ public class TestUIManager : MonoBehaviour {
 		switch(TestPlayerController.s_instance.lockInput) {
 			case TestPlayerController.InputLock.CameraOnly:
 			case TestPlayerController.InputLock.Locked:
-				Cursor.lockState = CursorLockMode.Confined;
+				//Cursor.lockState = CursorLockMode.Confined;
 				break;
 			case TestPlayerController.InputLock.Unlocked:
 				Cursor.lockState = CursorLockMode.Locked;

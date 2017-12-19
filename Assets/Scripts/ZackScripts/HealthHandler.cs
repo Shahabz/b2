@@ -70,6 +70,9 @@ public class HealthHandler : MonoBehaviour {
 	}
 
 	public void TakeStress(int stressAmount) {
+		if (stress >= 100) {
+			return;
+		}
 		lastStressor = Time.time;
 		TestPlayerController.s_instance.PlayBark ();
 		stress += stressAmount;
@@ -99,7 +102,7 @@ public class HealthHandler : MonoBehaviour {
 
 	public void Death() {
 		//Do game over BS
-		GameObject.Find("DeathCam").GetComponent<Cinemachine.CinemachineVirtualCamera>().enabled = true;
+		//GameObject.Find("DeathCam").GetComponent<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 		OverlayManager.s_instance.ShowDeathOverlay();
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.deathguillo);
 		SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.deathscream);
