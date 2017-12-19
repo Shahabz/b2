@@ -404,7 +404,7 @@ public class TestPlayerController : MonoBehaviour {
 
 	IEnumerator EndPillGrab() {
 		yield return new WaitForSeconds (3f);
-		GetComponent<HealthHandler> ().ReduceStress (10);
+		GetComponent<HealthHandler> ().ReduceStress (5);
 		heldObject.transform.parent = null;
 		heldObject.AddComponent<Rigidbody> ();
 		bSwitch_Normal = true;

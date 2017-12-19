@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TestUIManager : MonoBehaviour {
@@ -41,7 +41,7 @@ public class TestUIManager : MonoBehaviour {
 		}
 
 		if(NPInputManager.input.Menu.WasPressed) {
-			ToggleMenu();
+			SceneManager.LoadScene (SceneManager.GetActiveScene().name); 
 		}
 
 		HandleCursorLock();
