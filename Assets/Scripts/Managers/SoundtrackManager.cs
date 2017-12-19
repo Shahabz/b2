@@ -25,7 +25,9 @@ public class SoundtrackManager : MonoBehaviour {
 	catkill1,
 	catkill2,
 	catkill3,
-	catkill4
+	catkill4,
+	accessgranted,
+	accessdenied
 
 	; //soundtrack files
 

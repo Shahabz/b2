@@ -21,10 +21,14 @@ public class GateTerminal : MonoBehaviour, IInteractable {
 	}
 
 	public void Interact () {
-		if (terminalsDestroyed == terminalIndicators.Length) {
+		if (terminalsDestroyed >= terminalIndicators.Length) {
 			EnableGate ();
+			SoundtrackManager.s_instance.accessgranted.Play ();
+
 		} else {
 			TextManager.s_instance.SetNotification ("Quarantine Gate Locked \n" + (terminalIndicators.Length - terminalsDestroyed).ToString() + " Terminals Remain");
+			SoundtrackManager.s_instance.accessdenied.Play ();
+
 		}
 	}
 
