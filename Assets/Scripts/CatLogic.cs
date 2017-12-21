@@ -181,7 +181,7 @@ public class CatLogic : MonoBehaviour, IInteractable {
         if (other.tag == "Player" && canCauseStress)
         {
 			//if (thisCatState != CatStates.Waypoints&&thisCatState != CatStates.Talking) {
-			if (thisCatState == CatStates.AttackPlayer && GameManager.s_instance.saveWomen) { //only used for clifford super HACK	
+			if (thisCatState == CatStates.AttackPlayer && !GameManager.s_instance.saveWomen) { //only used for clifford super HACK	
 				TestPlayerController.s_instance.SetPlayerModeCutscene ();
 				GetComponent<CinemachineHardCut> ().HardCut ();
 				GameObject.Find ("HELLCAM").GetComponent<Cinemachine.CinemachineVirtualCamera> ().enabled = true;
