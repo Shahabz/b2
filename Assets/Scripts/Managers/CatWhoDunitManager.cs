@@ -45,7 +45,7 @@ public class CatWhoDunitManager : MonoBehaviour {
 		//the women just stand their, and if you walk into them, they turn into skeletons
 		diebitch.PlayDelayed (1f);
 
-		TextManager.s_instance.SetNotification ("You Saved the Models", 6f);
+		TextManager.s_instance.SetNotification ("You saved the models", 6f);
 		success.Play ();
 		GameManager.s_instance.SetSaveWomen (true);
 		foreach (WhodunitCat x in WhoDunitCats) {
@@ -61,9 +61,10 @@ public class CatWhoDunitManager : MonoBehaviour {
 		//state that the player failed
 		//make the cats stop and be uninteractable 
 		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (25);
-		TextManager.s_instance.SetNotification ("You Killed the Wrong Cat", 6f);
+		TextManager.s_instance.SetNotification ("You killed the wrong cat - now they will kill you", 6f);
 		foreach (WhodunitCat x in WhoDunitCats) {
 			x.FailState ();
+			x.GetComponentInChildren<Light> ().color = Color.red;
 		}
 	}
 

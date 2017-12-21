@@ -41,6 +41,25 @@ public class TestPlayerController : MonoBehaviour {
 		lastbark = temp; 
 	}
 
+	bool isStomp;
+	public void Stomp()
+	{
+		if (!isStomp) {
+			GetComponent<Animator> ().SetTrigger ("stomp");
+			isStomp = true;
+			SetPlayerModeCutscene ();
+			StartCoroutine ("HandleStomp");
+		}
+
+	}
+
+	IEnumerator HandleStomp ()
+	{
+		yield return new WaitForSeconds (.6f);
+		SetPlayerModeNormal ();
+		isStomp = false;
+	}
+
 	public GameObject NPCam;
 
 	public Transform holdItemTransform;

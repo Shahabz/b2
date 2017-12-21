@@ -24,6 +24,7 @@ public class XanaxGirl : GirlController {
 	public AudioSource Luigi;
 	public GameObject[] Lights;
 	bool hasDied;
+	public bool isParty;
 	public void SwitchToXanaxSearch () {
 		thisState = XanaxGirlState.lookingforxanax;
 		GetComponent<Animator> ().SetTrigger ("walk");
@@ -37,6 +38,8 @@ public class XanaxGirl : GirlController {
 		//xanaxWaypoints = FindObjectsOfType<XanaxWaypoint> ();
 		if (ghostTransform!=null)
 			GetComponent<Animator> ().SetTrigger ("walk");
+		if (isParty)TextManager.s_instance.SetNotification ("Take Sally to the Party Next Door and Turn Up", 6f);
+
 	}
 
 	// Update is called once per frame

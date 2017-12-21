@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //this is the cat used in the whodunit mini game
-public class WhodunitCat : CatLogic, IInteractable {
+public class WhodunitCat : CatLogic {
 
 	CatWhoDunitManager myManagerRef;
 	public string thisCatStory;
@@ -28,7 +28,7 @@ public class WhodunitCat : CatLogic, IInteractable {
 
 	public string myFlashbackStory;
 
-	public void Interact() {
+	public override void Interact() {
 		if (thisCatState == CatStates.Waypoints && TestPlayerController.s_instance.thisPlayerMode == PlayerMode.Normal) {
 			thisCatAnimator.SetTrigger ("idle");
 			thisCatState = CatStates.Talking;

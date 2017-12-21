@@ -65,7 +65,7 @@ public class HealthHandler : MonoBehaviour {
 			stress = 0;
 		OverlayManager.s_instance.anxietySlider.value = stress / 100;
 		OverlayManager.s_instance.anxietyText.text = "Anxiety: " + stress +"%";
-		OverlayManager.s_instance.ShowAnxietyFadeOut (.14f, false);
+		OverlayManager.s_instance.ShowAnxietyFadeOut (.05f, false);
 
 	}
 
@@ -82,15 +82,15 @@ public class HealthHandler : MonoBehaviour {
 			Death ();
 		}
 		else if (stressAmount >= 40) {
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.41f);
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.1f);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit3);
 
 		} else if (stressAmount >= 10) { 
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.21f);
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.07f);
 			if (SoundtrackManager.s_instance!=null)SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit4);
 
 		} else if (stressAmount >= 0) {
-			OverlayManager.s_instance.ShowAnxietyFadeOut (.11f);
+			OverlayManager.s_instance.ShowAnxietyFadeOut (.05f);
 			SoundtrackManager.s_instance.PlayAudioSource (SoundtrackManager.s_instance.AnxietyHit5);
 		} 
 	}

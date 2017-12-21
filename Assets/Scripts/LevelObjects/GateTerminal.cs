@@ -38,6 +38,7 @@ public class GateTerminal : MonoBehaviour, IInteractable {
 		TextManager.s_instance.SetNotification(terminalsDestroyed.ToString() + "/" + terminalIndicators.Length.ToString() + " Terminals Destroyed", 2f);
 		if (terminalsDestroyed == terminalIndicators.Length) {
 			TheFedIsComing.SetActive (true);
+			TextManager.s_instance.SetPrompt ("The cops are coming, don't let them catch you.", 7f);
 		}
 	}
 

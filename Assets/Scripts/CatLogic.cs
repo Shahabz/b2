@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public enum CatStates {Idle, Talking, Following, Waypoints, Runaway, AttackPlayer};
 
-public class CatLogic : MonoBehaviour {
+public class CatLogic : MonoBehaviour, IInteractable {
 
     public Animator thisCatAnimator;
 	protected NavMeshAgent thisNavMeshAgent;
 	protected CatStates thisCatState;
     float catRunSpeed = .02f;
     public float triggerFollowDistance = 15f;
-    float catLookAngle = 50;
+    float catLookAngle = 20;
     float waypointToggleDistance = 3f;
 	//cat runs back to this point after it attacks player
 	Vector3 runawayTarget;
@@ -53,7 +53,6 @@ public class CatLogic : MonoBehaviour {
 	
 	// Update is called once per frame
 	protected void Update () {
-		HandleCatStomp ();
 
 	switch (thisCatState)
         {
@@ -111,14 +110,14 @@ public class CatLogic : MonoBehaviour {
 	}
 		
 
-	void HandleCatStomp() {
-		if (isOverlappingPlayer) {
-			overlapTimeTilDeath += Time.deltaTime;
-			if (overlapTimeTilDeath > 1) {
-				isOverlappingPlayer = false;
-				TestPlayerController.s_instance.GetComponent<Animator> ().SetTrigger ("stomp");
-				StartCoroutine ("StompCat");
-			}
+
+	public virtual void Interact () {
+		if (Vector3.Distance (transform.position, TestPlayerController.s_instance.transform.position) < 1.3f) {
+			
+			TestPlayerController.s_instance.Stomp ();
+			StartCoroutine ("StompCat");
+			TestPlayerController.s_instance.PlayBark ();
+
 		}
 	}
 
@@ -194,7 +193,7 @@ public class CatLogic : MonoBehaviour {
 				OverlayManager.s_instance.blackout.SetActive (true);
 				gameObject.SetActive (false);
 			}
-			else {
+			else if (TestPlayerController.s_instance.thisPlayerMode==PlayerMode.Normal){
 				isOverlappingPlayer = true;
 				TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
 				switchToRunaway = true;
@@ -246,7 +245,6 @@ public class CatLogic : MonoBehaviour {
 
     protected void DestroyCat()
     {
-		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
         Destroy(gameObject);
     }
 
