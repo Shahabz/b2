@@ -245,6 +245,7 @@ public class CatLogic : MonoBehaviour, IInteractable {
 
     protected void DestroyCat()
     {
+		TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (1);
         Destroy(gameObject);
     }
 
