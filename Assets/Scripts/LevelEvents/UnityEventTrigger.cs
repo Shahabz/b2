@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class UnityEventTrigger : MonoBehaviour {
 
 	public UnityEvent myUnityEvent;
-
+	public bool isInfinitelyTriggerable;
 	protected bool hasPlayed;
 
 	protected virtual void OnTriggerEnter(Collider other) {
@@ -21,7 +21,7 @@ public class UnityEventTrigger : MonoBehaviour {
 	}
 
 	public void ExecuteEvent () {
-		hasPlayed = true;
+		if (!isInfinitelyTriggerable)hasPlayed = true;
 		if (myUnityEvent.GetPersistentTarget (0) != null) {
 			myUnityEvent.Invoke ();
 		}

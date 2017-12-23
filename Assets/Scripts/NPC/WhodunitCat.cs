@@ -5,7 +5,7 @@ using UnityEngine;
 //this is the cat used in the whodunit mini game
 public class WhodunitCat : CatLogic {
 
-	CatWhoDunitManager myManagerRef;
+	public CatWhoDunitManager myManagerRef;
 	public string thisCatStory;
 	bool hasPlayerHeardThisStory;
 	bool inHostageMode;
@@ -16,7 +16,6 @@ public class WhodunitCat : CatLogic {
 	// Use this for initialization
 	void Start () {
 		base.Start ();
-		myManagerRef = FindObjectOfType<CatWhoDunitManager> ();
 		GetComponent<DialogueSystem> ().onDialogueEnd.AddListener (OnDialogueEnd);
 		canCauseStress = false;
 	}

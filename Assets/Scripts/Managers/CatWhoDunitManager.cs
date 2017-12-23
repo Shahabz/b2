@@ -15,7 +15,6 @@ public class CatWhoDunitManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		WhoDunitCats = GameObject.FindObjectsOfType<WhodunitCat> ();
 	}
 	
 	// Update is called once per frame
