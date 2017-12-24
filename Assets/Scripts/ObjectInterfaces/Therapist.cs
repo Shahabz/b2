@@ -16,7 +16,7 @@ public class Therapist : MultipleChoice {
 	float introductionTime = 1f, askingQuestionTime = 1f, waitingTime = 1;
 	bool hasAskedQuestion;
 
-    BaseInput input;
+	[SerializeField] BaseInput input;
 
     const string therapyAudioDirectory = "Audio/Therapy/";
 	//it would be cool to fade into an abstract space when questions are being asked, or perhaps select 
@@ -57,7 +57,7 @@ public class Therapist : MultipleChoice {
     private void Start()
     {
 //        thisNPInputManager = TestPlayerController.s_instance.GetComponent<NPInputManager>();
-        input = GameObject.FindObjectOfType<BaseInput>();
+        //input = GameObject.FindObjectOfType<BaseInput>();
 		currentTherapySession = allTherapySessions [0];
 
     } 
@@ -65,7 +65,7 @@ public class Therapist : MultipleChoice {
     private void OnEnable()
     {
         //print(GameManager.s_instance);
-        GameObject.FindObjectOfType<GameManager>().OnNextDay += ResetTherapistForTheDay;
+        //GameObject.FindObjectOfType<GameManager>().OnNextDay += ResetTherapistForTheDay;
         //GameManager.s_instance.OnNextDay += ResetTherapistForTheDay;
     }
 

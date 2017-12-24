@@ -15,10 +15,7 @@ public class breakablelight : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if (hitpoints <= 0) {
-			Instantiate (brokenobject, transform.position, transform.rotation);
-			Destroy (gameObject);
-		}
+		
 	}
 	void Damage (float damage) 
 	{
