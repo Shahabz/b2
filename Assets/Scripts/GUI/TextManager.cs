@@ -44,7 +44,7 @@ public class TextManager : MonoBehaviour {
 		}
 	}
 		
-	public void SetNotification (string inString, float timeUntilDisable = 2f){
+	public void SetNotification (string inString, float timeUntilDisable = 4f){
 		notification.text = inString;
 		notificationTime = timeUntilDisable;
 		showNotification = true;
@@ -59,10 +59,10 @@ public class TextManager : MonoBehaviour {
 
 	public void SetPromptForced(string thisString)
 	{
-		SetPrompt (thisString);
+		SetPrompt (thisString, 5f);
 	}
 
-	public void SetPrompt(string inString, float timeUntilDisable = 2f) {
+	public void SetPrompt(string inString, float timeUntilDisable = 4f) {
 		prompt.text = inString;
 		promptTime = timeUntilDisable;
 		showPrompt = true;

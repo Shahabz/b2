@@ -35,10 +35,10 @@ public class GateTerminal : MonoBehaviour, IInteractable {
 	public void BlueTerminalDestroyed() {
 		terminalIndicators [terminalsDestroyed].GetComponent<MeshRenderer> ().material = greenSelectedMaterial;
 		terminalsDestroyed++;
-		TextManager.s_instance.SetNotification(terminalsDestroyed.ToString() + "/" + terminalIndicators.Length.ToString() + " Terminals Destroyed", 2f);
+		TextManager.s_instance.SetNotification(terminalsDestroyed.ToString() + "/" + terminalIndicators.Length.ToString() + " Terminals Destroyed", 5f);
 		if (terminalsDestroyed == terminalIndicators.Length) {
 			TheFedIsComing.SetActive (true);
-			TextManager.s_instance.SetPrompt ("The cops are coming, don't let them catch you.", 7f);
+			TextManager.s_instance.SetPrompt ("*** COPS ALERTED ***", 7f);
 		}
 	}
 
