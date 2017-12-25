@@ -193,7 +193,7 @@ public class CatLogic : MonoBehaviour, IInteractable {
 				OverlayManager.s_instance.blackout.SetActive (true);
 				gameObject.SetActive (false);
 			}
-			else if (TestPlayerController.s_instance.thisPlayerMode==PlayerMode.Normal){
+			else {
 				isOverlappingPlayer = true;
 				TestPlayerController.s_instance.GetComponent<HealthHandler> ().TakeStress (5);
 				switchToRunaway = true;
