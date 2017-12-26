@@ -41,7 +41,7 @@ public class TestUIManager : MonoBehaviour {
 		}
 
 		if(NPInputManager.input.Menu.WasPressed) {
-			SceneManager.LoadScene (SceneManager.GetActiveScene().name); 
+			//SceneManager.LoadScene (SceneManager.GetActiveScene().name); 
 		}
 
 		HandleCursorLock();
