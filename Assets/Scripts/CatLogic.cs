@@ -186,6 +186,8 @@ public class CatLogic : MonoBehaviour, IInteractable {
 				GetComponent<CinemachineHardCut> ().HardCut ();
 				GameObject.Find ("HELLCAM").GetComponent<Cinemachine.CinemachineVirtualCamera> ().enabled = true;
 				GameObject.Find ("HELLCAM").GetComponent<AudioSource> ().enabled = true;
+				GameObject.Find ("HELLCAM").GetComponent<AudioListener> ().enabled = true;
+
 
 				GameObject.Find ("NaughtyP_Bettter").GetComponent<Animator>().enabled = (true);
 				GameObject.Find ("NaughtyP_Bettter").GetComponent<TimedEventTrigger>().enabled = (true);
