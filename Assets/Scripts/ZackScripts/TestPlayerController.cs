@@ -156,7 +156,7 @@ public class TestPlayerController : MonoBehaviour {
 			}
 			break;
 		case PlayerMode.Death:
-			if (NPInputManager.input.Interact.WasPressed) {
+				if (NPInputManager.input.Interact.WasPressed || NPInputManager.input.Menu) {
 				SceneManager.LoadScene (SceneManager.GetActiveScene().name); 
 			}
 			break;
